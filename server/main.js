@@ -1,13 +1,22 @@
 import { Meteor } from 'meteor/meteor';
-import SimpleSchema from 'simpl-schema';
-import {Accounts} from 'meteor/accounts-base';
+import { WebApp } from 'meteor/webapp';
 
-// let userId = 'PgkuW5yLkttNSGphN'
-// let email = 'petersilie182@gmail.com'
 import '../imports/api/users';
+import '../imports/api/termine';
+import '../imports/startup/simple-schema-configuration';
 
 Meteor.startup(() => {
-  // code to run on server at startup
-
-
+  // Middleware die Requests prüft
+  // WebApp.connectHandlers.use((req, res, next) => {
+  //   console.log("this is from my custom middleware");
+  //   console.log(req.url, req.query, req.method)
+  //   if(req.url === '/1234'){
+  //     res.statusCode = 302;
+  //     res.setHeader('location', 'https://www.google.de');
+  //     res.end()
+  //   } else {
+  //     next();
+  //   }
+    
+  // })
 });

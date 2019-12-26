@@ -7,30 +7,32 @@ export const validateNewUser = (user) => {
     const email = user.emails[0].address;
     const vorname = user.profile.vorname;
     const nachname = user.profile.nachname;
+    console.log(user.profile.role);
     process.env.MAIL_URL="smtps://maik.tranvan%40gmail.com:dygtivgi@smtp.gmail.com:465/";
+  
 
     new SimpleSchema({
-        vorname: {
-          type: String,
-          max: 150
-        },
-        nachname: {
-          type: String,
-          max: 150
-        },
-        email: {
-          type: String,
-          regEx: SimpleSchema.RegEx.EmailWithTLD
-        }
-      }).validate({vorname, nachname, email })
-      
-      return true;
+      vorname: {
+        type: String,
+        max: 150
+      },
+      nachname: {
+        type: String,
+        max: 150
+      },
+      email: {
+        type: String,
+        regEx: SimpleSchema.RegEx.EmailWithTLD
+      }
+    }).validate({vorname, nachname, email })
+
+    return true;
 }
 
 // Benutzer-Validierung
 if(Meteor.isServer) {
     
-    Accounts.validateNewUser(validateNewUser)  
+    Accounts.validateNewUser(validateNewUser)
 }
 
 // Versende eine VerifizierungsMail an die angegebene Adresse
@@ -51,5 +53,15 @@ Meteor.methods({
             }
          };
         Accounts.sendVerificationEmail(this.userId, email);
+        
+    },
+
+    'addRole'(role) {
+      if(!this.userId){
+        throw new Meteor.Error('Es ist kein Benutzer vorhanden');
+      }
+      
+      // Roles.createRole('admin');
+      // Roles.addUsersToRoles(this.userId, role, Roles.GLOBAL_GROUP);
     }
 });

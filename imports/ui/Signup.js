@@ -4,6 +4,11 @@ import { Accounts } from 'meteor/accounts-base';
 import Select from 'react-select';
 import swal from 'sweetalert';
 
+const options = [
+  { value: 'admin', label: 'Administrator' },
+  { value: 'patient', label: 'Patient' }
+]
+
 export default class Signup extends React.Component{
     constructor(props){
         super(props);
@@ -17,6 +22,7 @@ export default class Signup extends React.Component{
 
     }
 
+    
     onSubmit(e){
       e.preventDefault();
       let vorname = this.refs.vorname.value.trim();
@@ -24,6 +30,7 @@ export default class Signup extends React.Component{
       let email = this.refs.email.value.trim();
       let password = this.refs.password.value.trim();
       let confirmPassword = this.refs.confirmPassword.value.trim();
+      let role = this.state.selectedOption;
       // let rolle = this.state.selectedOption;
       switch (password) {
         case password.length < 6:
@@ -40,7 +47,8 @@ export default class Signup extends React.Component{
           Accounts.createUser({
             profile: {
               vorname, 
-              nachname
+              nachname,
+              role
             }, 
             email, 
             password
@@ -51,7 +59,8 @@ export default class Signup extends React.Component{
               this.setState({error: ''});
             }
           });
-
+          
+          // Roles.addUsersToRoles(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
           // Methodenaufruf, damit die Verifizierungsmail versendet wird 
 
           Meteor.call('sendeEmail', 
@@ -62,12 +71,28 @@ export default class Signup extends React.Component{
               } else{
                 swal("Nutzer erfolgreich angelegt", "Es wurde eine Email zur Verifizierung an die angegebene Adresse versandt.", "success");
               }
-            }
+            },
+
+            // 'addRole',
+            // this.state.selectedOption,
+            // (error, result) => {
+            //   if(error) {
+            //     console.log(error)
+            //   } else {
+            //     console.log(this.state.selectedOption)
+            //   }
+            // }
+
           );
           break;
       }
     }
 
+    handleChangeRollen(selectedOption){
+      
+      this.setState({selectedOption});
+
+    }
     render(){
       const { selectedOption } = this.state;
     
@@ -82,16 +107,16 @@ export default class Signup extends React.Component{
               <input className="" type="email" placeholder="Email" name="email" ref="email" required/>
               <input className="" type="password" placeholder="Passwort" name="password" ref="password" required/>
               <input className="" type="password" placeholder="Passwort wiederholen" name="passwordconfirm" ref="confirmPassword" required/>
-              {/* <div className="form-group">
+              <div className="">
                 <label htmlFor="rolle">Benutzerrolle</label>
                   <Select
-                    className="noRad"
+                    className=""
                       placeholder="auswählen..."
                       value={selectedOption}
-                      onChange={this.handleChangeRollen}
+                      onChange={this.handleChangeRollen.bind(this)}
                       options={options}
                     />
-                  </div> */}
+                  </div>
               <button className="button" type="submit">registrieren</button>
               <Link to="/"><small>Sie haben einen schon einen Account?</small></Link>
             </form>

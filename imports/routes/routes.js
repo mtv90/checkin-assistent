@@ -69,7 +69,7 @@ export default class Routes extends React.Component {
                     () => <NotFound/>
                 }
                 />
-                <Route exact path="/verify-email/:token" render= {
+                <Route exact path="/#/verify-email/:token" render= {
                     () => <Verified/>
                 }
                 />
