@@ -2,6 +2,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 import {Termine} from '../api/termine';
+import TerminListeItem from './TerminListeItem';
 
 export default class TerminListe extends React.Component {
     constructor(props){
@@ -18,11 +19,12 @@ export default class TerminListe extends React.Component {
         });
     }
     componentWillUnmount() {
-        this.terminTracker = Tracker.stop();
+        // this.terminTracker = Tracker.stop();
     }
     renderTerminListeItem() {
         return this.state.termine.map((termin) => {
-            return <p key={termin._id}>{termin.titel}</p> 
+            return <TerminListeItem key={termin._id} {...termin}/>
+            // return <p key={termin._id}>{termin.titel}</p> 
         });
     }
     render () {

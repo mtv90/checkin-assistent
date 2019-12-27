@@ -30,7 +30,8 @@ export default class Signup extends React.Component{
       let email = this.refs.email.value.trim();
       let password = this.refs.password.value.trim();
       let confirmPassword = this.refs.confirmPassword.value.trim();
-      let role = this.state.selectedOption;
+      let role = this.state.selectedOption.value;
+      
       // let rolle = this.state.selectedOption;
       switch (password) {
         case password.length < 6:
@@ -51,7 +52,7 @@ export default class Signup extends React.Component{
               role
             }, 
             email, 
-            password
+            password,
           }, (err) => {
             if (err) {
               this.setState({error: err.reason});

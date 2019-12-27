@@ -1,13 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { Accounts } from 'meteor/accounts-base';
-import Signup from '../ui/Signup';
+
 
 export const validateNewUser = (user) => {
     const email = user.emails[0].address;
     const vorname = user.profile.vorname;
     const nachname = user.profile.nachname;
     console.log(user.profile.role);
+    console.log(user._id);
     process.env.MAIL_URL="smtps://maik.tranvan%40gmail.com:dygtivgi@smtp.gmail.com:465/";
   
 
@@ -25,7 +26,7 @@ export const validateNewUser = (user) => {
         regEx: SimpleSchema.RegEx.EmailWithTLD
       }
     }).validate({vorname, nachname, email })
-
+    Roles.addUsersToRoles(user._id, [user.profile.role])
     return true;
 }
 
@@ -33,12 +34,25 @@ export const validateNewUser = (user) => {
 if(Meteor.isServer) {
     
     Accounts.validateNewUser(validateNewUser)
+    
+    Meteor.publish(null, function () {
+      if (this.userId) {
+        return Meteor.roleAssignment.find({ 'user._id': this.userId });
+      } else {
+        this.ready()
+      }
+    });
+
+    Meteor.publish('userList', function (){ 
+      return Meteor.users.find({profile: {role: 'patient'}});
+    });
+  
 }
 
 // Versende eine VerifizierungsMail an die angegebene Adresse
 // diese Methode muss noch explizit aufgerufen werden! Siehe Signup.js 
 Meteor.methods({
-    'sendeEmail'(email) {
+    'sendeEmail'(email, role) {
         if(!this.userId){
             throw new Meteor.Error('Es ist kein Benutzer vorhanden');
         }
@@ -53,15 +67,19 @@ Meteor.methods({
             }
          };
         Accounts.sendVerificationEmail(this.userId, email);
-        
     },
 
-    'addRole'(role) {
-      if(!this.userId){
+    'checkRole'(userId)
+    {
+      if(!userId){
         throw new Meteor.Error('Es ist kein Benutzer vorhanden');
       }
-      
-      // Roles.createRole('admin');
-      // Roles.addUsersToRoles(this.userId, role, Roles.GLOBAL_GROUP);
+      Meteor.publish(null, function () {
+        if (userId) {
+          return Meteor.roleAssignment.find({ 'user._id': userId });
+        } else {
+          this.ready()
+        }
+      });
     }
 });

@@ -16,8 +16,8 @@ Meteor.methods({
         if(!this.userId){
             throw new Meteor.Error('Nicht authorisiert!');
         }
-        if(!titell){
-            throw new Meteor.Error('Ungültige Eingabe! Titel ist notwendig');
+        if(!titel){
+            throw new Meteor.Error('Ungültige Eingabe! Der Titel ist notwendig.');
         }
         new SimpleSchema({
             titel: {
