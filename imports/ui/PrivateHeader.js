@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 
 const PrivateHeader = (props) => {
     return (
-        <div>
-            <h1>{props.title}</h1>
-            <button className="" onClick={() => Accounts.logout()}>logout</button>
+        <div className="header">
+            <div className="header__content">
+                <h1 className="header__title">{props.title}</h1>
+                <button className="button button--link-text" onClick={() => Accounts.logout()}>logout</button>
+            </div>
         </div>
     )
 }

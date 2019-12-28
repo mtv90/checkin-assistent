@@ -7,8 +7,11 @@ export default class TerminListeItem extends React.Component {
     }
     render() {
         return (
-            <div>
-                <p>{this.props.titel}</p>
+            <div className="item">
+                <h2>{this.props.titel}</h2>
+                <p className="item__message">Hier sollen mal Termin etc. stehen</p>
+                <button className="button button--pill" onClick={() => alert('Test')}>anzeigen</button>
+                <button className="button button--pill" onClick={() => alert('Test 2')}>bearbeiten</button>
             </div>
         )
     }

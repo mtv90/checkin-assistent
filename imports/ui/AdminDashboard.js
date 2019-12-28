@@ -15,8 +15,10 @@ export default () => {
     return (
         <div className="">
             <PrivateHeader title="Admin" />
-            <AddTermin />
-            <TerminListe/>
+            <div className="page-content">
+                <AddTermin />
+                <TerminListe/>
+            </div>
         </div>
         )
     }

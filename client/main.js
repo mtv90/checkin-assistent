@@ -51,12 +51,12 @@ Meteor.startup(() => {
 	// 	client.search({type: 'Appointment'})
 	// 		.then(res => {
   //       console.log(res)
-	// 			this.setState({
-	// 				patients: res.data.entry,
-	// 				selfPage: res.data.link[0].url,
-	// 				nextPage: res.data.link[1].url,
-	// 				isLoading: false
-	// 			  })
+	// 			// this.setState({
+	// 			// 	patients: res.data.entry,
+	// 			// 	selfPage: res.data.link[0].url,
+	// 			// 	nextPage: res.data.link[1].url,
+	// 			// 	isLoading: false
+	// 			//   })
 	// 		})
 	// 		.catch(err => console.log(err))
   ReactDOM.render(

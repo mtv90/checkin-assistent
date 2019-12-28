@@ -2,13 +2,16 @@
 
 // Colors
 $serenty: #92A8D1;
+$light-grey: #f9f9f9;
+$dark-grey: #777777;
 
 // Spacing
 $space: 1.4rem;
-
+$site-max-width: 70rem;
 
 // Fontsizes
 $base-font-size: 1.6rem;
+$font-size-h2: 1.8rem;
 
 // Form-Inputs
 $input-border: $serenty;
@@ -24,3 +27,13 @@ $boxed-view-bg: white;
 //Button
 $button-bg: $serenty;
 $button-color: white;
+$button-cancel-bg: $light-grey;
+
+//Header
+$header-bg: $serenty;
+$header-color: white;
+
+// Termin-Items
+$item-bg: $light-grey;
+$item-border: darken($item-bg, 8%);
+$item-text-color: $dark-grey;

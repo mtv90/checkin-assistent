@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 import {Termine} from '../api/termine';
 import TerminListeItem from './TerminListeItem';
+import FlipMove from 'react-flip-move';
 
 export default class TerminListe extends React.Component {
     constructor(props){
@@ -22,6 +23,13 @@ export default class TerminListe extends React.Component {
         // this.terminTracker = Tracker.stop();
     }
     renderTerminListeItem() {
+        if(this.state.termine.length === 0) {
+            return (
+                <div className="item">
+                    <p className="item__status-message">Keine Termine gefunden</p>
+                </div>
+            )
+        }
         return this.state.termine.map((termin) => {
             return <TerminListeItem key={termin._id} {...termin}/>
             // return <p key={termin._id}>{termin.titel}</p> 
@@ -30,8 +38,9 @@ export default class TerminListe extends React.Component {
     render () {
         return (
             <div>
-                <p>Terminliste</p>
-                {this.renderTerminListeItem()}
+                <FlipMove maintainContainerHeight={true}>
+                    {this.renderTerminListeItem()}
+                </FlipMove>
             </div>
         );
     }

@@ -44,22 +44,23 @@ export default class AddTermin extends React.Component {
     render() {
         return (
             <div>
-                <button onClick={() => this.setState({isOpen: true})}>+ Termin anlegen</button>
+                <button className="button" onClick={() => this.setState({isOpen: true})}>+ Termin anlegen</button>
                 <Modal 
                     isOpen={this.state.isOpen} 
                     contentLabel="Termin anlegen" 
                     appElement={document.getElementById('app')}
                     onAfterOpen={() => this.refs.titel.focus()}
                     onRequestClose={this.handleModalClose.bind(this)}
+                    className="boxed-view__box"
+                    overlayClassName="boxed-view boxed-view--modal"
                 >
                     <h1>Termin hinzufügen</h1>
-                    {this.state.titel}
-                    <form onSubmit={this.onSubmit.bind(this)}>
+                    <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
                         <input type="text" ref="titel" placeholder="Titel eingeben" onChange={this.onChangeTitel.bind(this)}/>
                         <Select options={this.state.patients}/>
-                        <button>Termin anlegen</button>
+                        <button className="button">Termin anlegen</button>
+                        <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                     </form>
-                    <button onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                 </Modal>
             </div>
         );
