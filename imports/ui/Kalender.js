@@ -1,44 +1,128 @@
-import React from 'react'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import React from 'react';
+import {Link} from 'react-router-dom';
+
+import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
+import {Session} from 'meteor/session';
+
+// import history from '../routes/history';
+import {Termine} from '../api/termine';
+
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import moment from 'moment'
-import '@fullcalendar/core/main.css'
+import listPlugin from '@fullcalendar/list';
+import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
+import '@fullcalendar/timegrid/main.css';
+import '@fullcalendar/list/main.css';
+import '@fullcalendar/bootstrap/main.css';
 
-class Kalender extends React.Component {
-    calendarComponentRef = React.createRef()
-  constructor(props) {
-    super(props)
+import PrivateHeader from './PrivateHeader';
+import AddTermin from './AddTermin';
+import TerminListe from './TerminListe';
+
+import swal from 'sweetalert';
+
+export default class Kalender extends React.Component {
+  calendarComponentRef = React.createRef();
+  constructor(...props){
+    super(...props);
     this.state = {
-        myEventsList: [],
+        isLoading: false,
+        error: '',
+        appointments: [],
+        calendarWeekends: false,
+        termine: [],
+    }     
+}
+componentDidMount() {
+  this.setState({isLoading:true})
+
+  // Abfrage nach Termindaten vom FHIR-Server 
+  Meteor.call('getAppointments', 
+  (err, res) => {
+    if(err) {
+      swal("Fehler", `${err.error}`, "error"); 
+    } else {
+      this.setState({
+        appointments: res.entry
+      })
     }
+  });
 
-  }
+  this.terminTracker = Tracker.autorun(() => {
+    Meteor.subscribe('termine');
+    const termine = Termine.find().fetch();
 
+    if(termine) {
+      this.setState({termine, isLoading: false})
+    }
+  });
+}
 
-  render() {
-    return (
-        <div>
-        <FullCalendar
-        defaultView="timeGridWeek"
-        minTime= '08:00:00'
-        maxTime= '16:00:00'
-        header={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        }}
-        plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-        ref={ this.calendarComponentRef }
-        weekends={ this.state.calendarWeekends }
-        events={ this.state.calendarEvents }
-        dateClick={ this.handleDateClick }
-        />
+componentWillUnmount() {
+  this.terminTracker.stop();
+}
+
+openModal(e){
+ 
+  Session.set({
+    isOpen: true,
+    start: e.dateStr
+  });
+}
+render(){
+  var Spinner = require('react-spinkit');
+  const {isLoading} = this.state;
+
+  if (isLoading) {
+    return   (
+      <div className="pacman-view">
+          <Spinner name='pacman' color="#92A8D1" />
       </div>
     )
   }
+  return (
+    <div className="kalender-container">
+      <PrivateHeader title="Admin" button="Dashboard"/>
+      <div className="grid-row">
+        <Link className="button button--link" to="/dashboard"><h3>Dashboard</h3></Link>
+        <div className="kalender-view">
+          <FullCalendar 
+                  defaultView="timeGridWeek"
+                  height='parent'
+                  minTime= '08:00:00'
+                  maxTime= '18:00:00'
+                  header={{
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek', 
+                  }}
+                  buttonText={
+                    {
+                      today: 'heute',
+                      month: 'Monat',
+                      week: 'Woche',
+                      day: 'Tag',
+                      list: 'Liste'
+                    }
+                  }
+                  buttonIcons={true}
+                  plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin ]}
+                  ref={ this.calendarComponentRef }
+                  weekends={ this.state.calendarWeekends }
+                  events={ this.state.termine }
+                  dateClick={ this.openModal.bind(this) }
+                  locale= 'de'
+                  weekNumbers={true}
+                  navLinks={true}
+          />
+          <AddTermin/>
+        </div>
+      </div>
+    </div>
+  )
 }
-
-export default Kalender
+}

@@ -1,6 +1,5 @@
 import {Meteor} from 'meteor/meteor';
 import React from 'react';
-import {Tracker} from 'meteor/tracker';
 import history from './history';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
@@ -10,9 +9,10 @@ import Container from '../ui/Container';
 import Signup from '../ui/Signup';
 import Login from '../ui/Login';
 import NotFound from '../ui/NotFound';
-import Verified from '../ui/Verified';
 import AdminDashboard from '../ui/AdminDashboard';
 import PatientenDashboard from '../ui/PatientenDashboard';
+import Kalender from '../ui/Kalender';
+import Wartezimmer from '../ui/Wartezimmer';
 
 const unauthPages = ['/signup', '/'];
 const authPages = ['/dashboard'];
@@ -66,15 +66,20 @@ export default class Routes extends React.Component {
                         : (
                             <Redirect to="/" />
                         )
-                     }/>           
+                     }/> 
+                <Route exact path="/termine" render= {
+                    () => <Kalender/>
+                }
+                />      
+                <Route exact path="/wartezimmer" render= {
+                    () => <Wartezimmer/>
+                }
+                />      
                 <Route exact path="*" render= {
                     () => <NotFound/>
                 }
                 />
-                <Route exact path="/#/verify-email/:token" render= {
-                    () => <Verified/>
-                }
-                />
+ 
             </Switch>
         )
     }

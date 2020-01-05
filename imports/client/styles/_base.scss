@@ -29,9 +29,41 @@ a {
     color: black;
 }
 
-input[type=text], input[type=email], input[type=password] {
+input[type=text], input[type=email], input[type=password], 
+select[name=patienten], input[type=date], input[type=datetime-local] {
     border: 1px solid $input-border;
     font-size: $base-font-size;
     margin-bottom: $space;
     padding: $input-spacing;
 }
+label {
+    font-size: $base-font-size / 1.2;
+    text-align: left;
+    margin-bottom: $space / 3;
+}
+textarea {
+    border: 1px solid $input-border;
+    font-size: $base-font-size;
+    margin-bottom: $space;
+    padding: $input-spacing;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }

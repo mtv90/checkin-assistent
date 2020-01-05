@@ -20,7 +20,7 @@ export default class TerminListe extends React.Component {
         });
     }
     componentWillUnmount() {
-        // this.terminTracker = Tracker.stop();
+        this.terminTracker.stop();
     }
     renderTerminListeItem() {
         if(this.state.termine.length === 0) {

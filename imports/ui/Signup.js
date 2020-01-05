@@ -1,4 +1,5 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import {Link} from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import Select from 'react-select';
@@ -31,8 +32,8 @@ export default class Signup extends React.Component{
       let password = this.refs.password.value.trim();
       let confirmPassword = this.refs.confirmPassword.value.trim();
       let role = this.state.selectedOption.value;
+      console.log(role)
       
-      // let rolle = this.state.selectedOption;
       switch (password) {
         case password.length < 6:
           this.setState({error: 'Das Passwort muss mehr als 6 Zeichen haben.'});
@@ -46,13 +47,13 @@ export default class Signup extends React.Component{
         default:
           this.setState({error:''})
           Accounts.createUser({
+            role,
             profile: {
               vorname, 
               nachname,
-              role
             }, 
             email, 
-            password,
+            password
           }, (err) => {
             if (err) {
               this.setState({error: err.reason});
@@ -61,7 +62,6 @@ export default class Signup extends React.Component{
             }
           });
           
-          // Roles.addUsersToRoles(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
           // Methodenaufruf, damit die Verifizierungsmail versendet wird 
 
           Meteor.call('sendeEmail', 
@@ -94,6 +94,7 @@ export default class Signup extends React.Component{
       this.setState({selectedOption});
 
     }
+
     render(){
       const { selectedOption } = this.state;
     

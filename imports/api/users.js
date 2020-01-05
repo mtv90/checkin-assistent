@@ -7,11 +7,10 @@ export const validateNewUser = (user) => {
     const email = user.emails[0].address;
     const vorname = user.profile.vorname;
     const nachname = user.profile.nachname;
-    console.log(user.profile.role);
-    console.log(user._id);
+    const role = user.role;
     process.env.MAIL_URL="smtps://maik.tranvan%40gmail.com:dygtivgi@smtp.gmail.com:465/";
   
-
+    console.log(role)
     new SimpleSchema({
       vorname: {
         type: String,
@@ -24,16 +23,30 @@ export const validateNewUser = (user) => {
       email: {
         type: String,
         regEx: SimpleSchema.RegEx.EmailWithTLD
+      },
+      role: {
+        type: String,
+        max: 150
       }
-    }).validate({vorname, nachname, email })
-    Roles.addUsersToRoles(user._id, [user.profile.role])
+    }).validate({vorname, nachname, email, role })
+    Roles.addUsersToRoles(user._id, [role])
     return true;
 }
 
 // Benutzer-Validierung
 if(Meteor.isServer) {
     
-    Accounts.validateNewUser(validateNewUser)
+    Accounts.validateNewUser(validateNewUser);
+
+    Accounts.onCreateUser(function(options, user) {
+      // console.log(options)
+      user.profile = options.profile || {};
+      //Basic Role Set Up
+      user.role = options.role || [];
+  
+      // Returns the user object
+      return user;
+  });
     
     Meteor.publish(null, function () {
       if (this.userId) {
@@ -42,9 +55,16 @@ if(Meteor.isServer) {
         this.ready()
       }
     });
-
+      
     Meteor.publish('userList', function (){ 
-      return Meteor.users.find({profile: {role: 'patient'}});
+      
+      const role = Roles.userIsInRole(this.userId, 'admin')
+      if(role){
+        return Meteor.users.find({role: "patient"});
+      } else {
+        throw new Meteor.Error('Sie haben keine Rechte');
+      }
+ 
     });
   
 }
@@ -69,17 +89,17 @@ Meteor.methods({
         Accounts.sendVerificationEmail(this.userId, email);
     },
 
-    'checkRole'(userId)
-    {
-      if(!userId){
-        throw new Meteor.Error('Es ist kein Benutzer vorhanden');
-      }
-      Meteor.publish(null, function () {
-        if (userId) {
-          return Meteor.roleAssignment.find({ 'user._id': userId });
-        } else {
-          this.ready()
-        }
-      });
-    }
+    // 'checkRole'(userId)
+    // {
+    //   if(!userId){
+    //     throw new Meteor.Error('Es ist kein Benutzer vorhanden');
+    //   }
+    //   Meteor.publish(null, function () {
+    //     if (userId) {
+    //       return Meteor.roleAssignment.find({ 'user._id': userId });
+    //     } else {
+    //       this.ready()
+    //     }
+    //   });
+    // }
 });
