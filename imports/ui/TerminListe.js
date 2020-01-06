@@ -22,7 +22,21 @@ export default class TerminListe extends React.Component {
     componentWillUnmount() {
         this.terminTracker.stop();
     }
-    renderTerminListeItem() {
+    renderTerminListeItemCheckedIn() {
+        if(this.state.termine.length === 0) {
+            return (
+                <div className="item">
+                    <p className="item__status-message">Noch Termine im Wartezimmer!</p>
+                </div>
+            )
+        }
+        return this.state.termine.map((termin) => {
+            if(termin.checkedIn && (moment(termin.start).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD'))){
+                return <TerminListeItem key={termin._id} {...termin}/>
+            }
+        });
+    }
+    renderTerminListeItem(){
         if(this.state.termine.length === 0) {
             return (
                 <div className="item">
@@ -31,16 +45,27 @@ export default class TerminListe extends React.Component {
             )
         }
         return this.state.termine.map((termin) => {
-            return <TerminListeItem key={termin._id} {...termin}/>
-            // return <p key={termin._id}>{termin.titel}</p> 
+            if(termin.checkedIn === false && (moment(termin.start).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD'))){
+                return <TerminListeItem key={termin._id} {...termin}/> 
+            }
         });
     }
     render () {
         return (
             <div>
-                <FlipMove maintainContainerHeight={true}>
-                    {this.renderTerminListeItem()}
-                </FlipMove>
+                <div>
+                    <h2>Im Wartezimmer</h2>
+                    <FlipMove maintainContainerHeight={true}>
+                        {this.renderTerminListeItemCheckedIn()}
+                    </FlipMove>
+                </div>
+                <hr/>
+                <div>
+                    <h2>Heute Geplant</h2>
+                    <FlipMove maintainContainerHeight={true}>
+                        {this.renderTerminListeItem()}
+                    </FlipMove>
+                </div>
             </div>
         );
     }

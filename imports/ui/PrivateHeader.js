@@ -8,9 +8,11 @@ const PrivateHeader = (props) => {
         <div className="header">
             <div className="header__content">
                 <h1 className="header__title">{props.title}</h1>
-                {props.button === 'Dashboard' ? (<Link className="button button--link" to="/dashboard"><i className="fas fa-home"></i></Link>) : undefined}
-                <button className="button button--link-text" onClick={() => Accounts.logout()}>logout</button>
-            </div>
+                <span className="container-right">
+                    {props.button === 'Dashboard' ? (<Link className="button button--link button--dashboard" to="/dashboard"><h3>Dashboard</h3></Link>) : undefined}
+                    <button className="button button--link-text button--logout" onClick={() => Accounts.logout()}>logout</button>
+                </span>
+              </div>
         </div>
     )
 }

@@ -78,6 +78,9 @@ export default class AddTermin extends React.Component {
             });
         });
     }
+    componentDidCatch(){
+        this.patientTracker = Tracker.stop();
+    }
     getDate(date){
 
         this.setState({date})
@@ -126,13 +129,12 @@ export default class AddTermin extends React.Component {
         }
     }
     openTerminModal(){
-        console.log(Session.get('start'))
         this.setState({isOpen: true});
     }
     render() {
         return (
-            <div>
-                <button className="button" onClick={this.openTerminModal.bind(this)}>+ Termin anlegen</button>
+            <div className="add-termin--container">
+                <button className="button button--add" onClick={this.openTerminModal.bind(this)}>+ Termin anlegen</button>
                 <Modal 
                     isOpen={this.state.isOpen} 
                     contentLabel="Termin anlegen" 

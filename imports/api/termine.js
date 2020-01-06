@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
-
+import moment from 'moment';
 export const Termine = new Mongo.Collection('termine');
 
 if(Meteor.isServer){
@@ -54,6 +54,7 @@ Meteor.methods({
             start,
             end,
             notes,
+            checkedIn: false,
             user_id: this.userId,
             createdAt: new Date(),
             updatedAt: new Date()
@@ -74,6 +75,33 @@ Meteor.methods({
         Termine.remove({
             _id,
             user_id: this.userId
-        })
+        });
+    },
+
+    'termin.checkIn'(_id, termin) {
+        if(!this.userId) {
+            throw new Meteor.Error('Nicht authorisiert!');
+        }
+        const checkedIn = termin.checkedIn;
+        new SimpleSchema({
+            _id: {
+                type: String,
+                min: 1
+            },
+            checkedIn: {
+                type: Boolean,
+                allowedValues: [true]
+            }
+        }).validate({_id, checkedIn});
+
+        Termine.update({
+            _id,
+            user_id: this.userId
+        },{
+            $set: {
+                updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
+                ...termin
+            }
+        }); 
     }
 });

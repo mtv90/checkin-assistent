@@ -71,9 +71,7 @@ export default class Wartezimmer extends React.Component {
         return (
             <div className="">
                 <PrivateHeader title="Admin" button="Dashboard"/>
-                <div className="button-wrapper">
-                    <button type="button" className="button menu" onClick={this.openNav.bind(this)}>&#9776;</button>
-                </div>
+                <button type="button" className="button menu" onClick={this.openNav.bind(this)}>&#9776;</button>
                 <div id="mySidenav" className="sidenav">
                     <a type="button" className="closebtn" onClick={this.closeNav.bind(this)}>&times;</a>
                     <TerminListe/>
@@ -82,7 +80,7 @@ export default class Wartezimmer extends React.Component {
                     <div id="external-events" className="termin-liste">
                         <TerminListe/>
                     </div>
-                    <div className="resource-cal">
+                    <div className="resource-cal resource-spacing">
                         <FullCalendar id="calendarEl"
                             schedulerLicenseKey= "GPL-My-Project-Is-Open-Source"
                             plugins={[ resourceTimelinePlugin, interactionPlugin ]}

@@ -7,11 +7,10 @@
     cursor: pointer;
     font-size: $base-font-size;
     line-height: 1.2;
-    margin-bottom: $space;
+    // margin-bottom: $space;
     padding: $input-spacing;
     text-transform: uppercase;
 }
-
 .button--link {
     display: inline-block;
     text-decoration: none;
@@ -44,12 +43,23 @@
     text-transform: none;
 }
 
+.button--logout {
+    border: 1px solid $button-color;
+    padding: 10px;
+    margin: 0px;
+}
+.button--add {
+    background-color: #CE5B78;
+}
+.button--add:hover {
+    background-color: darken(#CE5B78, 10%);
+}
 .menu{
     display: none;
     background-color: transparent;
     border: 1px solid $serenty;
     color: $serenty;
-    // margin: 0 ($space / 2) 0 0;
+    margin: $space;
     padding: .3rem .8rem;
     text-transform: none;
 }
@@ -57,7 +67,14 @@
     background-color: $button-bg;
     color: $button-color;
 }
-// .menu:focus {
-//     color:red;
-//     border: 1px solid $serenty;
-// }
+
+.button--dashboard {
+    background-color: white;
+    color: $serenty;
+    margin: 0px 5px 0px 0px;
+} 
+
+.button--dashboard:hover {
+    background-color: darken(white, 10%);
+    text-decoration: underline;
+}

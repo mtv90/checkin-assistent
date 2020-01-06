@@ -39,7 +39,6 @@ export default class Kalender extends React.Component {
 }
 componentDidMount() {
   this.setState({isLoading:true})
-
   // Abfrage nach Termindaten vom FHIR-Server 
   Meteor.call('getAppointments', 
   (err, res) => {
@@ -63,7 +62,7 @@ componentDidMount() {
 }
 
 componentWillUnmount() {
-  this.terminTracker.stop();
+  // this.terminTracker.stop();
 }
 
 openModal(e){
@@ -72,6 +71,9 @@ openModal(e){
     isOpen: true,
     start: e.dateStr
   });
+}
+test(e){
+  console.log(e.target)
 }
 render(){
   var Spinner = require('react-spinkit');
@@ -85,42 +87,70 @@ render(){
     )
   }
   return (
-    <div className="kalender-container">
+    <div className="">
       <PrivateHeader title="Admin" button="Dashboard"/>
-      <div className="grid-row">
-        <Link className="button button--link" to="/dashboard"><h3>Dashboard</h3></Link>
-        <div className="kalender-view">
-          <FullCalendar 
-                  defaultView="timeGridWeek"
-                  height='parent'
-                  minTime= '08:00:00'
-                  maxTime= '18:00:00'
-                  header={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek', 
-                  }}
-                  buttonText={
-                    {
-                      today: 'heute',
-                      month: 'Monat',
-                      week: 'Woche',
-                      day: 'Tag',
-                      list: 'Liste'
-                    }
-                  }
-                  buttonIcons={true}
-                  plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin ]}
-                  ref={ this.calendarComponentRef }
-                  weekends={ this.state.calendarWeekends }
-                  events={ this.state.termine }
-                  dateClick={ this.openModal.bind(this) }
-                  locale= 'de'
-                  weekNumbers={true}
-                  navLinks={true}
+      <AddTermin/>
+      <div className="kalender-container" id="wide-calendar">
+        <FullCalendar
+          defaultView="timeGridWeek"
+          height='parent'
+          minTime= '08:00:00'
+          maxTime= '18:00:00'
+          header={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek', 
+          }}
+          buttonText={
+            {
+              today: 'heute',
+              month: 'Monat',
+              week: 'Woche',
+              day: 'Tag',
+              list: 'Liste'
+            }
+          }
+          buttonIcons={true}
+          plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin ]}
+          ref={ this.calendarComponentRef }
+          weekends={ this.state.calendarWeekends }
+          events={ this.state.termine }
+          dateClick={ this.openModal.bind(this) }
+          locale= 'de'
+          weekNumbers={true}
+          navLinks={true}
+        />
+      </div>
+      <div className="kalender-container" id="mobile-calendar">
+        <FullCalendar
+            defaultView="listWeek"
+            height='parent'
+            minTime= '08:00:00'
+            maxTime= '18:00:00'
+            header={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'listWeek', 
+            }}
+            buttonText={
+              {
+                // today: 'heute',
+                // month: 'Monat',
+                // week: 'Woche',
+                // day: 'Tag',
+                list: 'Liste'
+              }
+            }
+            buttonIcons={true}
+            plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin ]}
+            ref={ this.calendarComponentRef }
+            weekends={ this.state.calendarWeekends }
+            events={ this.state.termine }
+            dateClick={ this.openModal.bind(this) }
+            locale= 'de'
+            weekNumbers={true}
+            navLinks={true}
           />
-          <AddTermin/>
-        </div>
       </div>
     </div>
   )
