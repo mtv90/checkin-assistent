@@ -8,9 +8,8 @@ export const validateNewUser = (user) => {
     const vorname = user.profile.vorname;
     const nachname = user.profile.nachname;
     const role = user.role;
-    process.env.MAIL_URL="smtps://maik.tranvan%40gmail.com:dygtivgi@smtp.gmail.com:465/";
+    process.env.MAIL_URL="smtps://postmaster@sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org:fe653a7f73cc5507ccc19eb84097eb8d-713d4f73-f4fe8845@smtp.mailgun.org:587/";
   
-    console.log(role)
     new SimpleSchema({
       vorname: {
         type: String,
