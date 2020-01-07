@@ -3,7 +3,7 @@ import React from 'react';
 import history from '../routes/history';
 import PrivateHeader from './PrivateHeader';
 import TerminListe from './TerminListe';
-
+import Warteliste from './Warteliste';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -25,6 +25,7 @@ export default class Wartezimmer extends React.Component {
         super(props);
         this.state={
             isOpen: false,
+            termine:[],
             resources: [
                 {
                     id: '1',
@@ -51,13 +52,25 @@ export default class Wartezimmer extends React.Component {
         let calendarEl = document.getElementById('calendar');
 
         new Draggable(containerEl, {
-            itemSelector: '.item',
+            itemSelector: '.drag-it',
             eventData: function(eventEl) {
+                console.log(eventEl.firstChild.innerText)
                 return {
-                    title: eventEl.innerText
+                    title: eventEl.firstChild.innerText
                 };
             }
         });
+
+        this.terminTracker = Tracker.autorun(() => {
+            Meteor.subscribe('termine');
+            const termine = Termine.find().fetch();
+        
+            if(termine) {
+  
+              this.setState({termine, isLoading: false})
+            }
+            
+          });
     }
     openNav(){
         document.getElementById("mySidenav").style.width = "250px";
@@ -78,6 +91,8 @@ export default class Wartezimmer extends React.Component {
                 </div>
                 <div className="wrapper">
                     <div id="external-events" className="termin-liste">
+                        <Warteliste/>
+                        <hr/>
                         <TerminListe/>
                     </div>
                     <div className="resource-cal resource-spacing">
@@ -95,6 +110,7 @@ export default class Wartezimmer extends React.Component {
                                 }
                             }
                             editable={true}
+                            events={ this.state.termine }
                             droppable={true}
                             drop={(info) => {
                                 console.log(info)

@@ -22,6 +22,7 @@
     padding: 2.4rem;
     text-align: center;
     width: 24rem;
+    justify-content: center;
 }
 
 .boxed-view__form {
@@ -35,7 +36,9 @@
     height: 100vh;
     width: 100vw;
 }
-
+.spinner-box{
+    margin: 0 auto;
+}
 @media only screen and (min-width: 770px) {
     .boxed-view__dashboard {
         display: -webkit-box;

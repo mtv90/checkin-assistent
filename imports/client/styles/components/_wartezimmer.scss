@@ -12,12 +12,15 @@
     height: -webkit-calc(100vh - 125px); /* google, safari */
     height: -moz-calc(100vh - 125px); /* firefox */
 }
-.button-wrapper{
-    // margin: $space;
-    // justify-content: space-between;
-}
+
 .termin-liste {
     overflow-y: scroll;
+}
+.warteliste-container{
+    padding-top: $space*2;
+}
+.terminliste-container{
+    padding-top: $space*2;
 }
 .resource-cal {
     overflow-y: scroll;

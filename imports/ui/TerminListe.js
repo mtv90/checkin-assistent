@@ -14,8 +14,9 @@ export default class TerminListe extends React.Component {
     }
     componentDidMount() {
         this.terminTracker = Tracker.autorun(() => {
-            Meteor.subscribe('termine');
-            const termine = Termine.find().fetch();
+            Meteor.subscribe('termineToday');
+            const termine = Termine.find({$and: [{user_id: Meteor.userId()}, {checkedIn: false}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
+            console.log(termine)
             this.setState({termine})
         });
     }
@@ -52,20 +53,20 @@ export default class TerminListe extends React.Component {
     }
     render () {
         return (
-            <div>
-                <div>
+            <div className="terminliste-container">
+                {/* <div>
                     <h2>Im Wartezimmer</h2>
                     <FlipMove maintainContainerHeight={true}>
                         {this.renderTerminListeItemCheckedIn()}
                     </FlipMove>
                 </div>
-                <hr/>
-                <div>
-                    <h2>Heute Geplant</h2>
+                <hr/> */}
+                {/* <div> */}
+                    <h2 className="item-title">Heute Geplant</h2>
                     <FlipMove maintainContainerHeight={true}>
                         {this.renderTerminListeItem()}
                     </FlipMove>
-                </div>
+                {/* </div> */}
             </div>
         );
     }

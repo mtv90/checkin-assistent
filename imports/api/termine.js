@@ -5,9 +5,20 @@ import moment from 'moment';
 export const Termine = new Mongo.Collection('termine');
 
 if(Meteor.isServer){
-    Meteor.publish('termine', function (){
-        return Termine.find({user_id: this.userId});
+    Meteor.publish(
+        'termine', function (){
+            return Termine.find({user_id: this.userId});
     });
+    Meteor.publish(
+        'termineWaiting', function (){
+            return Termine.find({$and: [ { user_id: this.userId }, { checkedIn: true }, { start: {$gte: moment().format('YYYY-MM-DD') } } ]});
+        }
+    );
+    Meteor.publish(
+        'termineToday', function (){
+            return Termine.find({$and: [ { user_id: this.userId }, { checkedIn: false }, { start: {$gte: moment().format('YYYY-MM-DD') } } ]});
+        }
+    );
 }
 
 Meteor.methods({
@@ -78,7 +89,7 @@ Meteor.methods({
         });
     },
 
-    'termin.checkIn'(_id, termin) {
+    'termin.check'(_id, termin) {
         if(!this.userId) {
             throw new Meteor.Error('Nicht authorisiert!');
         }
@@ -90,7 +101,7 @@ Meteor.methods({
             },
             checkedIn: {
                 type: Boolean,
-                allowedValues: [true]
+                allowedValues: [true, false]
             }
         }).validate({_id, checkedIn});
 
@@ -99,8 +110,9 @@ Meteor.methods({
             user_id: this.userId
         },{
             $set: {
+                ...termin,
                 updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
-                ...termin
+                
             }
         }); 
     }
