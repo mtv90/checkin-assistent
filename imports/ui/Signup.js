@@ -32,7 +32,6 @@ export default class Signup extends React.Component{
       let password = this.refs.password.value.trim();
       let confirmPassword = this.refs.confirmPassword.value.trim();
       let role = this.state.selectedOption.value;
-      console.log(role)
       
       switch (password) {
         case password.length < 6:

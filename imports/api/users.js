@@ -73,6 +73,7 @@ if(Meteor.isServer) {
 // diese Methode muss noch explizit aufgerufen werden! Siehe Signup.js 
 Meteor.methods({
     'sendeEmail'(email, role) {
+      process.env.MAIL_URL="smtps://maik.tranvan%40gmail.com:dygtivgi@smtp.gmail.com:465/";
         if(!this.userId){
             throw new Meteor.Error('Es ist kein Benutzer vorhanden');
         }
