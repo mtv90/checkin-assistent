@@ -8,8 +8,7 @@ export const validateNewUser = (user) => {
     const vorname = user.profile.vorname;
     const nachname = user.profile.nachname;
     const role = user.role;
-    process.env.MAIL_URL="smtps://postmaster@sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org:fe653a7f73cc5507ccc19eb84097eb8d-713d4f73-f4fe8845@smtp.mailgun.org:587/";
-  
+
     new SimpleSchema({
       vorname: {
         type: String,
@@ -72,12 +71,14 @@ if(Meteor.isServer) {
 // diese Methode muss noch explizit aufgerufen werden! Siehe Signup.js 
 Meteor.methods({
     'sendeEmail'(email, role) {
-      process.env.MAIL_URL="smtps://postmaster@sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org:fe653a7f73cc5507ccc19eb84097eb8d-713d4f73-f4fe8845@smtp.mailgun.org:587/";
+      process.env.MAIL_URL="smtp://postmaster@sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org:627255fe243896176d23c2fab07f5bd3-713d4f73-90681d23@smtp.mailgun.org:587/";
+      // username_mailgun = postmaster@sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org
+      // process.env.MAIL_URL="smtps://maik.tranvan%40gmail.com:dygtivgi@smtp.gmail.com:465/";
         if(!this.userId){
             throw new Meteor.Error('Es ist kein Benutzer vorhanden');
         }
         Accounts.emailTemplates.siteName = 'Dein Checkin-Assistent';
-        Accounts.emailTemplates.from = 'Checkin-Assistent<postmaster@sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org>';
+        Accounts.emailTemplates.from = 'Checkin-Assistent<postmaster%40sandboxb0f2b1d3f4854cd9a8986607c253cb1d.mailgun.org>';
         Accounts.emailTemplates.verifyEmail = {
             subject() {
                return "Aktivieren Sie jetzt Ihren Account!";
