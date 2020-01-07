@@ -24,6 +24,7 @@
     "history": "^4.10.1",
     "jquery": "^3.4.1",
     "jso": "^4.1.1",
+    "mailgun-js": "^0.22.0",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
