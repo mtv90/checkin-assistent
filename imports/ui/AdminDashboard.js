@@ -2,15 +2,9 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 
-import history from '../routes/history';
-import Kalender from './Kalender';
-import Termin from './Termin';
-
+// import history from '../routes/history';
 import PrivateHeader from './PrivateHeader';
 
-import {Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 export default () => {
     return (

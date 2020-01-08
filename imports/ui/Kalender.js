@@ -26,6 +26,7 @@ import TerminListe from './TerminListe';
 import swal from 'sweetalert';
 
 export default class Kalender extends React.Component {
+  _isMounted = false;
   calendarComponentRef = React.createRef();
   constructor(...props){
     super(...props);
@@ -35,21 +36,24 @@ export default class Kalender extends React.Component {
         appointments: [],
         calendarWeekends: false,
         termine: [],
-    }     
+    }   
 }
 componentDidMount() {
+  this._isMounted = true;
   this.setState({isLoading:true})
+
   // Abfrage nach Termindaten vom FHIR-Server 
-  Meteor.call('getAppointments', 
-  (err, res) => {
-    if(err) {
-      swal("Fehler", `${err.error}`, "error"); 
-    } else {
-      this.setState({
-        appointments: res.entry
-      })
-    }
-  });
+  
+    // Meteor.call('getAppointments', 
+    // (err, res) => {
+    //   if(err) {
+    //     swal("Fehler", `${err.error}`, "error"); 
+    //   } else {
+    //     this.setState({
+    //       appointments: res.entry
+    //     })
+    //   }
+    // });
 
   this.terminTracker = Tracker.autorun(() => {
     Meteor.subscribe('termine');
@@ -62,6 +66,7 @@ componentDidMount() {
 }
 
 componentWillUnmount() {
+  this._isMounted = false;
   // this.terminTracker.stop();
 }
 
@@ -72,9 +77,7 @@ openModal(e){
     start: e.dateStr
   });
 }
-test(e){
-  console.log(e.target)
-}
+
 render(){
   var Spinner = require('react-spinkit');
   const {isLoading} = this.state;

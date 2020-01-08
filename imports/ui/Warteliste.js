@@ -17,7 +17,6 @@ export default class Warteliste extends React.Component {
         this.wartelistTracker = Tracker.autorun(() => {
             Meteor.subscribe('termineWaiting');
             const termine = Termine.find({$and: [{user_id: Meteor.userId()}, {checkedIn: true}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
-            console.log(termine)
             this.setState({termine})
         });
     }

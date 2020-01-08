@@ -72,17 +72,6 @@ export default class Signup extends React.Component{
                 swal("Nutzer erfolgreich angelegt", "Es wurde eine Email zur Verifizierung an die angegebene Adresse versandt.", "success");
               }
             },
-
-            // 'addRole',
-            // this.state.selectedOption,
-            // (error, result) => {
-            //   if(error) {
-            //     console.log(error)
-            //   } else {
-            //     console.log(this.state.selectedOption)
-            //   }
-            // }
-
           );
           break;
       }

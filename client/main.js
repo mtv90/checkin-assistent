@@ -23,11 +23,11 @@ Tracker.autorun(() => {
 });
 
 Tracker.autorun(() => {
-  const admin = Roles.userIsInRole(Meteor.userId(), 'admin');
-  const patient = Roles.userIsInRole(Meteor.userId(), 'patient');
+  // const admin = Roles.userIsInRole(Meteor.userId(), 'admin');
+  // const patient = Roles.userIsInRole(Meteor.userId(), 'patient');
   
-  Session.set('admin', admin);
-  Session.set('patient', patient);
+  // Session.set('admin', admin);
+  // Session.set('patient', patient);
   Session.set('isOpen', false);
   Session.set({
     start: moment().format('YYYY-MM-DDTHH:mm:ss'),

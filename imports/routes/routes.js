@@ -1,4 +1,5 @@
 import {Meteor} from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import React from 'react';
 import history from './history';
 
@@ -17,6 +18,14 @@ import Wartezimmer from '../ui/Wartezimmer';
 const unauthPages = ['/signup', '/'];
 const authPages = ['/dashboard'];
 
+Tracker.autorun(() => {
+    let role_admin = Roles.userIsInRole(Meteor.userId(), 'admin');
+    let role_patient = Roles.userIsInRole(Meteor.userId(), 'patient');
+
+    Session.set('admin', role_admin);
+    Session.set('patient', role_patient);
+
+});
 export const onAuthChange = (isAuth) => {
     const pathname = history.location.pathname;
     const isUnAuthPage = unauthPages.includes(pathname);
@@ -62,17 +71,17 @@ export default class Routes extends React.Component {
                 />
                 <Route exact path="/dashboard" render={ () => 
                     isLoggedIn() ? (
-                        <Container />) 
+                        <Container/>) 
                         : (
                             <Redirect to="/" />
                         )
                      }/> 
                 <Route exact path="/termine" render= {
-                    () => <Kalender/>
+                    () => isLoggedIn() ? ( <Kalender/> ) : ( <Redirect to="/" /> )
                 }
                 />      
                 <Route exact path="/wartezimmer" render= {
-                    () => <Wartezimmer/>
+                    () => isLoggedIn() ? ( <Wartezimmer/> ) : ( <Redirect to="/" /> )
                 }
                 />      
                 <Route exact path="*" render= {
