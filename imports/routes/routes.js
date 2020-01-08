@@ -10,22 +10,16 @@ import Container from '../ui/Container';
 import Signup from '../ui/Signup';
 import Login from '../ui/Login';
 import NotFound from '../ui/NotFound';
+import NotVerified from '../ui/NotVerified';
 import AdminDashboard from '../ui/AdminDashboard';
 import PatientenDashboard from '../ui/PatientenDashboard';
 import Kalender from '../ui/Kalender';
 import Wartezimmer from '../ui/Wartezimmer';
 
 const unauthPages = ['/signup', '/'];
-const authPages = ['/dashboard'];
+const authPages = ['/dashboard', '/termine', '/wartezimmer'];
+const verfiedPages = ['/termine', '/wartezimmer'];
 
-Tracker.autorun(() => {
-    let role_admin = Roles.userIsInRole(Meteor.userId(), 'admin');
-    let role_patient = Roles.userIsInRole(Meteor.userId(), 'patient');
-
-    Session.set('admin', role_admin);
-    Session.set('patient', role_patient);
-
-});
 export const onAuthChange = (isAuth) => {
     const pathname = history.location.pathname;
     const isUnAuthPage = unauthPages.includes(pathname);
@@ -48,6 +42,18 @@ export const isLoggedIn = () => {
 }
 
 export default class Routes extends React.Component {
+    constructor(props){
+        super(props);
+        this.state ={
+            isVerified: false
+        }
+    }
+    componentDidMount() {
+        Tracker.autorun(() => {
+            let isVerified = Session.get('verified');
+            this.setState({ isVerified })
+        })
+    }
     render () {
         return (
             <Switch>
@@ -77,13 +83,16 @@ export default class Routes extends React.Component {
                         )
                      }/> 
                 <Route exact path="/termine" render= {
-                    () => isLoggedIn() ? ( <Kalender/> ) : ( <Redirect to="/" /> )
+                    () => (isLoggedIn() && this.state.isVerified) ? ( <Kalender/> ) : ( <Redirect to="/not-verified" /> )
                 }
                 />      
                 <Route exact path="/wartezimmer" render= {
-                    () => isLoggedIn() ? ( <Wartezimmer/> ) : ( <Redirect to="/" /> )
+                    () => (isLoggedIn() && this.state.isVerified) ? ( <Wartezimmer/> ) : ( <Redirect to="/not-verified" /> )
                 }
-                />      
+                /> 
+                <Route exact path="/not-verified" render = {
+                    () => (isLoggedIn() && !this.state.isVerified) ? ( <NotVerified/> ) : ( <Redirect to="/" />)
+                } />     
                 <Route exact path="*" render= {
                     () => <NotFound/>
                 }

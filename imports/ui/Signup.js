@@ -67,7 +67,7 @@ export default class Signup extends React.Component{
             email,
             (error, result) => {
               if(error){
-                swal("Fehler", `${error.message}`, "error");
+                swal("Fehler", `${error.error}`, "error");
               } else{
                 swal("Nutzer erfolgreich angelegt", "Es wurde eine Email zur Verifizierung an die angegebene Adresse versandt.", "success");
               }

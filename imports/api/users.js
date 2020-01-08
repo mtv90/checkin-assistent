@@ -64,6 +64,14 @@ if(Meteor.isServer) {
       }
  
     });
+
+    Meteor.publish('isVerified', function() {
+      if(this.userId) {
+        return Meteor.users.find({_id: this.userId});
+      } else {
+        throw new Meteor.Error('Sie haben keine Rechte');
+      }
+    });
 }
 
 // Versende eine VerifizierungsMail an die angegebene Adresse
@@ -76,6 +84,11 @@ Meteor.methods({
         if(!this.userId){
             throw new Meteor.Error('Es ist kein Benutzer vorhanden');
         }
+        // let mail = email;
+        // if(!mail) {
+        //   const user = Meteor.users.findOne({_id: this.userId});
+        //   mail = user.emails[0].address
+        // }
         Accounts.emailTemplates.siteName = 'Dein Checkin-Assistent';
         Accounts.emailTemplates.from = 'Checkin-Assistent<app151404387@heroku.com>';
         Accounts.emailTemplates.verifyEmail = {
@@ -88,5 +101,27 @@ Meteor.methods({
          };
         Accounts.sendVerificationEmail(this.userId, email);
     },
+
+    'resentEmail'() {
+      const user = Meteor.users.findOne({_id: this.userId});
+      if (user.emails[0].address) {
+        process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+        let email = user.emails[0].address;
+        Accounts.emailTemplates.siteName = 'Dein Checkin-Assistent';
+        Accounts.emailTemplates.from = 'Checkin-Assistent<app151404387@heroku.com>';
+        Accounts.emailTemplates.verifyEmail = {
+            subject() {
+               return "Aktivieren Sie jetzt Ihren Account!";
+            },
+            text(user, url) {
+               return `Hey! Schön, dass Sie unseren Service nutzen möchten. Damit dies vollumfänglich möglich ist, bestätigen Sie bitte Ihre Email unter folgendem Link: ${url}`;
+            }
+         };
+        Accounts.sendVerificationEmail(user._id, email);
+      }
+      else {
+        throw new Meteor.Error('Es ist ein Fehler beim Senden aufgetreten!');
+      }
+    }
 
 });
