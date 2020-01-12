@@ -3,7 +3,11 @@ import {Link} from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import swal from 'sweetalert';
 
+
 export default class NotVerified extends React.Component {
+    constructor(props){
+        super(props);
+    }
     resentMail() {
         Meteor.call('resentEmail','', 
             (err, res) => {

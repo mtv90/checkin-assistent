@@ -19,6 +19,15 @@ if(Meteor.isServer){
             return Termine.find({$and: [ { user_id: this.userId }, { checkedIn: false }, { start: {$gte: moment().format('YYYY-MM-DD') } } ]});
         }
     );
+    Meteor.publish(
+        'patiententermine', function() {
+            let data = Termine.find({}, {patient: {
+                _id: this.userId
+            }})
+            return Termine.find({'patient._id': this.userId}, {sort: {start: 1}});
+            // Termine.find({ $query: {"patient._id": this.userId}, $orderby: { start : 1 } });
+        }
+    );
 }
 
 Meteor.methods({
@@ -27,6 +36,7 @@ Meteor.methods({
         patient_id,
         start,
         end,
+        subject,
         notes
         ){
         if(!this.userId){
@@ -43,13 +53,19 @@ Meteor.methods({
                 max: 400,
                 optional:false
             },
+            subject:{
+                type: String,
+                label: 'Betreff',
+                max: 200,
+                optional:false
+            },
             notes: {
                 type: String,
                 label: 'Bemerkungen',
                 max: 1000,
                 optional:true
             }
-        }).validate({patient_id, notes});
+        }).validate({patient_id, subject, notes});
 
         let res = Meteor.users.findOne({_id: patient_id});
         let patient = {
@@ -62,6 +78,7 @@ Meteor.methods({
         return Termine.insert({
             title,
             patient,
+            subject,
             start,
             end,
             notes,

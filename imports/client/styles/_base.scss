@@ -36,6 +36,9 @@ select[name=patienten], input[type=date], input[type=datetime-local] {
     margin-bottom: $space;
     padding: $input-spacing;
 }
+button[type=submit] {
+    margin-bottom: $space;
+}
 label {
     font-size: $base-font-size / 1.2;
     text-align: left;

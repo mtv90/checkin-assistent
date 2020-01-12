@@ -15,6 +15,7 @@ export default class AddTermin extends React.Component {
             patients:[],
             patient_id: '',
             notes:'',
+            subject:'',
             isOpen: false,
             date: moment().format('YYYY-MM-DD'),
             start: null,
@@ -25,12 +26,13 @@ export default class AddTermin extends React.Component {
     }
     onSubmit(e) {
         e.preventDefault();
-        const {patient_id, start, end, notes} = this.state;
+        const {patient_id, start, end, notes, subject} = this.state;
         
         Meteor.call('termine.insert', 
             patient_id,
             start,
             end,
+            subject,
             notes,
             (error, result) => {
                 if(error) {
@@ -55,6 +57,7 @@ export default class AddTermin extends React.Component {
         this.setState({
             isOpen: false, 
             titel: '',
+            subject: '',
             timeError: '',
             patient_id:''
         })
@@ -128,6 +131,12 @@ export default class AddTermin extends React.Component {
             this.setState({patient_id})
         }
     }
+    onChangeSubject(e){
+        const subject = e.target.value;
+        if(subject) {
+            this.setState({subject});
+        }
+    }
     openTerminModal(){
         this.setState({isOpen: true});
     }
@@ -150,6 +159,7 @@ export default class AddTermin extends React.Component {
                             <option>Patienten auswählen...</option>
                             {this.renderOptions()}
                         </select>
+                        <input name="subject" type="text" placeholder="Betreff" value={this.state.subject} onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
                         {/* <label htmlFor="date">Datum:</label>
                         <input name="date" type="date" placeholder="Datum auswählen" value={this.state.date} onChange={this.onChangeDate.bind(this)}/> */}
                         <label htmlFor="starttime">von:</label>
@@ -158,7 +168,7 @@ export default class AddTermin extends React.Component {
                         {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
                         <input name="endtime" type="datetime-local" placeholder="Ende wählen" value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
                         <textarea ref="notes" placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
-                        <button className="button">Termin anlegen</button>
+                        <button type="submit" className="button">Termin anlegen</button>
                         <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                     </form>
                 </Modal>

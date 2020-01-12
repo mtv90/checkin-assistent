@@ -22,7 +22,7 @@ import '@fullcalendar/bootstrap/main.css';
 import PrivateHeader from './PrivateHeader';
 import AddTermin from './AddTermin';
 import TerminListe from './TerminListe';
-
+import PropTypes from 'prop-types';
 import swal from 'sweetalert';
 
 export default class Kalender extends React.Component {
@@ -41,7 +41,7 @@ export default class Kalender extends React.Component {
 componentDidMount() {
   this._isMounted = true;
   this.setState({isLoading:true})
-
+  
   // Abfrage nach Termindaten vom FHIR-Server 
   
     // Meteor.call('getAppointments', 
@@ -91,7 +91,7 @@ render(){
   }
   return (
     <div className="">
-      <PrivateHeader title="Admin" button="Dashboard"/>
+      <PrivateHeader title={`${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}`}/>
       <AddTermin/>
       <div className="kalender-container" id="wide-calendar">
         <FullCalendar
@@ -158,4 +158,8 @@ render(){
     </div>
   )
 }
+}
+
+Kalender.propTypes = {
+  user: PropTypes.object.isRequired
 }

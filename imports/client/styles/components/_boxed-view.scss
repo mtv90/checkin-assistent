@@ -48,13 +48,24 @@
         display: flex;
         
         -webkit-flex-flow: row;
-    
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-evenly;
     }
 
     .boxed-view__dashboardbox {
         background-color: $dashboard-box-bg;
+        padding: $space + 1rem;
+        text-align: center;
+        margin: 15% 0 15% 0;
+        width: $space * 14;
+        height: $space * 14;
+        color: $dashboard-box-text-color;
+        border: $dashboard-box-border;
+       
+    }
+
+    .boxed-view__dashboardbox--patient {
+        background-color: $mint-green;
         padding: $space + 1rem;
         text-align: center;
         margin: 15% 0 15% 0;
@@ -88,6 +99,16 @@
         color: $dashboard-box-text-color;
         border: $dashboard-box-border;
     }
+
+    .boxed-view__dashboardbox--patient {
+        background-color: $mint-green;
+        padding: $space + 1rem;
+        text-align: center;
+        margin: 5% 0 0 0;
+        height: $space * 7;
+        color: $dashboard-box-text-color;
+        border: $dashboard-box-border;
+    }
 }
 .add-termin--container {
     display: inline-block;
@@ -96,4 +117,20 @@
 .info-text {
     margin-top: $space*2;
     font-style: italic;
+}
+
+.boxed-view__dashboardbox:nth-child(odd) {
+    background-color: #2A4B7C;
+}
+
+.boxed-view__dashboardbox:hover {
+    box-shadow: 10px 10px grey;
+}
+
+.boxed-view__dashboardbox--patient:nth-child(odd) {
+    background-color: $dark-green;
+}
+
+.boxed-view__dashboardbox--patient:hover {
+    box-shadow: 10px 10px grey;
 }

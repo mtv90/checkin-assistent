@@ -3,17 +3,12 @@
     max-width: $site-max-width;
     padding: $space;
 }
+
+// Styling für Admindashboard & Patientendashboard
+
 .dashboard-content {
     margin: 0 auto;
     max-width: $site-max-width;
     padding: $space;
     
-}
-
-.boxed-view__dashboardbox:nth-child(odd) {
-    background-color: #2A4B7C;
-}
-
-.boxed-view__dashboardbox:hover {
-    box-shadow: 10px 10px grey;
 }

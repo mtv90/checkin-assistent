@@ -8,43 +8,52 @@ import ReactDOM from 'react-dom';
 
 import history from './../imports/routes/history'
 import {Router} from 'react-router-dom';
-import { onAuthChange, verifiedUser } from '../imports/routes/routes';
+import { onAuthChange, Routes, checkUserService } from '../imports/routes/routes';
 import '../imports/startup/simple-schema-configuration';
 
 import App from '../imports/ui/App';
-
+import Loading from '../imports/ui/Loading';
 import moment from 'moment';
 import {Session} from 'meteor/session';
-import swal from 'sweetalert';
-
 
 Tracker.autorun(() => {
+
   const isAuth = !!Meteor.userId();
   onAuthChange(isAuth);
-});
-
-Tracker.autorun(() => {
-  Meteor.subscribe('isVerified');
-  const user = Meteor.users.findOne({_id: Meteor.userId()});
-  if(user) {
-    Session.set('verified', user.emails[0].verified)
-  }
-
-});
-
-Tracker.autorun(() => {
-  const admin = Roles.userIsInRole(Meteor.userId(), 'admin');
-  const patient = Roles.userIsInRole(Meteor.userId(), 'patient');
   
-  Session.set('admin', admin);
-  Session.set('patient', patient);
-  Session.set('isOpen', false);
-  Session.set({
-    start: moment().format('YYYY-MM-DDTHH:mm:ss'),
-    end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
-  });
-
 });
+
+let handle = Meteor.subscribe('user');
+Tracker.autorun(() => {
+  if(handle.ready()) {
+    let user = Meteor.user();
+    checkUserService(user);
+  }
+  
+})
+
+Tracker.autorun((run) => {
+  // const admin = Roles.userIsInRole(Meteor.userId(), 'admin');
+  // const patient = Roles.userIsInRole(Meteor.userId(), 'patient');
+  
+  if(!run.firstRun){
+
+    Session.set({
+      // admin: admin,
+      // patient: patient,
+      isOpen: false,
+      start: moment().format('YYYY-MM-DDTHH:mm:ss'),
+      end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
+    });
+  }
+});
+
+Tracker.autorun(() => {
+  const selectedTerminId = Session.get('selectedTerminId');
+  if(selectedTerminId) {
+    history.replace(`/meine-termine/${selectedTerminId}`);
+  }
+})
 
 Accounts.onEmailVerificationLink((token, done) => {
   Accounts.verifyEmail(token, (error) => { 
@@ -53,10 +62,21 @@ Accounts.onEmailVerificationLink((token, done) => {
 });
 
 Meteor.startup(() => {
+  Session.set({
+    selectedTerminId: undefined,
+    start: moment().format('YYYY-MM-DDTHH:mm:ss'),
+    end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
+  })
+  
+  ReactDOM.render(<Loading/>, document.getElementById('app'));
+  
+  window.setTimeout(() => {
+    ReactDOM.render(
+      // <Router history={history}>
+      //   <App/>
+      // </Router>
+      Routes
+      , document.getElementById('app'));
+  }, 1000);
 
-  ReactDOM.render(
-    <Router history={history}>
-      <App/>
-    </Router>
-    , document.getElementById('app'));
-})
+});

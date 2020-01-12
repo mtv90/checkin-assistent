@@ -65,13 +65,26 @@ if(Meteor.isServer) {
  
     });
 
-    Meteor.publish('isVerified', function() {
+    Meteor.publish('user', function() {
       if(this.userId) {
         return Meteor.users.find({_id: this.userId});
       } else {
         throw new Meteor.Error('Sie haben keine Rechte');
       }
     });
+
+    Meteor.publish('patient', function() {
+      if(this.userId) {
+        if(Roles.userIsInRole(this.userId, 'patient')) {
+          return Meteor.users.find({$and: [ {_id: this.userId}, {role: 'patient'} ]});
+        } else {
+          throw new Meteor.Error('Benutzer hat nicht die richtige Benutzerrolle!');
+        }
+        
+      } else {
+        throw new Meteor.Error('Sie haben keine Rechte');
+      }
+    })
 }
 
 // Versende eine VerifizierungsMail an die angegebene Adresse

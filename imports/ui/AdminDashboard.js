@@ -6,10 +6,11 @@ import {Link} from 'react-router-dom';
 import PrivateHeader from './PrivateHeader';
 
 
-export default () => {
+export default (props) => {
+
     return (
         <div className="">
-            <PrivateHeader title="Admin" />
+            <PrivateHeader title={`${props.user.profile.nachname}, ${props.user.profile.vorname}`} />
             <div className="dashboard-content">
                 <div className="boxed-view__dashboard">
                     <Link className="boxed-view__dashboardbox" to="/termine"><h3>Mein Kalender</h3></Link>

@@ -9,4 +9,5 @@ import '../imports/startup/simple-schema-configuration';
 Meteor.startup(() => {
     Roles.createRole('admin', {unlessExists: true});
     Roles.createRole('patient', {unlessExists: true});
+
 });
