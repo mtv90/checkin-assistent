@@ -55,6 +55,13 @@ Tracker.autorun(() => {
   }
 })
 
+Tracker.autorun(() => {
+  const selectedPraxisId = Session.get('selectedPraxisId');
+  if(selectedPraxisId) {
+    history.replace(`/praxisverwaltung/${selectedPraxisId}`);
+  }
+})
+
 Accounts.onEmailVerificationLink((token, done) => {
   Accounts.verifyEmail(token, (error) => { 
     console.log(error);
@@ -64,6 +71,7 @@ Accounts.onEmailVerificationLink((token, done) => {
 Meteor.startup(() => {
   Session.set({
     selectedTerminId: undefined,
+    selectedPraxisId: undefined,
     start: moment().format('YYYY-MM-DDTHH:mm:ss'),
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
   })

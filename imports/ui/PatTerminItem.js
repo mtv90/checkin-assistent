@@ -14,15 +14,16 @@ export class PatTerminItem extends React.Component {
         
     }
     componentDidMount(){
+        console.log(this.props)
     }
     render() {
         return (
             <div className="item" id={this.props.termin._id} onClick={ () => {
                 this.props.Session.set('selectedTerminId', this.props.termin._id)
             }}>
-                <h5>{this.props.termin.title}</h5>
+                <h5>{this.props.termin.subject}</h5>
                 { this.props.termin.selected ? 'selected' : undefined}
-                <p className="item__message">{moment(this.props.termin.start).format("HH:mm | DD.MM.YYYY")}</p>
+                <p className="item__message">{moment(this.props.termin.start).format("HH:mm")} Uhr | {moment(this.props.termin.start).format("DD.MM.YYYY")}</p>
             </div>
         )
     }

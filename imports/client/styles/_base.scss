@@ -29,7 +29,7 @@ a {
     color: black;
 }
 
-input[type=text], input[type=email], input[type=password], 
+input[type=text], input[type=email], input[type=password], input[type=number], 
 select[name=patienten], input[type=date], input[type=datetime-local] {
     border: 1px solid $input-border;
     font-size: $base-font-size;
@@ -39,6 +39,10 @@ select[name=patienten], input[type=date], input[type=datetime-local] {
 button[type=submit] {
     margin-bottom: $space;
 }
+.select-box {
+    margin-bottom: $space;
+}
+
 label {
     font-size: $base-font-size / 1.2;
     text-align: left;

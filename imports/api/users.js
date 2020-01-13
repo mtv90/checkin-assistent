@@ -65,6 +65,17 @@ if(Meteor.isServer) {
  
     });
 
+    Meteor.publish('mitarbeiter', function (){ 
+      
+      const role = Roles.userIsInRole(this.userId, 'admin')
+      if(role){
+        return Meteor.users.find({role: "admin"});
+      } else {
+        throw new Meteor.Error('Sie haben keine Rechte');
+      }
+ 
+    });
+
     Meteor.publish('user', function() {
       if(this.userId) {
         return Meteor.users.find({_id: this.userId});

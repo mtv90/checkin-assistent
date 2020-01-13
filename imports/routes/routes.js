@@ -15,7 +15,7 @@ import Kalender from '../ui/Kalender';
 import Wartezimmer from '../ui/Wartezimmer';
 import AdminDashboard from '../ui/AdminDashboard';
 import PatientenDashboard from '../ui/PatientenDashboard';
-import Loading from '../ui/Loading';
+import Praxisverwaltung from '../ui/Praxisverwaltung';
 import {Session} from 'meteor/session';
 
 const unauthPages = ['/signup', '/'];
@@ -194,7 +194,6 @@ const onEnterDashboard = () => {
 }
 const onEnterTermine = (props) => {
     if(isLoggedIn() && this.isVerified && (this.role === 'patient')) {
-        console.log(props.match.params.id)
         Session.set('selectedTerminId', props.match.params.id)
         return true;
     } else {
@@ -205,9 +204,12 @@ const onEnterTermine = (props) => {
         <Router history={history}>
         <Switch>
             <Route exact path="/" render={() => { onEnterPublicPage(); return <Login/> }}/>
+            <Route exact path="/signup" render={() => { onEnterPublicPage(); return <Signup/> }}/>
             <Route exact path="/dashboard" render={() => onEnterDashboard() ? onEnterDashboard() : <Redirect to="/" />} />
             <Route exact path="/termine" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Kalender user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
             <Route exact path="/wartezimmer" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Wartezimmer user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
+            
+            <Route exact path="/praxisverwaltung" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
             <Route exact path="/meine-termine" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? (<Patiententermine user={this.user}/>) : (<Redirect to="/not-verified" />) } /> 
             <Route exact path="/meine-termine/:id" render= {(props) => onEnterTermine(props) ? <Patiententermine/> : <Redirect to="/not-verified" />}  /> 
             <Route exact path="/patient/:user_id" render= {() => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? ( <Account user={this.user}/> ) : ( <Redirect to="/not-verified" /> )}/>

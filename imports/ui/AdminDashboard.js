@@ -16,6 +16,7 @@ export default (props) => {
                     <Link className="boxed-view__dashboardbox" to="/termine"><h3>Mein Kalender</h3></Link>
                     <Link className="boxed-view__dashboardbox" to="/wartezimmer"><h3>Mein Wartezimmer</h3></Link>
                     <Link className="boxed-view__dashboardbox" to="/patienten"><h3>Meine Patienten</h3></Link>
+                    <Link className="boxed-view__dashboardbox" to="/praxisverwaltung"><h3>Praxisverwaltung</h3></Link>
                 </div>
             </div>
         </div>

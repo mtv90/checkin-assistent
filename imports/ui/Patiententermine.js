@@ -7,6 +7,7 @@ import PatTerminItem from './PatTerminItem';
 import {Session} from 'meteor/session';
 import Patientheader from './Patientheader';
 import FlipMove from 'react-flip-move';
+import Editor from './Editor';
 
 export const Patiententermine = (props) => {
     
@@ -19,6 +20,7 @@ export const Patiententermine = (props) => {
                     return <PatTerminItem key={termin._id} termin={termin}/> 
                 })}
             </FlipMove>
+            <Editor/>
         </div>
     );
 };
