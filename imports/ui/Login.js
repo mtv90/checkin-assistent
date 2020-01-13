@@ -12,8 +12,6 @@ export default class Login extends React.Component{
     }
 
     onLogin(e){
-        e.preventDefault();
-
         let email = this.refs.email.value.trim();
         let password = this.refs.password.value.trim();
     
