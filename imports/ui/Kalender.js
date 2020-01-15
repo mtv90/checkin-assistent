@@ -26,12 +26,13 @@ import PropTypes from 'prop-types';
 import swal from 'sweetalert';
 
 export default class Kalender extends React.Component {
-  _isMounted = false;
+  // _isMounted = false;
   calendarComponentRef = React.createRef();
-  constructor(...props){
-    super(...props);
+  constructor(props){
+    super(props);
     this.state = {
         isLoading: false,
+        praxisId:'',
         error: '',
         appointments: [],
         calendarWeekends: false,
@@ -39,7 +40,7 @@ export default class Kalender extends React.Component {
     }   
 }
 componentDidMount() {
-  this._isMounted = true;
+  // this._isMounted = true;
   this.setState({isLoading:true})
   
   // Abfrage nach Termindaten vom FHIR-Server 
@@ -56,18 +57,19 @@ componentDidMount() {
     // });
 
   this.terminTracker = Tracker.autorun(() => {
+    const praxisId = Session.get('praxisId');
     Meteor.subscribe('termine');
     const termine = Termine.find().fetch();
 
     if(termine) {
-      this.setState({termine, isLoading: false})
+      this.setState({termine, isLoading: false, praxisId})
     }
   });
 }
 
 componentWillUnmount() {
-  this._isMounted = false;
-  // this.terminTracker.stop();
+  // this._isMounted = false;
+  this.terminTracker.stop();
 }
 
 openModal(e){
@@ -91,7 +93,7 @@ render(){
   }
   return (
     <div className="">
-      <PrivateHeader title={`${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}`}/>
+      <PrivateHeader title={`${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}`} {...this.state.praxisId}/>
       <AddTermin/>
       <div className="kalender-container" id="wide-calendar">
         <FullCalendar

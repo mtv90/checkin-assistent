@@ -64,7 +64,7 @@ export default class AddTermin extends React.Component {
     }
     componentDidMount() {
 
-        this.patientTracker = Tracker.autorun(() => {
+        this.patientTracker = Tracker.autorun((run) => {
             Meteor.subscribe('userList');
             let patientsArray = [];
             const patients = Meteor.users.find({role: "patient"}).fetch();
@@ -81,8 +81,9 @@ export default class AddTermin extends React.Component {
             });
         });
     }
-    componentDidCatch(){
-        this.patientTracker = Tracker.stop();
+    componentWillUnmount(){
+        Meteor.subscribe('userList').stop();
+        this.patientTracker.stop()
     }
     getDate(date){
 

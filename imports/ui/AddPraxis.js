@@ -18,6 +18,8 @@ export class AddPraxis extends React.Component {
             nummer: null,
             plz: null,
             stadt: '',
+            telefon: null,
+            email: '',
             mitarbeiter: null,
             isOpen: false,
             error: '',
@@ -40,6 +42,8 @@ export class AddPraxis extends React.Component {
             nummer: null,
             plz: null,
             stadt: '',
+            telefon: null,
+            email: '',
             error: '',
             mitarbeiterList:[]
         })
@@ -52,6 +56,8 @@ export class AddPraxis extends React.Component {
         const plz = this.state.plz;
         const stadt = this.state.stadt;
         const mitarbeiter = this.state.mitarbeiterList;
+        const telefon = this.state.telefon;
+        const email = this.state.email;
         
         var pattern = new RegExp("[0-9]{5}");
         var result = pattern.test(plz);
@@ -73,6 +79,8 @@ export class AddPraxis extends React.Component {
             nummer,
             plz,
             stadt,
+            telefon,
+            email,
             mitarbeiter,
             (error, result) => {
                 if(error) {
@@ -116,18 +124,18 @@ export class AddPraxis extends React.Component {
             this.setState({stadt});
         }
     }
-    renderOptions() {
-        if(this.props.mitarbeiter.length === 0) {
-            return (
-                <option className="item__status-message">Keine Patienten vorhanden!</option>
-            )
-        }
-        return this.props.mitarbeiter.map(( mitarbeiter) => {
-            return (
-                <option key={mitarbeiter._id} ref="pat_id" value={mitarbeiter._id}>{mitarbeiter.label}</option>
-            )
-        });
-    }
+    // renderOptions() {
+    //     if(this.props.mitarbeiter.length === 0) {
+    //         return (
+    //             <option className="item__status-message">Keine Patienten vorhanden!</option>
+    //         )
+    //     }
+    //     return this.props.mitarbeiter.map(( mitarbeiter) => {
+    //         return (
+    //             <option key={mitarbeiter._id} ref="pat_id" value={mitarbeiter._id}>{mitarbeiter.label}</option>
+    //         )
+    //     });
+    // }
 
     handleChange = mitarbeiterList => {
         this.setState(
@@ -135,10 +143,22 @@ export class AddPraxis extends React.Component {
 
         );
       };
+    onChangeTelefon(e){
+        const telefon = e.target.value;
+        if(telefon){
+            this.setState({telefon});
+        }
+    }
+    onChangeEmail(e){
+        const email = e.target.value;
+        if(email){
+            this.setState({email});
+        }
+    }
     render() {
         return (
             <div className="add-termin--container">
-                <button className="button button--add" onClick={this.openPraxisModal.bind(this)}>+ Termin anlegen</button>
+                <button className="button button--add" onClick={this.openPraxisModal.bind(this)}>+ Praxis anlegen</button>
                 <Modal 
                     isOpen={this.state.isOpen} 
                     contentLabel="Termin anlegen" 
@@ -151,11 +171,13 @@ export class AddPraxis extends React.Component {
                     <h1>Praxis hinzufügen</h1>
                     <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
                         {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
-                        <input name="title" ref="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} />
-                        <input name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} />
-                        <input name="nummer" type="number" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} />
-                        <input name="plz"  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} />
+                        <input name="title" ref="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="off"/>
+                        <input name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="off"/>
+                        <input name="nummer" type="number" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="off"/>
+                        <input name="plz"  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} autoComplete="off"/>
                         <input name="stadt" type="text" placeholder="Stadt" onChange={this.onChangeStadt.bind(this)} autoComplete="off"/>
+                        <input name="telefon" type="tel" placeholder="Telefon" onChange={this.onChangeTelefon.bind(this)} autoComplete="off"/>
+                        <input name="email" type="email" placeholder="E-mail" onChange={this.onChangeEmail.bind(this)} autoComplete="off"/>
                         <Select
                             value={this.state.mitarbeiterList}
                             onChange={this.handleChange}
@@ -165,7 +187,15 @@ export class AddPraxis extends React.Component {
                             className="select-box"
                             classNamePrefix="Mitarbeiter auswählen..."
                         />
-
+                        {/* <Select
+                            value={this.state.patientenList}
+                            onChange={this.handleChangePatient}
+                            isMulti
+                            name="Mitarbeiter"
+                            options={this.props.patienten}
+                            className="select-box"
+                            classNamePrefix="Mitarbeiter auswählen..."
+                        /> */}
                         <button type="submit" className="button">Termin anlegen</button>
                         <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                     </form>

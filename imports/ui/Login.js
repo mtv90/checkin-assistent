@@ -12,17 +12,20 @@ export default class Login extends React.Component{
     }
 
     onLogin(e){
-        let email = this.refs.email.value.trim();
-        let password = this.refs.password.value.trim();
+      e.preventDefault();
+      
+      let email = this.refs.email.value.trim();
+      let password = this.refs.password.value.trim();
     
-        Meteor.loginWithPassword({email}, password, (err) => {
-          if(err){
-            this.setState({error: 'Login nicht möglich. Bitte Email und Passwort überprüfen.'});
-          } else {
-            this.setState({error: ''});
-            history.push('/dashboard')
-          }
-        });
+      Meteor.loginWithPassword({email}, password, (err) => {
+        if(err){
+          this.setState({error: 'Login nicht möglich. Bitte Email und Passwort überprüfen.'});
+        } else {
+          this.setState({error: ''});
+          window.location.replace('/dashboard')
+          // history.push('/dashboard')
+        }
+      });
         
     }
     render() {

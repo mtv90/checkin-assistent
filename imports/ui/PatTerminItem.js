@@ -14,7 +14,7 @@ export class PatTerminItem extends React.Component {
         
     }
     componentDidMount(){
-        console.log(this.props)
+        
     }
     render() {
         return (

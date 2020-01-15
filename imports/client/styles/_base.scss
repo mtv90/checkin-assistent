@@ -30,7 +30,7 @@ a {
 }
 
 input[type=text], input[type=email], input[type=password], input[type=number], 
-select[name=patienten], input[type=date], input[type=datetime-local] {
+select[name=patienten], select[name=praxis], input[type=date], input[type=datetime-local] {
     border: 1px solid $input-border;
     font-size: $base-font-size;
     margin-bottom: $space;

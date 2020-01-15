@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 
 import history from './../imports/routes/history'
 import {Router} from 'react-router-dom';
-import { onAuthChange, Routes, checkUserService } from '../imports/routes/routes';
+import { onAuthChange, Routes, checkUserService, goBack } from '../imports/routes/routes';
 import '../imports/startup/simple-schema-configuration';
 
 import App from '../imports/ui/App';
@@ -20,12 +20,13 @@ Tracker.autorun(() => {
 
   const isAuth = !!Meteor.userId();
   onAuthChange(isAuth);
-  
+
 });
 
 let handle = Meteor.subscribe('user');
 Tracker.autorun(() => {
   if(handle.ready()) {
+    
     let user = Meteor.user();
     checkUserService(user);
   }
@@ -33,14 +34,11 @@ Tracker.autorun(() => {
 })
 
 Tracker.autorun((run) => {
-  // const admin = Roles.userIsInRole(Meteor.userId(), 'admin');
-  // const patient = Roles.userIsInRole(Meteor.userId(), 'patient');
-  
+ 
   if(!run.firstRun){
 
     Session.set({
-      // admin: admin,
-      // patient: patient,
+    
       isOpen: false,
       start: moment().format('YYYY-MM-DDTHH:mm:ss'),
       end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
@@ -62,6 +60,23 @@ Tracker.autorun(() => {
   }
 })
 
+Tracker.autorun((run) => {
+  
+    const praxisId = Session.get('praxisId');
+
+    if(praxisId) {
+      history.replace(`/dashboard/${praxisId}`);
+    } 
+  
+});
+
+// Tracker.autorun(() => {
+//   const praxisId = Session.get('praxisId');
+//   if(praxisId) {
+//     history.replace(`/termine/${praxisId}`);
+//   } 
+// });
+
 Accounts.onEmailVerificationLink((token, done) => {
   Accounts.verifyEmail(token, (error) => { 
     console.log(error);
@@ -72,9 +87,11 @@ Meteor.startup(() => {
   Session.set({
     selectedTerminId: undefined,
     selectedPraxisId: undefined,
+    // praxisId: 'hello',
     start: moment().format('YYYY-MM-DDTHH:mm:ss'),
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
   })
+  Session.setDefault( 'praxisId', undefined)
   
   ReactDOM.render(<Loading/>, document.getElementById('app'));
   

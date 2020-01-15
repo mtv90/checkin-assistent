@@ -15,7 +15,6 @@ export const Praxisliste = (props) => {
     
     return (
         <div>
-            Praxisliste:
             <AddPraxis/>
             <FlipMove maintainContainerHeight={true}>
                 {props.praxen.map( (praxis) => {

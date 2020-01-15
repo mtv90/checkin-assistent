@@ -1,3 +1,7 @@
 .error--text {
     color: red;
 }
+a.disabled--link {
+    pointer-events: none;
+    display: none;
+}

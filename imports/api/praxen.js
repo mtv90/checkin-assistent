@@ -11,6 +11,17 @@ if(Meteor.isServer){
             
         }
     );
+    Meteor.publish(
+        'show_all', function() {
+            return Praxen.find();
+        }
+    );
+    Meteor.publish(
+        'meine_praxen', function() {
+            
+            return Praxen.find({mitarbeiter: {$elemMatch: {_id: this.userId}}});
+        }
+    );
 }
 Meteor.methods({
     'praxis.insert'( 
@@ -19,56 +30,60 @@ Meteor.methods({
         nummer,
         plz,
         stadt,
+        telefon,
+        email,
         mitarbeiter,
         ){
         if(!this.userId){
             throw new Meteor.Error('Nicht authorisiert!');
         }
-
-            console.log(        
-                title,
-                strasse,
-                nummer,
-                plz,
-                stadt,
-                mitarbeiter)
-            
-            new SimpleSchema({
-
-                title:{
-                    type: String,
-                    label: 'Titel',
-                    max: 200,
-                    optional:false
-                },
-                strasse: {
-                    type: String,
-                    label: 'Straße',
-                    max: 200,
-                    optional:false
-                },
-                nummer: {
-                    type: SimpleSchema.Integer,
-                    label: 'Hausnummer',
-                    min: 1,
-                    optional:false
-                },
-                plz: {
-                    type: SimpleSchema.RegEx.ZipCode,
-                    label: 'Postleitzahl',
-                    optional:false
-                },
-                stadt: {
-                    type: String,
-                    label: 'Stadt',
-                    max: 200,
-                    optional:false
-                }
+        new SimpleSchema({
+            title:{
+                type: String,
+                label: 'Titel',
+                max: 200,
+                optional:false
+            },
+            strasse: {
+                type: String,
+                label: 'Straße',
+                max: 200,
+                optional:false
+            },
+            nummer: {
+                type: SimpleSchema.Integer,
+                label: 'Hausnummer',
+                min: 1,
+                optional:false
+            },
+            plz: {
+                type: SimpleSchema.RegEx.ZipCode,
+                label: 'Postleitzahl',
+                optional:false
+            },
+            telefon: {
+                type: String,
+                label: 'Telefon',
+                optional: false
+            },
+            email: {
+                type: SimpleSchema.RegEx.Email,
+                label: 'E-mail',
+                optional: false
+            },
+            stadt: {
+                type: String,
+                label: 'Stadt',
+                max: 200,
+                optional:false
+            }
             }).validate({
                 title,
                 strasse,
                 nummer,
                 plz,
+                telefon,
+                email,
                 stadt
             });
             
@@ -77,6 +92,8 @@ Meteor.methods({
                 strasse,
                 nummer,
                 plz,
+                telefon,
+                email,
                 stadt,
                 mitarbeiter,
                 user_id: this.userId,
