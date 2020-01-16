@@ -32,7 +32,7 @@ Meteor.methods({
         stadt,
         telefon,
         email,
-        mitarbeiter,
+        mitarbeiter
         ){
         if(!this.userId){
             throw new Meteor.Error('Nicht authorisiert!');
@@ -51,7 +51,7 @@ Meteor.methods({
                 optional:false
             },
             nummer: {
-                type: SimpleSchema.Integer,
+                type: String,
                 label: 'Hausnummer',
                 min: 1,
                 optional:false
@@ -97,6 +97,7 @@ Meteor.methods({
                 stadt,
                 mitarbeiter,
                 user_id: this.userId,
+                updatedBy: this.userId,
                 createdAt: new Date(),
                 updatedAt: new Date()
             });
@@ -112,4 +113,180 @@ Meteor.methods({
         // let title = `${res.profile.nachname}, ${res.profile.vorname}` 
 
     },
+
+    'praxis.update'(_id, updates, patienten) {
+        if(!this.userId){
+            throw new Meteor.Error('Sie sind nicht authorisiert!');
+        }
+        new SimpleSchema({
+            _id: {
+                type: String,
+                min: 1
+            },
+            title:{
+                type: String,
+                label: 'Titel',
+                max: 200,
+                optional:false
+            },
+            strasse: {
+                type: String,
+                label: 'Straße',
+                max: 200,
+                optional:false
+            },
+            nummer: {
+                type: String,
+                label: 'Hausnummer',
+                min: 1,
+                optional:false
+            },
+            plz: {
+                type: SimpleSchema.RegEx.ZipCode,
+                label: 'Postleitzahl',
+                optional:false
+            },
+            telefon: {
+                type: String,
+                label: 'Telefon',
+                optional: false
+            },
+            email: {
+                type: SimpleSchema.RegEx.Email,
+                label: 'E-mail',
+                optional: false
+            },
+            stadt: {
+                type: String,
+                label: 'Stadt',
+                max: 200,
+                optional:false
+            },
+            user_id: {
+                type: String,
+                label: 'UserID',
+            },
+            createdAt: {
+                type: Date,
+                label: 'createdAt'
+            },
+            updatedAt: {
+                type: Date,
+                label: 'updatedAt',
+                optional: true
+            },
+            updatedBy:{
+                type: String,
+                label: 'Updated By',
+                optional: true,
+            },
+            mitarbeiter: {
+                type: Array,
+                required: false,
+                optional: true
+            },
+            'mitarbeiter.$':{
+                type: Object,
+                required: false,
+                optional: true
+            },
+            'mitarbeiter.$._id': {type: String, required: false},
+            'mitarbeiter.$.role': {type: String, optional: true},
+            'mitarbeiter.$.label': {type: String, optional: true},
+            'mitarbeiter.$.value': {type: String, optional: true},
+            'mitarbeiter.$.profile': {type:Object, optional: true},
+            'mitarbeiter.$.profile.vorname': {type: String, optional: true},
+            'mitarbeiter.$.profile.nachname': {type: String, optional: true},
+            'mitarbeiter.$.createdAt': {type: Date, optional: true},
+            'mitarbeiter.$.updatedAt': {type: Date, optional: true},
+            'mitarbeiter.$.emails': {type: Array, optional: true},
+            'mitarbeiter.$.emails.$': {type:Object, optional: true},
+            'mitarbeiter.$.emails.$.address': {type: String, optional: true},
+            'mitarbeiter.$.emails.$.verified': Boolean,
+            // 'mitarbeiter.$.services': {type:Object, optional: true},
+            // 'mitarbeiter.$.services.password': {type:Object, optional: true},
+            // 'mitarbeiter.$.services.password.bcrypt': String,
+            // 'mitarbeiter.$.services.resume': {type:Object, optional: true},
+            // 'mitarbeiter.$.services.resume.loginTokens': {type: Array, optional: true},
+            // 'mitarbeiter.$.services.resume.loginTokens.$': {type:Object, optional: true},
+            // 'mitarbeiter.$.services.resume.loginTokens.$.when': Date,
+            // 'mitarbeiter.$.services.resume.loginTokens.$.hashedToken': String,
+            // 'mitarbeiter.$.services.email': {type:Object, optional: true},
+            // // 'mitarbeiter.$.services.email.verificationTokens
+            // 'mitarbeiter.$.services.email.verificationTokens': {type: Array, optional: true},
+            // 'mitarbeiter.$.services.email.verificationTokens.$': {
+            // //     type: Object,
+            // //     optional: true
+            // // },
+            patienten: {
+                type: Array,
+                optional: true
+            },
+            'patienten.$':  {
+                type: Object,
+                optional: true
+            },
+            'patienten.$._id':  {
+                type: String,
+                optional: true
+            },
+            'patienten.$.role':  {
+                type: String,
+                optional: true
+            },
+            'patienten.$.label':  {
+                type: String,
+                optional: true
+            },
+            'patienten.$.value':  {
+                type: String,
+                optional: true
+            },
+            'patienten.$.emails': {
+                type: Array,
+                optional: true
+            },
+            'patienten.$.createdAt': {
+                type: Date,
+                optional: true
+            },
+            'patienten.$.emails.$': {
+                type: Object,
+                optional: true
+            },
+            'patienten.$.emails.$.address': {
+                type: String,
+                optional: true
+            },
+            'patienten.$.emails.$.verified': {
+                type: Boolean,
+                optional: true
+            },
+            'patienten.$.profile': {
+                type: Object,
+                optional: true
+            },
+            'patienten.$.profile.vorname': {
+                type: String,
+                optional: true
+            },
+            'patienten.$.profile.nachname': {
+                type: String,
+                optional: true
+            }
+        }).validate({
+            _id,
+            ...updates
+        });
+
+        Praxen.update({
+            _id
+        },{
+            $set: {
+                updatedAt: new Date(),
+                updatedBy: this.userId,
+                ...updates
+            }
+        });
+    }
 });

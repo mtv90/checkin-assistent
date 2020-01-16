@@ -58,7 +58,7 @@ if(Meteor.isServer) {
       
       const role = Roles.userIsInRole(this.userId, 'admin')
       if(role){
-        return Meteor.users.find({role: "patient"});
+        return Meteor.users.find({role: "patient"}, {fields:{services: 0}});
       } else {
         throw new Meteor.Error('Sie haben keine Rechte');
       }
@@ -69,7 +69,7 @@ if(Meteor.isServer) {
       
       const role = Roles.userIsInRole(this.userId, 'admin')
       if(role){
-        return Meteor.users.find({role: "admin"});
+        return Meteor.users.find({role: "admin"}, {fields:{services: 0}});
       } else {
         throw new Meteor.Error('Sie haben keine Rechte');
       }

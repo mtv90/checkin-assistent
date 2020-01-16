@@ -89,6 +89,10 @@ export class AddPraxis extends React.Component {
                     swal("Daten erfolgreich gespeichert", '', "success");
                     this.handleModalClose();
                 }
+                if(result) {
+                    console.log(result)
+                    Session.set('selectedPraxisId', result)
+                }
             }
         );
         }
@@ -107,7 +111,7 @@ export class AddPraxis extends React.Component {
         }
     }
     onChangeNummer(e) {
-        const nummer = parseInt(e.target.value);
+        const nummer = e.target.value;
         if(nummer) {
             this.setState({nummer});
         }
@@ -173,7 +177,7 @@ export class AddPraxis extends React.Component {
                         {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
                         <input name="title" ref="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="off"/>
                         <input name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="off"/>
-                        <input name="nummer" type="number" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="off"/>
+                        <input name="nummer" type="text" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="off"/>
                         <input name="plz"  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} autoComplete="off"/>
                         <input name="stadt" type="text" placeholder="Stadt" onChange={this.onChangeStadt.bind(this)} autoComplete="off"/>
                         <input name="telefon" type="tel" placeholder="Telefon" onChange={this.onChangeTelefon.bind(this)} autoComplete="off"/>

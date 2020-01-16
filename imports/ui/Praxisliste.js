@@ -30,6 +30,7 @@ export default withTracker( () => {
     // let handle = 
     Meteor.subscribe('praxen');
     // if(handle.ready()){
+        
         return {
             praxen: Praxen.find().fetch().map( (praxis) => {
                 return {

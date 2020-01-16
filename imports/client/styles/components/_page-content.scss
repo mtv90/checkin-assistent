@@ -3,7 +3,12 @@
     max-width: $site-max-width;
     padding: $space;
 }
-
+.page-content__sidebar{
+    width: $page-editor-sidebar-width;
+}
+.page-content__main{
+    width: $page-editor-main-width;
+}
 // Styling für Admindashboard & Patientendashboard
 
 .dashboard-content {
@@ -11,4 +16,9 @@
     max-width: $site-max-width;
     padding: $space;
     
+}
+.page-editor-container {
+    margin: 0 auto;
+    max-width: $site-max-width;
+    padding: $space;
 }

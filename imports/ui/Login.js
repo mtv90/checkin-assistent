@@ -31,7 +31,7 @@ export default class Login extends React.Component{
     render() {
         return (
             <div className="boxed-view">
-                <div className="boxed-view__box">
+                <div className="boxed-view__box box-view__shadow">
                     <h1 className="card-title">Anmelden</h1>
                     {this.state.error ? <p className=" red-text text-darken-1">{this.state.error}</p> : undefined}
                     <form onSubmit={this.onLogin.bind(this)} className="boxed-view__form">

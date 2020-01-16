@@ -19,7 +19,7 @@ export class Praxis extends React.Component {
 
     render() {
         return (
-            <div className="item" id={this.props.praxis._id} onClick={ () => {
+            <div className="" id={this.props.praxis._id} onClick={ () => {
                 this.props.Session.set('selectedPraxisId', this.props.praxis._id)
             }}>
                 <h5>{this.props.praxis.title}</h5>

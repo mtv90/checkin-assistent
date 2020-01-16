@@ -9,7 +9,8 @@ $dark-green: #16A086;
 
 // Spacing
 $space: 1.4rem;
-$site-max-width: 80rem;
+$large-space: 2.8rem;
+$site-max-width: 100rem;
 $dashboard-max-width: 80rem;
 
 // Fontsizes
@@ -46,3 +47,7 @@ $item-text-color: $dark-grey;
 $dashboard-box-bg: $serenty;
 $dashboard-box-border: darken($serenty, 8%);
 $dashboard-box-text-color: white;
+
+//Page Content
+$page-editor-sidebar-width: 30rem;
+$page-editor-main-width: calc(#{$site-max-width} - #{$page-editor-sidebar-width});

@@ -87,7 +87,7 @@ export default class Signup extends React.Component{
     
       return (
         <div className="boxed-view">
-          <div className="boxed-view__box"> 
+          <div className="boxed-view__box box-view__shadow"> 
             <h1 className="">Registrieren</h1>
             {this.state.error ? <p className="red darken-1">{this.state.error}</p> : undefined}
             <form className="boxed-view__form" onSubmit={this.onSubmit.bind(this)}>

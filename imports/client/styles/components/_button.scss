@@ -16,6 +16,17 @@
     text-decoration: none;
 }
 
+.button--edit {
+    display: inline-block;
+    text-decoration: none;
+}
+.button--edit_container {
+    margin: $space 0 $space 0;
+}
+.button--edit:hover {
+    background: darken($serenty, 10%);
+}
+
 .resent-button {
     border: none;
     cursor: pointer;
