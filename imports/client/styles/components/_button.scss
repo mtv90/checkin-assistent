@@ -58,6 +58,7 @@
     color:  $serenty;
     border: 1px solid $serenty;
     background-color: $button-cancel-bg;
+    margin-bottom: $space;
 }
 
 .button--link-text {
@@ -75,6 +76,9 @@
 }
 .button--add {
     background-color: #CE5B78;
+}
+.button--add-praxis {
+    margin: 0 auto;
 }
 .button--add:hover {
     background-color: darken(#CE5B78, 10%);

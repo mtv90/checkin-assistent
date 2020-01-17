@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
 html{
     // BasisSchriftGröße == 16
@@ -9,6 +10,7 @@ html{
 body{
     font-family: Helvetica, Arial, sans-serif;
     font-size: $base-font-size;
+    background-color: darken($light-grey, 4);
 }
 
 h1 {
@@ -41,14 +43,23 @@ select[name=patienten], input[type=tel], select[name=praxis], input[type=date], 
 button[type=submit] {
     margin-bottom: $space;
 }
+input[type=text].praxis-title{
+    text-align: center;
+    font-size: $base-font-size*2;
+    border-bottom: 1.5px solid $serenty;
+    // margin-bottom: $space;
+}
 
 input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, input[type=number]:focus, 
-input[type=tel]:focus, select[name=praxis], input[type=date]:focus, input[type=datetime-local]:focus{
+input[type=tel]:focus, select[name=praxis].focus, input[type=date]:focus, input[type=datetime-local]:focus{
     border-bottom: solid $serenty;
     outline:none;
     box-shadow: 5px;
 }
-
+input[type=text]:disabled, input[type=email]:disabled, input[type=password]:disabled, input[type=number]:disabled, 
+input[type=tel]:disabled, select[name=praxis], input[type=date]:disabled, input[type=datetime-local]:disabled {
+    background-color: $light-grey;
+}
 .select-box {
     margin-bottom: $space;
 }

@@ -37,6 +37,7 @@ $button-cancel-bg: $light-grey;
 //Header
 $header-bg: $serenty;
 $header-color: white;
+$header-height: 6rem;
 
 // Termin-Items
 $item-bg: $light-grey;
@@ -51,3 +52,4 @@ $dashboard-box-text-color: white;
 //Page Content
 $page-editor-sidebar-width: 30rem;
 $page-editor-main-width: calc(#{$site-max-width} - #{$page-editor-sidebar-width});
+$page-content-height: calc(100vh - #{$header-height});

@@ -1,12 +1,19 @@
 .page-content {
     margin: 0 auto;
+    height: $page-content-height;
     max-width: $site-max-width;
-    padding: $space;
+    padding: $large-space $space;
 }
 .page-content__sidebar{
+    display: flex;
+    overflow-y: scroll;
     width: $page-editor-sidebar-width;
+    // padding-right: $large-space;
 }
 .page-content__main{
+    background-color: white;
+    display: flex;
+    overflow-y: scroll;
     width: $page-editor-main-width;
 }
 // Styling für Admindashboard & Patientendashboard
@@ -21,4 +28,9 @@
     margin: 0 auto;
     max-width: $site-max-width;
     padding: $space;
+}
+
+.page-content-praxisverwaltung {
+    // background-color: darken($light-grey, 4);
+    
 }

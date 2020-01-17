@@ -1,4 +1,19 @@
 .editor {
     background-color: white;
     border: 1px solid $light-grey;
+    display: flex;
+    flex-direction: column;
+    padding: $large-space;
+    width: 100%;
+}
+.praxisliste{
+    background-color: white;
+    padding-right: $large-space;
+    border: 1px solid $light-grey;
+    width: 100%;
+}
+
+.praxis-editor__input {
+    display: flex;
+    flex-direction: column;
 }

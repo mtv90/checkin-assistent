@@ -23,7 +23,8 @@ export class AddPraxis extends React.Component {
             mitarbeiter: null,
             isOpen: false,
             error: '',
-            mitarbeiterList: []
+            mitarbeiterList: [],
+            openings: [],
         }
     }
     openPraxisModal(){
@@ -159,10 +160,19 @@ export class AddPraxis extends React.Component {
             this.setState({email});
         }
     }
+    addOpenings(e){
+        this.setState({ openings: [...this.state.openings, ""]})
+    }
+    handleChangeOpeningInput(e, index) {
+        this.state.openings[index] = e.target.value;
+        this.setState({openings: this.state.openings})
+
+        console.log(this.state.openings)
+    }
     render() {
         return (
             <div className="add-termin--container">
-                <button className="button button--add" onClick={this.openPraxisModal.bind(this)}>+ Praxis anlegen</button>
+                <button className="button button--add button--add-praxis" onClick={this.openPraxisModal.bind(this)}>+ Praxis anlegen</button>
                 <Modal 
                     isOpen={this.state.isOpen} 
                     contentLabel="Termin anlegen" 
@@ -191,6 +201,16 @@ export class AddPraxis extends React.Component {
                             className="select-box"
                             classNamePrefix="Mitarbeiter auswählen..."
                         />
+                        <button type="button" className="button button--cancel" onClick={this.addOpenings.bind(this)}>{this.state.count}</button>
+                        {
+                            this.state.openings.map((open, index) => {
+                                return (
+                                    <div key={index}>
+                                        <input onChange={(e) => this.handleChangeOpeningInput(e, index)} value={open} />
+                                    </div>
+                                )
+                            })
+                        }
                         {/* <Select
                             value={this.state.patientenList}
                             onChange={this.handleChangePatient}
@@ -200,7 +220,7 @@ export class AddPraxis extends React.Component {
                             className="select-box"
                             classNamePrefix="Mitarbeiter auswählen..."
                         /> */}
-                        <button type="submit" className="button">Termin anlegen</button>
+                        <button type="submit" className="button">speichern</button>
                         <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                     </form>
                 </Modal>

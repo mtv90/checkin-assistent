@@ -143,17 +143,18 @@ export class PraxisEditor extends React.Component {
     render() {
        if(this.props.praxis) {   
         return (
-            <div>
+            <div className="editor">
                 <div className="button--edit_container">
                 {
                     !this.state.edit ? <button type="button" className="button button--edit" onClick={this.startEdit.bind(this)}>bearbeiten</button> : undefined
                 }
                 </div>
-                
-                <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
+                {/* boxed-view__form */}
+                <form onSubmit={this.onSubmit.bind(this)} className="praxis-editor__input">
                     
                     {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
                     <input 
+                            className="praxis-title"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="title" 
                             ref="title" 
@@ -237,9 +238,11 @@ export class PraxisEditor extends React.Component {
         )
        } else {
            return (
-               <p>
-                   {this.props.selectedPraxisId ? 'Keine Praxis gefunden' : 'Bitte eine Praxis auswählen.'}
-               </p>
+               <div className="editor">
+                    <p>
+                        {this.props.selectedPraxisId ? 'Keine Praxis gefunden' : 'Bitte eine Praxis auswählen.'}
+                    </p>
+               </div>
            )
        }
     }
@@ -256,7 +259,7 @@ export default withTracker( () => {
     Meteor.subscribe('mitarbeiter');
     let mitarbeiter = [];
     const users = Meteor.users.find({role: "admin"}, {fields:{services: 0}}).fetch();
-    console.log(users)
+    
     users.map(user => {
             user["label"] = `${user.profile.nachname}, ${user.profile.vorname}`;
             user["value"] = `${user.profile.nachname}, ${user.profile.vorname}`;
@@ -266,7 +269,7 @@ export default withTracker( () => {
     Meteor.subscribe('userList');
     let patienten = [];
     const usersAsPatients = Meteor.users.find({role: "patient"}).fetch();
-    console.log(usersAsPatients)
+    
     usersAsPatients.map(patient => {
             patient["label"] = `${patient.profile.nachname}, ${patient.profile.vorname}`;
             patient["value"] = `${patient.profile.nachname}, ${patient.profile.vorname}`;

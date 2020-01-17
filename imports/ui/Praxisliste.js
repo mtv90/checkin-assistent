@@ -14,7 +14,7 @@ import Praxis from './Praxis';
 export const Praxisliste = (props) => {
     
     return (
-        <div>
+        <div className="praxisliste">
             <AddPraxis/>
             <FlipMove maintainContainerHeight={true}>
                 {props.praxen.map( (praxis) => {
