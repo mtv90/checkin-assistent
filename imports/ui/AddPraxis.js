@@ -25,6 +25,7 @@ export class AddPraxis extends React.Component {
             error: '',
             mitarbeiterList: [],
             openings: [],
+            day: ''
         }
     }
     openPraxisModal(){
@@ -46,7 +47,8 @@ export class AddPraxis extends React.Component {
             telefon: null,
             email: '',
             error: '',
-            mitarbeiterList:[]
+            mitarbeiterList:[],
+            openings:[]
         })
     }
     onSubmit(e) {
@@ -161,17 +163,43 @@ export class AddPraxis extends React.Component {
         }
     }
     addOpenings(e){
-        this.setState({ openings: [...this.state.openings, ""]})
+        
+        if(this.state.openings.length < 7){
+            this.setState({ openings: [...this.state.openings, {
+                day:'',
+                start: moment().format('HH:mm'),
+                end: moment().format('HH:mm')
+            }]})
+           
+        } else {
+            console.log("Eine Woche kann leider nur 7 Tage haben!")
+        }
+        
     }
-    handleChangeOpeningInput(e, index) {
-        this.state.openings[index] = e.target.value;
-        this.setState({openings: this.state.openings})
+    handleChangeOpeningDay(e, index) {
+        
+        this.state.openings[index]['day'] = e.target.value;
 
-        console.log(this.state.openings)
+        this.setState({openings: this.state.openings})
+    }
+    handleChangeOpeningStart(e, index){
+        this.state.openings[index]['start'] = e.target.value;
+
+        this.setState({openings: this.state.openings})
+    }
+    handleChangeOpeningEnd(e, index){
+        this.state.openings[index]['end'] = e.target.value;
+
+        this.setState({openings: this.state.openings})
+    }
+    handleRemoveOpening(e, index) {
+        this.state.openings.splice(index, 1);
+
+        this.setState({openings: this.state.openings})
     }
     render() {
         return (
-            <div className="add-termin--container">
+            <div className="add-praxis--container">
                 <button className="button button--add button--add-praxis" onClick={this.openPraxisModal.bind(this)}>+ Praxis anlegen</button>
                 <Modal 
                     isOpen={this.state.isOpen} 
@@ -201,12 +229,27 @@ export class AddPraxis extends React.Component {
                             className="select-box"
                             classNamePrefix="Mitarbeiter auswählen..."
                         />
-                        <button type="button" className="button button--cancel" onClick={this.addOpenings.bind(this)}>{this.state.count}</button>
+                        <button type="button" className="button button--cancel button--add-opening" onClick={this.addOpenings.bind(this)}>Öffnungszeiten hinzufügen</button>
                         {
                             this.state.openings.map((open, index) => {
                                 return (
-                                    <div key={index}>
-                                        <input onChange={(e) => this.handleChangeOpeningInput(e, index)} value={open} />
+                                    <div className="praxis-opening-time--container" key={index}>
+                                        <div className="praxis-opening-box praxis-opening-box--header ">
+                                            <h5>Tag {index + 1}</h5>
+                                            <button className="button--remove-opening" onClick={(e) => {this.handleRemoveOpening(e, index)}}>entfernen</button>
+                                        </div>
+                                        
+                                        <input type="text" name="tag" placeholder="Wochentag" onChange={(e) => this.handleChangeOpeningDay(e, index)} value={open.day} autoComplete="false" />
+                                        <div className="praxis-opening-box">
+                                            <div className="time-box">
+                                                <label className="opening-label" htmlFor="open-time">von:</label>
+                                                <input type="time" name="open-time" placeholder="von" onChange={(e) => this.handleChangeOpeningStart(e, index)} value={open.start} />
+                                            </div>
+                                            <div className="time-box">
+                                                <label className="opening-label" htmlFor="close-time">bis:</label>
+                                                <input type="time" name="close-time" placeholder="bis" onChange={(e) => this.handleChangeOpeningEnd(e, index)} value={open.end} />
+                                            </div>
+                                        </div>
                                     </div>
                                 )
                             })

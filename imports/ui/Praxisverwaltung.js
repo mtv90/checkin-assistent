@@ -21,15 +21,15 @@ export class Praxisverwaltung extends React.Component {
     // }
     render(){
         return (
-            <div className="page-content-praxisverwaltung">
+            <div className="">
                 <PrivateHeader title={`${Session.get('user').profile.nachname}, ${Session.get('user').profile.vorname}`}/>
                 
-                <button type="button" className="button menu" onClick={this.openNav.bind(this)}>&#9776;</button>
+                {/* <button type="button" className="button menu" onClick={this.openNav.bind(this)}>&#9776;</button>
                 <div id="mySidenav" className="sidenav">
                     <a type="button" className="closebtn" onClick={this.closeNav.bind(this)}>&times;</a>
                     <Praxisliste />
-                </div>
-                <div className="wrapper page-content">
+                </div> */}
+                <div className="page-content editor-container">
                     <div className="page-content__sidebar">
                         <Praxisliste />
                     </div>

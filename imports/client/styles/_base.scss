@@ -5,7 +5,10 @@
 }
 html{
     // BasisSchriftGröße == 16
-    font-size: 62.5%;
+    font-size: 55%;
+    @include desktop{
+        font-size: 62.5%;
+    }
 }
 body{
     font-family: Helvetica, Arial, sans-serif;
@@ -65,9 +68,11 @@ input[type=tel]:disabled, select[name=praxis], input[type=date]:disabled, input[
 }
 
 label {
-    font-size: $base-font-size / 1.2;
-    text-align: left;
-    margin-bottom: $space / 3;
+    color: $dark-grey;
+    font-size: $base-font-size;
+    font-weight: 600;
+    text-align: end;
+    // margin-bottom: $space / 3;
 }
 textarea {
     border: 1px solid $input-border;

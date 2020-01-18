@@ -55,12 +55,13 @@ Tracker.autorun(() => {
 
 Tracker.autorun(() => {
   const selectedPraxisId = Session.get('selectedPraxisId');
+  Session.set('isNavOpen', false);
   if(selectedPraxisId) {
     history.replace(`/praxisverwaltung/${selectedPraxisId}`);
   }
 })
 
-Tracker.autorun((run) => {
+Tracker.autorun(() => {
   
     const praxisId = Session.get('praxisId');
 
@@ -70,6 +71,10 @@ Tracker.autorun((run) => {
   
 });
 
+Tracker.autorun(() => {
+  const isNavOpen = Session.get('isNavOpen');
+  document.body.classList.toggle('is-nav-open', isNavOpen);
+})
 // Tracker.autorun(() => {
 //   const praxisId = Session.get('praxisId');
 //   if(praxisId) {
@@ -87,11 +92,12 @@ Meteor.startup(() => {
   Session.set({
     selectedTerminId: undefined,
     selectedPraxisId: undefined,
-    // praxisId: 'hello',
+    isNavOpen: false,
+    praxisId: undefined,
     start: moment().format('YYYY-MM-DDTHH:mm:ss'),
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
   })
-  Session.setDefault( 'praxisId', undefined)
+  // Session.setDefault( 'praxisId', undefined)
   
   ReactDOM.render(<Loading/>, document.getElementById('app'));
   

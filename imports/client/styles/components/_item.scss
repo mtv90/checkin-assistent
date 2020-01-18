@@ -20,3 +20,25 @@
 .item-title {
     text-align: center;
 }
+
+.empty-item {
+    font-style: italic;
+    padding: $space;
+    text-align: center;
+}
+
+.praxis-item {
+    border-left: $praxis-item-border solid transparent;
+    cursor: pointer;
+    padding: $space;
+    transition: background-color .3s ease, border-left .3s ease;
+}
+
+.praxis-item:hover {
+    background-color: $light-grey;
+    border-left: $praxis-item-border solid grey;
+}
+.praxis-item--selected, .praxis-item--selected:hover {
+    background-color: $light-grey;
+    border-left: $praxis-item-border solid $serenty;
+}

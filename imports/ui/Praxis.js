@@ -18,12 +18,12 @@ export class Praxis extends React.Component {
     }
 
     render() {
+        const className = this.props.praxis.selected ? 'praxis-item praxis-item--selected' : 'praxis-item'
         return (
-            <div className="" id={this.props.praxis._id} onClick={ () => {
+            <div className={className} id={this.props.praxis._id} onClick={ () => {
                 this.props.Session.set('selectedPraxisId', this.props.praxis._id)
             }}>
                 <h5>{this.props.praxis.title}</h5>
-                { this.props.praxis.selected ? 'selected' : undefined}
                 <p className="item__message">
                 <small>{this.props.praxis.strasse} {this.props.praxis.nummer}<br/>
                 {this.props.praxis.plz} {this.props.praxis.stadt}</small></p>

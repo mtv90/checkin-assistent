@@ -163,52 +163,69 @@ export class PraxisEditor extends React.Component {
                             value={this.state.edit ? this.state.title : this.props.praxis.title} 
                             onChange={this.onChangeTitle.bind(this)} 
                             autoComplete="off"/>
-                    <input 
-                        disabled = {this.state.edit ? "" : "disabled"} 
-                        name="straße" 
-                        type="text" 
-                        placeholder="Straße" 
-                        value={this.state.edit ? this.state.strasse : this.props.praxis.strasse}
-                        onChange={this.onChangeStrasse.bind(this)} 
-                        autoComplete="off"/>
-                    <input 
-                        disabled = {this.state.edit ? "" : "disabled"} 
-                        name="nummer" 
-                        type="text" 
-                        placeholder="Hausnr."
-                        value={this.state.edit ? this.state.nummer : this.props.praxis.nummer} 
-                        onChange={this.onChangeNummer.bind(this)} 
-                        autoComplete="off"/>
-                    <input 
-                        disabled = {this.state.edit ? "" : "disabled"} 
-                        name="plz"  
-                        type="number" 
-                        placeholder="Postleitzahl"
-                        value={this.state.edit ? this.state.plz : this.props.praxis.plz} 
-                        onChange={this.onChangePLZ.bind(this)} 
-                        autoComplete="off"/>
-                    <input 
-                        disabled = {this.state.edit ? "" : "disabled"} 
-                        name="stadt" type="text" 
-                        placeholder="Stadt"
-                        value={this.state.edit ? this.state.stadt : this.props.praxis.stadt} 
-                        onChange={this.onChangeStadt.bind(this)} 
-                        autoComplete="off"/>
-                    <input 
-                        disabled = {this.state.edit ? "" : "disabled"} 
-                        name="telefon" 
-                        type="tel" 
-                        placeholder="Telefon" 
-                        value={this.state.edit ? this.state.telefon : this.props.praxis.telefon}
-                        onChange={this.onChangeTelefon.bind(this)} 
-                        autoComplete="off"/>
-                    <input 
-                        disabled = {this.state.edit ? "" : "disabled"} 
-                        name="email" type="email" 
-                        placeholder="E-mail" 
-                        value={this.state.edit ? this.state.email : this.props.praxis.email}
-                        onChange={this.onChangeEmail.bind(this)} 
-                        autoComplete="off"/>
+                    <h5 className="item__message item__status-message praxis--subheading">Adresse</h5>
+                    <div className="adress-container">
+                        <input 
+                            className="praxis--strasse"
+                            disabled = {this.state.edit ? "" : "disabled"} 
+                            name="straße" 
+                            type="text" 
+                            placeholder="Straße" 
+                            value={this.state.edit ? this.state.strasse : this.props.praxis.strasse}
+                            onChange={this.onChangeStrasse.bind(this)} 
+                            autoComplete="off"/>
+                        <input 
+                            className="praxis--hausnummer"
+                            disabled = {this.state.edit ? "" : "disabled"} 
+                            name="nummer" 
+                            type="text" 
+                            placeholder="Hausnr."
+                            value={this.state.edit ? this.state.nummer : this.props.praxis.nummer} 
+                            onChange={this.onChangeNummer.bind(this)} 
+                            autoComplete="off"/>
+                        <input 
+                            className="praxis--plz"
+                            disabled = {this.state.edit ? "" : "disabled"} 
+                            name="plz"  
+                            type="number" 
+                            placeholder="Postleitzahl"
+                            value={this.state.edit ? this.state.plz : this.props.praxis.plz} 
+                            onChange={this.onChangePLZ.bind(this)} 
+                            autoComplete="off"/>
+                        <input 
+                            className="praxis--stadt"
+                            disabled = {this.state.edit ? "" : "disabled"} 
+                            name="stadt" type="text" 
+                            placeholder="Stadt"
+                            value={this.state.edit ? this.state.stadt : this.props.praxis.stadt} 
+                            onChange={this.onChangeStadt.bind(this)} 
+                            autoComplete="off"/>
+                    </div>
+                    <h5 className="item__message item__status-message praxis--subheading">Kontaktdaten</h5>
+                    <div className="adress-container">
+                        <label htmlFor="telefon" className="praxis--label">Telefon:</label>
+                        <input 
+                            className="praxis--telefon"
+                            disabled = {this.state.edit ? "" : "disabled"} 
+                            name="telefon" 
+                            type="tel" 
+                            placeholder="Telefon" 
+                            value={this.state.edit ? this.state.telefon : this.props.praxis.telefon}
+                            onChange={this.onChangeTelefon.bind(this)} 
+                            autoComplete="off"/>
+                    </div>
+                    <div className="adress-container">
+                        <label htmlFor="email" className="praxis--label">E-Mail:</label>
+                        <input 
+                            className="praxis--email"
+                            disabled = {this.state.edit ? "" : "disabled"} 
+                            name="email" type="email" 
+                            placeholder="E-mail" 
+                            value={this.state.edit ? this.state.email : this.props.praxis.email}
+                            onChange={this.onChangeEmail.bind(this)} 
+                            autoComplete="off"/>
+                    </div>
+                    
                     <Select 
                         value={this.state.edit ? this.state.mitarbeiter : this.props.praxis.mitarbeiter}
                         onChange={this.handleChangeMitarbeiter}
@@ -230,16 +247,17 @@ export class PraxisEditor extends React.Component {
                         className="select-box"
                         classNamePrefix="Patienten auswählen..."
                     />
-                    {this.state.edit ?  <button type="submit" className="button">speichern</button> : undefined}
-                    {this.state.edit ? <button type="button" className="button button--cancel" onClick={this.handleEditCancel.bind(this)}>abbrechen</button> : undefined}
-                        
+                    <div className="adress-container">
+                        {this.state.edit ?  <button type="submit" className="button button--edit praxis--speichern">speichern</button> : undefined}
+                        {this.state.edit ? <button type="button" className="button button--cancel button--edit praxis--cancel" onClick={this.handleEditCancel.bind(this)}>abbrechen</button> : undefined}
+                    </div>   
                 </form>
             </div>
         )
        } else {
            return (
                <div className="editor">
-                    <p>
+                    <p className="editor--message">
                         {this.props.selectedPraxisId ? 'Keine Praxis gefunden' : 'Bitte eine Praxis auswählen.'}
                     </p>
                </div>

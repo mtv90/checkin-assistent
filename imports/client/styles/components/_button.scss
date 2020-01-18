@@ -10,6 +10,10 @@
     // margin-bottom: $space;
     padding: $input-spacing;
     text-transform: uppercase;
+
+    @include desktop{
+        font-size: $base-font-size;
+    }
 }
 .button--link {
     display: inline-block;
@@ -80,8 +84,12 @@
 .button--add-praxis {
     margin: 0 auto;
 }
+
 .button--add:hover {
     background-color: darken(#CE5B78, 10%);
+}
+.button--add:focus {
+    outline: none;
 }
 .menu{
     display: none;
@@ -98,6 +106,7 @@
 }
 
 .button--dashboard {
+    border: 1px solid $serenty;
     background-color: white;
     color: $serenty;
     margin: 0px 5px 0px 0px;
@@ -110,4 +119,36 @@
 
 .button--patient {
     color: $mint-green;
+}
+.sidebar-button--wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    @include desktop{
+        display: none;
+    }
+}
+.button--add-opening{
+    text-transform: none;
+}
+.button--add-opening:focus{
+    outline: none;
+    border: 1px solid $serenty;
+}
+.button--remove-opening{
+    display: inline-block;
+    border: none;
+    background-color: #CE5B78;
+    font-size: $base-font-size/1.3;
+    padding: $space/3;
+    color: white;
+}
+
+.minus{
+    // border: 1px solid #CE5B78;
+    // background-color: #CE5B78;
+    // border-radius: 100%;
+    // color: white;
+    // padding: $space;
+    // font-weight: 800;
 }
