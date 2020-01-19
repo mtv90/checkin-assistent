@@ -9,15 +9,17 @@ import {Session} from 'meteor/session';
 export class PrivateHeader extends React.Component {
     constructor(props){
         super(props);
+        console.log(this.props)
     }
     renderDashboard = (props) => {
-        if(!(history.location.pathname === '/dashboard' || history.location.pathname === `/dashboard/${props.praxisId}`)){
-            if(props) {
-                return <Link className="button button--link button--dashboard" to={{pathname: `/dashboard/${props.praxisId}`}}><h3>Dashboard</h3></Link>
-            } else if(!props.praxisId){
-                return <Link className="button button--link button--dashboard" to={{pathname: `/dashboard`}}><h3>Dashboard</h3></Link>
-            } else {
-                return undefined;
+        const praxisId = this.props.praxisId || this.props.praxis._id;
+        if(!(history.location.pathname === '/dashboard' || history.location.pathname === `/dashboard/${praxisId}`)){
+            if(praxisId) {
+                return <button className="button button--link button--dashboard" onClick={() => history.replace(`/dashboard/${praxisId}`) }><h3>Dashboard</h3></button>
+            } 
+
+            else {
+               return !praxisId ?  <button className="button button--link button--dashboard" onClick={() => history.replace(`/dashboard`) }><h3>Dashboard</h3></button> : undefined;
             }
         }
     }
@@ -43,6 +45,7 @@ export class PrivateHeader extends React.Component {
 
 PrivateHeader.propTypes = {
     title: PropTypes.string.isRequired,
+    praxis: PropTypes.object,
     praxisId: PropTypes.string,
     isNavOpen: PropTypes.bool.isRequired,
 }

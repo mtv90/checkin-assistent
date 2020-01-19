@@ -174,13 +174,13 @@ export class AddPraxis extends React.Component {
         console.log(this.state.resources.length)
         this.setState({ resources: [...this.state.resources, {
             _id: Random.id(),
-            name:'',
+            title:'',
         }]})
     }
 
-    handleChangeResourceName(e, index) {
+    handleChangeResoureTitle(e, index) {
         
-        this.state.resources[index]['name'] = e.target.value;
+        this.state.resources[index]['title'] = e.target.value;
 
         this.setState({resources: this.state.resources})
     }
@@ -277,7 +277,7 @@ export class AddPraxis extends React.Component {
                                             <h5>Resource {index + 1}</h5>
                                             <button className="button--remove-opening" onClick={(e) => {this.handleRemoveResource(e, index)}}>entfernen</button>
                                         </div>
-                                        <input type="text" name="title" placeholder="Name" onChange={(e) => this.handleChangeResourceName(e, index)} value={resource.name} autoComplete="false" />
+                                        <input type="text" name="title" placeholder="Name" onChange={(e) => this.handleChangeResourceTitle(e, index)} value={resource.title} autoComplete="false" />
                                         {/* <div className="praxis-opening-box">
                                             <div className="time-box">
                                                 <label className="opening-label" htmlFor="open-time">von:</label>

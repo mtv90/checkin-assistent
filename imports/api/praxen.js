@@ -152,17 +152,6 @@ Meteor.methods({
                 createdAt: new Date(),
                 updatedAt: new Date()
             });
-
-
-
-        // let res = Meteor.users.findOne({_id: patient_id});
-        // let patient = {
-        //     _id: res._id,
-        //     emails: res.emails,
-        //     profile: res.profile
-        // }
-        // let title = `${res.profile.nachname}, ${res.profile.vorname}` 
-
     },
 
     'praxis.update'(_id, updates, patienten) {
@@ -254,21 +243,6 @@ Meteor.methods({
             'mitarbeiter.$.emails.$': {type:Object, optional: true},
             'mitarbeiter.$.emails.$.address': {type: String, optional: true},
             'mitarbeiter.$.emails.$.verified': Boolean,
-            // 'mitarbeiter.$.services': {type:Object, optional: true},
-            // 'mitarbeiter.$.services.password': {type:Object, optional: true},
-            // 'mitarbeiter.$.services.password.bcrypt': String,
-            // 'mitarbeiter.$.services.resume': {type:Object, optional: true},
-            // 'mitarbeiter.$.services.resume.loginTokens': {type: Array, optional: true},
-            // 'mitarbeiter.$.services.resume.loginTokens.$': {type:Object, optional: true},
-            // 'mitarbeiter.$.services.resume.loginTokens.$.when': Date,
-            // 'mitarbeiter.$.services.resume.loginTokens.$.hashedToken': String,
-            // 'mitarbeiter.$.services.email': {type:Object, optional: true},
-            // // 'mitarbeiter.$.services.email.verificationTokens
-            // 'mitarbeiter.$.services.email.verificationTokens': {type: Array, optional: true},
-            // 'mitarbeiter.$.services.email.verificationTokens.$': {
-            // //     type: Object,
-            // //     optional: true
-            // // },
             openings:{
                 type: Array,
                 label: 'Öffnungszeiten',

@@ -63,9 +63,9 @@ Tracker.autorun(() => {
 
 Tracker.autorun(() => {
   
-    const praxisId = Session.get('praxisId');
-
-    if(praxisId) {
+  const praxisId = Session.get('praxisId');
+  const dashboard_path = Session.get('dashboard_path');
+    if(praxisId && dashboard_path === '/dashboard/:id') {
       history.replace(`/dashboard/${praxisId}`);
     } 
   
@@ -75,12 +75,22 @@ Tracker.autorun(() => {
   const isNavOpen = Session.get('isNavOpen');
   document.body.classList.toggle('is-nav-open', isNavOpen);
 })
-// Tracker.autorun(() => {
-//   const praxisId = Session.get('praxisId');
-//   if(praxisId) {
-//     history.replace(`/termine/${praxisId}`);
-//   } 
-// });
+
+Tracker.autorun(() => {
+  const praxisId_termin = Session.get('praxisId_termin');
+  const termin_path = Session.get('termin_path')
+  if(praxisId_termin && termin_path === '/dashboard/:id/termine') {
+    history.replace(`/dashboard/${praxisId_termin}/termine`);
+  } 
+});
+
+Tracker.autorun(() => {
+  const praxisId_warte = Session.get('praxisId_warte');
+  const wartezimmer_path = Session.get('wartezimmer_path')
+  if(praxisId_warte && wartezimmer_path === '/dashboard/:id/wartezimmer') {
+    history.replace(`/dashboard/${praxisId_warte}/wartezimmer`);
+  } 
+});
 
 Accounts.onEmailVerificationLink((token, done) => {
   Accounts.verifyEmail(token, (error) => { 
@@ -93,7 +103,11 @@ Meteor.startup(() => {
     selectedTerminId: undefined,
     selectedPraxisId: undefined,
     isNavOpen: false,
-    praxisId: undefined,
+    // praxisId: undefined,
+    praxisId_termin: undefined,
+    praxisId_warte: undefined,
+    termin_path: undefined,
+    wartezimmer_path: undefined,
     start: moment().format('YYYY-MM-DDTHH:mm:ss'),
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
   })

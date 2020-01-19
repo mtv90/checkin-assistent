@@ -138,25 +138,23 @@ export class PraxisEditor extends React.Component {
         this.props.praxis.resources = Session.get('editResources');
     }
     handleChangeMitarbeiter = (mitarbeiter) => {
-        console.log(mitarbeiter)
         this.setState({mitarbeiter});
         
     }
     handleChangePatienten = (patienten) => {
-        console.log(patienten)
         this.setState({patienten});
     }
 
     addResources(){
         this.setState({ resources: [...this.state.resources, {
             _id: Random.id(),
-            name:'',
+            title:'',
         }]})
     }
 
-    handleChangeResourceName(e, index) {
+    handleChangeResourceTitle(e, index) {
         
-        this.state.resources[index]['name'] = e.target.value;
+        this.state.resources[index]['title'] = e.target.value;
 
         this.setState({resources: this.state.resources})
     }
@@ -394,8 +392,8 @@ export class PraxisEditor extends React.Component {
                                                 type="text" 
                                                 name="title" 
                                                 placeholder="Ressourcentitel" 
-                                                onChange={(e) => this.handleChangeResourceName(e, index)} 
-                                                value={resource.name} 
+                                                onChange={(e) => this.handleChangeResourcetitle(e, index)} 
+                                                value={resource.title} 
                                                 autoComplete="false" />
                                         </div>
                                     </div>
@@ -410,7 +408,7 @@ export class PraxisEditor extends React.Component {
                             this.props.praxis.resources.map((resource, index) => {
                                 return (
                                     <p className="item__message item-title" key={index}>
-                                        <strong>{resource.name}</strong>
+                                        <strong>{resource.title}</strong>
                                     </p>
                                 )
                             }) :

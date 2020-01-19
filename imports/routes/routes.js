@@ -103,6 +103,7 @@ const onEnterDashboard = (props) => {
     if(isLoggedIn() && this.user && this.role === 'admin'){
         // if(!(props.match.params.id === 'undefined')){
             Session.set('praxisId', props.match.params.id)
+            Session.set('dashboard_path', props.match.path)
         // }
         return <AdminDashboard user={this.user}/>
    } else if(isLoggedIn() && this.user && this.role === 'patient') {
@@ -132,12 +133,24 @@ const onEnterPraxen = (props) => {
 
 const onEnterKalender = (props) => {
     if(isLoggedIn() && this.isVerified && (this.role === 'admin') ) {
-        Session.set('praxisId', props.match.params.id)
+        Session.set('praxisId_termin', props.match.params.id)
+        Session.set('termin_path', props.match.path)
         return true;
     } else {
         return false;
     }
 }
+
+const onEnterWartezimmer = (props) => {
+    if(isLoggedIn() && this.isVerified && (this.role === 'admin') ) {
+        Session.set('praxisId_warte', props.match.params.id) 
+        Session.set('url_id', props.match.params.id)
+        Session.set('wartezimmer_path', props.match.path)
+        return true;
+    } else {
+        return false;
+    }
+} 
     export const Routes = (
         <Router history={history}>
         <Switch>
@@ -145,8 +158,8 @@ const onEnterKalender = (props) => {
             <Route exact path="/signup" render={() => { onEnterPublicPage(); return <Signup/> }}/>
             <Route exact path="/dashboard" render={(props) => onEnterDashboard(props) ? onEnterDashboard(props) : <Redirect to="/" />} />
             <Route exact path="/dashboard/:id" render={(props) => onEnterDashboard(props) ? onEnterDashboard(props) : <Redirect to="/" />} />
-            <Route exact path="/termine/:id" render= { (props) => onEnterKalender(props) ? ( <Kalender user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
-            <Route exact path="/wartezimmer/:id" render= { (props) => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Wartezimmer user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
+            <Route exact path="/dashboard/:id/termine" render= { (props) => onEnterKalender(props) ? ( <Kalender user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
+            <Route exact path="/dashboard/:id/wartezimmer" render= { (props) => onEnterWartezimmer(props) ? ( <Wartezimmer user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
             
             <Route exact path="/praxisverwaltung" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
             <Route exact path="/praxisverwaltung/:id" render= { (props) => onEnterPraxen(props) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
