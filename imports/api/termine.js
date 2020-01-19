@@ -37,7 +37,8 @@ Meteor.methods({
         start,
         end,
         subject,
-        notes
+        notes,
+        praxis
         ){
         if(!this.userId){
             throw new Meteor.Error('Nicht authorisiert!');
@@ -82,6 +83,7 @@ Meteor.methods({
             start,
             end,
             notes,
+            praxis,
             checkedIn: false,
             user_id: this.userId,
             createdAt: new Date(),

@@ -89,8 +89,8 @@ export class Wartezimmer extends React.Component {
         
     }
     render() {
+        var Spinner = require('react-spinkit');
         if(!this.props.praxis){
-            var Spinner = require('react-spinkit');
             return (
                 <div className="pacman-view">
                     <Spinner name='pacman' color="#92A8D1" />
@@ -154,7 +154,7 @@ export default withTracker( () => {
     
     Meteor.subscribe('meine_praxen');
     const praxis = Praxen.findOne(praxisId_warte);
-    console.log(praxis)
+    
     return {
         praxisId_warte,
         praxis

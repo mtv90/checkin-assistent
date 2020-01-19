@@ -4,9 +4,10 @@ import {Link} from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 import {Session} from 'meteor/session';
-
+import { withTracker  } from 'meteor/react-meteor-data';
 // import history from '../routes/history';
 import {Termine} from '../api/termine';
+import {Praxen} from '../api/praxen';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -25,7 +26,7 @@ import TerminListe from './TerminListe';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
 
-export default class Kalender extends React.Component {
+export class Kalender extends React.Component {
   // _isMounted = false;
   calendarComponentRef = React.createRef();
   constructor(props){
@@ -41,7 +42,7 @@ export default class Kalender extends React.Component {
 }
 componentDidMount() {
   // this._isMounted = true;
-  this.setState({isLoading:true})
+
   
   // Abfrage nach Termindaten vom FHIR-Server 
   
@@ -56,20 +57,20 @@ componentDidMount() {
     //   }
     // });
 
-  this.terminTracker = Tracker.autorun(() => {
-    const praxisId = Session.get('praxisId');
-    Meteor.subscribe('termine');
-    const termine = Termine.find().fetch();
+  // this.terminTracker = Tracker.autorun(() => {
+  //   const praxisId = Session.get('praxisId');
+  //   Meteor.subscribe('termine');
+  //   const termine = Termine.find().fetch();
 
-    if(termine) {
-      this.setState({termine, isLoading: false, praxisId})
-    }
-  });
+  //   if(termine) {
+  //     this.setState({termine, isLoading: false, praxisId})
+  //   }
+  // });
 }
 
 componentWillUnmount() {
   // this._isMounted = false;
-  this.terminTracker.stop();
+  // this.terminTracker.stop();
 }
 
 openModal(e){
@@ -82,19 +83,18 @@ openModal(e){
 
 render(){
   var Spinner = require('react-spinkit');
-  const {isLoading} = this.state;
-
-  if (isLoading) {
-    return   (
-      <div className="pacman-view">
-          <Spinner name='pacman' color="#92A8D1" />
-      </div>
+  if(!this.props.praxis){
+    return (
+        <div className="pacman-view">
+            <Spinner name='pacman' color="#92A8D1" />
+        </div>
     )
-  }
+}
   return (
     <div className="">
-      <PrivateHeader title={`${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}`} {...this.state.praxisId}/>
-      <AddTermin/>
+      {/* `${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}` */}
+      <PrivateHeader title={this.props.praxis.title} praxis={this.props.praxis}/>
+      <AddTermin praxis={this.props.praxis} />
       <div className="kalender-container" id="wide-calendar">
         <FullCalendar
           defaultView="timeGridWeek"
@@ -119,7 +119,7 @@ render(){
           plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin ]}
           ref={ this.calendarComponentRef }
           weekends={ this.state.calendarWeekends }
-          events={ this.state.termine }
+          events={ this.props.termine }
           dateClick={ this.openModal.bind(this) }
           locale= 'de'
           weekNumbers={true}
@@ -163,5 +163,23 @@ render(){
 }
 
 Kalender.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  praxis: PropTypes.object,
+  termine: PropTypes.object,
 }
+
+export default withTracker( () => {
+  const praxisId_termin = Session.get('praxisId_termin');
+  
+  Meteor.subscribe('meine_praxen');
+  const praxis = Praxen.findOne(praxisId_termin);
+
+  Meteor.subscribe('termine');
+  const termine = Termine.find({"praxis._id": praxisId_termin}).fetch();
+ 
+  return {
+    praxisId_termin,
+    praxis,
+    termine
+  };
+})(Kalender);

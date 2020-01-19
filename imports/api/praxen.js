@@ -278,9 +278,9 @@ Meteor.methods({
                 label: 'Ressource',
                 optional: true
             },
-            'resources.$.name':{
+            'resources.$.title':{
                 type: String,
-                label: 'Name',
+                label: 'Titel',
                 optional: true
             },
             'resources.$._id':{

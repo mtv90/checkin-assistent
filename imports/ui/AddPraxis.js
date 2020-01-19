@@ -66,6 +66,7 @@ export class AddPraxis extends React.Component {
         const email = this.state.email;
         const openings = this.state.openings;
         const resources = this.state.resources;
+        
         console.log(resources)
         var pattern = new RegExp("[0-9]{5}");
         var result = pattern.test(plz);

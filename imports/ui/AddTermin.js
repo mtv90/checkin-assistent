@@ -27,13 +27,14 @@ export default class AddTermin extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         const {patient_id, start, end, notes, subject} = this.state;
-        
+        const praxis = this.props.praxis;
         Meteor.call('termine.insert', 
             patient_id,
             start,
             end,
             subject,
             notes,
+            praxis,
             (error, result) => {
                 if(error) {
                     swal("Fehler", `${error.error}`, "error");
@@ -63,7 +64,6 @@ export default class AddTermin extends React.Component {
         })
     }
     componentDidMount() {
-
         this.patientTracker = Tracker.autorun((run) => {
             Meteor.subscribe('userList');
             let patientsArray = [];

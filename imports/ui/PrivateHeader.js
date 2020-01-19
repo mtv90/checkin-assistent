@@ -9,10 +9,9 @@ import {Session} from 'meteor/session';
 export class PrivateHeader extends React.Component {
     constructor(props){
         super(props);
-        console.log(this.props)
     }
     renderDashboard = (props) => {
-        const praxisId = this.props.praxisId || this.props.praxis._id;
+        const praxisId = this.props.praxisId || (this.props.praxis ? this.props.praxis._id : undefined);
         if(!(history.location.pathname === '/dashboard' || history.location.pathname === `/dashboard/${praxisId}`)){
             if(praxisId) {
                 return <button className="button button--link button--dashboard" onClick={() => history.replace(`/dashboard/${praxisId}`) }><h3>Dashboard</h3></button>
