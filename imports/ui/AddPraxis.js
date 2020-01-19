@@ -6,6 +6,7 @@ import moment from 'moment';
 import Modal from 'react-modal';
 import { Tracker } from 'meteor/tracker';
 import {Session} from 'meteor/session';
+import { Random } from 'meteor/random';
 import Select from 'react-select';
 
 export class AddPraxis extends React.Component {
@@ -24,7 +25,8 @@ export class AddPraxis extends React.Component {
             isOpen: false,
             error: '',
             mitarbeiterList: [],
-            openings: []
+            openings: [],
+            resources: []
         }
     }
     openPraxisModal(){
@@ -48,7 +50,8 @@ export class AddPraxis extends React.Component {
             email: '',
             error: '',
             mitarbeiterList:[],
-            openings:[]
+            openings:[],
+            resources: []
         })
     }
     onSubmit(e) {
@@ -62,7 +65,8 @@ export class AddPraxis extends React.Component {
         const telefon = this.state.telefon;
         const email = this.state.email;
         const openings = this.state.openings;
-        
+        const resources = this.state.resources;
+        console.log(resources)
         var pattern = new RegExp("[0-9]{5}");
         var result = pattern.test(plz);
 
@@ -87,6 +91,7 @@ export class AddPraxis extends React.Component {
             email,
             mitarbeiter,
             openings,
+            resources,
             (error, result) => {
                 if(error) {
                     swal("Fehler", `${error.reason}`, "error");
@@ -165,6 +170,21 @@ export class AddPraxis extends React.Component {
         }
         
     }
+    addResources(){
+        console.log(this.state.resources.length)
+        this.setState({ resources: [...this.state.resources, {
+            _id: Random.id(),
+            name:'',
+        }]})
+    }
+
+    handleChangeResourceName(e, index) {
+        
+        this.state.resources[index]['name'] = e.target.value;
+
+        this.setState({resources: this.state.resources})
+    }
+
     handleChangeOpeningDay(e, index) {
         
         this.state.openings[index]['day'] = e.target.value;
@@ -185,6 +205,11 @@ export class AddPraxis extends React.Component {
         this.state.openings.splice(index, 1);
 
         this.setState({openings: this.state.openings})
+    }
+    handleRemoveResource(e, index) {
+        this.state.resources.splice(index, 1);
+
+        this.setState({resources: this.state.resources})
     }
     render() {
         return (
@@ -239,6 +264,30 @@ export class AddPraxis extends React.Component {
                                                 <input type="time" name="close-time" placeholder="bis" onChange={(e) => this.handleChangeOpeningEnd(e, index)} value={open.end} />
                                             </div>
                                         </div>
+                                    </div>
+                                )
+                            })
+                        }
+                        <button type="button" className="button button--cancel button--add-opening" onClick={this.addResources.bind(this)}>Ressourcen hinzufügen</button>
+                        {
+                            this.state.resources.map((resource, index) => {
+                                return (
+                                    <div className="praxis-opening-time--container" key={index}>
+                                        <div className="praxis-opening-box praxis-opening-box--header ">
+                                            <h5>Resource {index + 1}</h5>
+                                            <button className="button--remove-opening" onClick={(e) => {this.handleRemoveResource(e, index)}}>entfernen</button>
+                                        </div>
+                                        <input type="text" name="title" placeholder="Name" onChange={(e) => this.handleChangeResourceName(e, index)} value={resource.name} autoComplete="false" />
+                                        {/* <div className="praxis-opening-box">
+                                            <div className="time-box">
+                                                <label className="opening-label" htmlFor="open-time">von:</label>
+                                                <input type="time" name="open-time" placeholder="von" onChange={(e) => this.handleChangeOpeningStart(e, index)} value={open.start} />
+                                            </div>
+                                            <div className="time-box">
+                                                <label className="opening-label" htmlFor="close-time">bis:</label>
+                                                <input type="time" name="close-time" placeholder="bis" onChange={(e) => this.handleChangeOpeningEnd(e, index)} value={open.end} />
+                                            </div>
+                                        </div> */}
                                     </div>
                                 )
                             })

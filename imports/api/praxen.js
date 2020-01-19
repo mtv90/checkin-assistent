@@ -34,6 +34,7 @@ Meteor.methods({
         email,
         mitarbeiter,
         openings,
+        resources,
         ){
         if(!this.userId){
             throw new Meteor.Error('Nicht authorisiert!');
@@ -78,6 +79,26 @@ Meteor.methods({
                 max: 200,
                 optional:false
             },
+            resources: {
+                type: Array,
+                label: 'Ressourcen',
+                optional: true
+            },
+            'resources.$':{
+                type: Object,
+                label: 'Ressource',
+                optional: true
+            },
+            'resources.$.name':{
+                type: String,
+                label: 'Name',
+                optional: true
+            },
+            'resources.$._id':{
+                type: String,
+                label: 'Ressource-ID',
+                optional: true
+            },
             openings:{
                 type: Array,
                 label: 'Öffnungszeiten',
@@ -111,7 +132,8 @@ Meteor.methods({
                 telefon,
                 email,
                 stadt,
-                openings
+                openings,
+                resources
             });
             
             return Praxen.insert({
@@ -124,6 +146,7 @@ Meteor.methods({
                 stadt,
                 mitarbeiter,
                 openings,
+                resources,
                 user_id: this.userId,
                 updatedBy: this.userId,
                 createdAt: new Date(),
@@ -269,6 +292,26 @@ Meteor.methods({
             'openings.$.end':{
                 type: String,
                 label: 'Endzeit',
+                optional: true
+            },
+            resources: {
+                type: Array,
+                label: 'Ressourcen',
+                optional: true
+            },
+            'resources.$':{
+                type: Object,
+                label: 'Ressource',
+                optional: true
+            },
+            'resources.$.name':{
+                type: String,
+                label: 'Name',
+                optional: true
+            },
+            'resources.$._id':{
+                type: String,
+                label: 'Ressource-ID',
                 optional: true
             },
             patienten: {

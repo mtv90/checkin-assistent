@@ -22,7 +22,8 @@ export class PraxisEditor extends React.Component {
             telefon: null,
             mitarbeiter: [],
             patienten: [],
-            openings: []
+            openings: [],
+            resources: []
         }
     }
 
@@ -77,7 +78,8 @@ export class PraxisEditor extends React.Component {
             telefon: this.state.telefon,
             mitarbeiter: this.state.mitarbeiter,
             patienten: this.state.patienten,
-            openings: this.state.openings
+            openings: this.state.openings,
+            resources: this.state.resources
         }
        
         let praxis = {
@@ -102,6 +104,7 @@ export class PraxisEditor extends React.Component {
         const mypraxis = this.props.praxis;
         Session.set('editpraxis', mypraxis);
         Session.set('editOpenings', mypraxis.openings)
+        Session.set('editResources', mypraxis.resources)
         this.setState({
             edit: true,
             title: this.props.praxis.title,
@@ -113,7 +116,8 @@ export class PraxisEditor extends React.Component {
             telefon: this.props.praxis.telefon,
             mitarbeiter: this.props.praxis.mitarbeiter,
             patienten: this.props.praxis.patienten,
-            openings: this.props.praxis.openings
+            openings: this.props.praxis.openings,
+            resources: this.props.praxis.resources
         });
 
     }
@@ -131,6 +135,7 @@ export class PraxisEditor extends React.Component {
             openings:[]
         })
         this.props.praxis.openings = Session.get('editOpenings');
+        this.props.praxis.resources = Session.get('editResources');
     }
     handleChangeMitarbeiter = (mitarbeiter) => {
         console.log(mitarbeiter)
@@ -140,6 +145,20 @@ export class PraxisEditor extends React.Component {
     handleChangePatienten = (patienten) => {
         console.log(patienten)
         this.setState({patienten});
+    }
+
+    addResources(){
+        this.setState({ resources: [...this.state.resources, {
+            _id: Random.id(),
+            name:'',
+        }]})
+    }
+
+    handleChangeResourceName(e, index) {
+        
+        this.state.resources[index]['name'] = e.target.value;
+
+        this.setState({resources: this.state.resources})
     }
 
     addOpenings(e){
@@ -177,7 +196,11 @@ export class PraxisEditor extends React.Component {
 
         this.setState({openings: this.state.openings})
     }
+    handleRemoveResource(e, index) {
+        this.state.resources.splice(index, 1);
 
+        this.setState({resources: this.state.resources})
+    }
     render() {
        if(this.props.praxis) {   
         return (
@@ -338,6 +361,61 @@ export class PraxisEditor extends React.Component {
                             }) :
                             (<p className="editor--message">
                                 Es wurden noch keine Öffnungszeiten angegeben
+                            </p>)
+                    )}
+                    <h5 className="item__message item__status-message praxis--subheading">Praxis-Ressourcen</h5>
+                    {this.state.edit ? (
+                        <button 
+                            disabled = {this.state.edit ? "" : "disabled"}
+                            type="button" 
+                            className="button button--cancel button--add-opening" 
+                            onClick={this.addResources.bind(this)}>Ressourcen hinzufügen</button>
+                    ) 
+                    : 
+                    undefined }
+                    {this.state.edit ? 
+                        ( this.state.resources ?
+                            this.state.resources.map((resource, index) => {
+                                return (
+                                    <div className="praxis-opening-time--container" key={index}>
+                                        <div className="praxis-opening-box praxis-opening-box--header ">
+                                            <h5>Ressource {index + 1}</h5>
+                                            {this.state.edit? <button
+                                                disabled = {this.state.edit ? "" : "disabled"}
+                                                className="button--remove-opening" 
+                                                onClick={(e) => {this.handleRemoveResource(e, index)}}>
+                                                    entfernen
+                                            </button> : undefined}
+                                        </div>
+                                        <div className="desktop-opening-container">
+                                            <input
+                                                className="opening-day" 
+                                                disabled = {this.state.edit ? "" : "disabled"}
+                                                type="text" 
+                                                name="title" 
+                                                placeholder="Ressourcentitel" 
+                                                onChange={(e) => this.handleChangeResourceName(e, index)} 
+                                                value={resource.name} 
+                                                autoComplete="false" />
+                                        </div>
+                                    </div>
+                                )
+                            }) : 
+                            (<p className="editor--message">
+                                Es wurden noch Ressourcen angelegt.
+                            </p>)
+                        ) 
+                    : 
+                        (this.props.praxis.resources.length != 0 ?
+                            this.props.praxis.resources.map((resource, index) => {
+                                return (
+                                    <p className="item__message item-title" key={index}>
+                                        <strong>{resource.name}</strong>
+                                    </p>
+                                )
+                            }) :
+                            (<p className="editor--message">
+                                Es wurden noch keine Ressourcen angelegt.
                             </p>)
                     )}
                     <h5 className="item__message item__status-message praxis--subheading">Mitarbeiter</h5>
