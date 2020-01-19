@@ -32,7 +32,8 @@ Meteor.methods({
         stadt,
         telefon,
         email,
-        mitarbeiter
+        mitarbeiter,
+        openings,
         ){
         if(!this.userId){
             throw new Meteor.Error('Nicht authorisiert!');
@@ -76,6 +77,31 @@ Meteor.methods({
                 label: 'Stadt',
                 max: 200,
                 optional:false
+            },
+            openings:{
+                type: Array,
+                label: 'Öffnungszeiten',
+                optional: true
+            },
+            'openings.$': {
+                type: Object,
+                label: 'Öffnungszeit',
+                optional: true
+            },
+            'openings.$.day': {
+                type: String,
+                label: 'Tag',
+                optional: true
+            },
+            'openings.$.start':{
+                type: String,
+                label: 'Startzeit',
+                optional: true,
+            },
+            'openings.$.end':{
+                type: String,
+                label: 'Endzeit',
+                optional: true
             }
             }).validate({
                 title,
@@ -84,7 +110,8 @@ Meteor.methods({
                 plz,
                 telefon,
                 email,
-                stadt
+                stadt,
+                openings
             });
             
             return Praxen.insert({
@@ -96,6 +123,7 @@ Meteor.methods({
                 email,
                 stadt,
                 mitarbeiter,
+                openings,
                 user_id: this.userId,
                 updatedBy: this.userId,
                 createdAt: new Date(),
@@ -218,6 +246,31 @@ Meteor.methods({
             // //     type: Object,
             // //     optional: true
             // // },
+            openings:{
+                type: Array,
+                label: 'Öffnungszeiten',
+                optional: true
+            },
+            'openings.$': {
+                type: Object,
+                label: 'Öffnungszeit',
+                optional: true
+            },
+            'openings.$.day': {
+                type: String,
+                label: 'Tag',
+                optional: true
+            },
+            'openings.$.start':{
+                type: String,
+                label: 'Startzeit',
+                optional: true,
+            },
+            'openings.$.end':{
+                type: String,
+                label: 'Endzeit',
+                optional: true
+            },
             patienten: {
                 type: Array,
                 optional: true
@@ -280,7 +333,8 @@ Meteor.methods({
         });
 
         Praxen.update({
-            _id
+            _id,
+            user_id: this.userId
         },{
             $set: {
                 updatedAt: new Date(),

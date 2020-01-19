@@ -99,9 +99,31 @@
     justify-content: space-between;
     padding: $space/3;
 }
+.opening-day{
+    margin-top: $space/1.1;
+    
+    @include desktop {
+        margin-left: $space/2;
+    }
+}
 .time-box{
     display: flex;
     flex-direction: column;
-    width: 50vw;
+    width: 100%;
     padding: $space/1.3;
+}
+.desktop-opening-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @include desktop{
+        flex-direction: row;
+    }
+}
+
+.time-box .time-box--editor{
+    @include desktop{
+        width: 30vw;
+    }  
 }

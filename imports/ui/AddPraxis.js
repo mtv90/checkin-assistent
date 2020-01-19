@@ -24,8 +24,7 @@ export class AddPraxis extends React.Component {
             isOpen: false,
             error: '',
             mitarbeiterList: [],
-            openings: [],
-            day: ''
+            openings: []
         }
     }
     openPraxisModal(){
@@ -37,6 +36,7 @@ export class AddPraxis extends React.Component {
             start: moment().format('YYYY-MM-DDTHH:mm:ss'),
             end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
         })
+        
         this.setState({
             isOpen: false, 
             titel: '',
@@ -61,6 +61,7 @@ export class AddPraxis extends React.Component {
         const mitarbeiter = this.state.mitarbeiterList;
         const telefon = this.state.telefon;
         const email = this.state.email;
+        const openings = this.state.openings;
         
         var pattern = new RegExp("[0-9]{5}");
         var result = pattern.test(plz);
@@ -85,6 +86,7 @@ export class AddPraxis extends React.Component {
             telefon,
             email,
             mitarbeiter,
+            openings,
             (error, result) => {
                 if(error) {
                     swal("Fehler", `${error.reason}`, "error");
@@ -93,7 +95,6 @@ export class AddPraxis extends React.Component {
                     this.handleModalClose();
                 }
                 if(result) {
-                    console.log(result)
                     Session.set('selectedPraxisId', result)
                 }
             }
@@ -120,7 +121,7 @@ export class AddPraxis extends React.Component {
         }
     }
     onChangePLZ(e) {
-        const plz = parseInt(e.target.value);
+        const plz = e.target.value;
         if(plz) {
             this.setState({plz});
         }
@@ -131,18 +132,6 @@ export class AddPraxis extends React.Component {
             this.setState({stadt});
         }
     }
-    // renderOptions() {
-    //     if(this.props.mitarbeiter.length === 0) {
-    //         return (
-    //             <option className="item__status-message">Keine Patienten vorhanden!</option>
-    //         )
-    //     }
-    //     return this.props.mitarbeiter.map(( mitarbeiter) => {
-    //         return (
-    //             <option key={mitarbeiter._id} ref="pat_id" value={mitarbeiter._id}>{mitarbeiter.label}</option>
-    //         )
-    //     });
-    // }
 
     handleChange = mitarbeiterList => {
         this.setState(
@@ -162,7 +151,7 @@ export class AddPraxis extends React.Component {
             this.setState({email});
         }
     }
-    addOpenings(e){
+    addOpenings(){
         
         if(this.state.openings.length < 7){
             this.setState({ openings: [...this.state.openings, {
@@ -275,7 +264,7 @@ export class AddPraxis extends React.Component {
 export default withTracker( () => {
     Meteor.subscribe('mitarbeiter');
     let mitarbeiter = [];
-    const users = Meteor.users.find({role: "admin"}).fetch();
+    const users = Meteor.users.find({role: "admin"}, {fields:{services: 0}}).fetch();
     users.map(user => {
             user["label"] = `${user.profile.nachname}, ${user.profile.vorname}`;
             user["value"] = `${user.profile.nachname}, ${user.profile.vorname}`;

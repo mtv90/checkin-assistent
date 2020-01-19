@@ -21,7 +21,8 @@ export class PraxisEditor extends React.Component {
             email: '',
             telefon: null,
             mitarbeiter: [],
-            patienten: []
+            patienten: [],
+            openings: []
         }
     }
 
@@ -75,7 +76,8 @@ export class PraxisEditor extends React.Component {
             email: this.state.email,
             telefon: this.state.telefon,
             mitarbeiter: this.state.mitarbeiter,
-            patienten: this.state.patienten
+            patienten: this.state.patienten,
+            openings: this.state.openings
         }
        
         let praxis = {
@@ -94,17 +96,12 @@ export class PraxisEditor extends React.Component {
                 }
             })
     }
-    cancelEdit(e){
-        e.preventDefault();
-        this.setState({
-            edit: false
-        })
 
-    }
     startEdit(e){
         e.preventDefault();
         const mypraxis = this.props.praxis;
-        Session.set('editpraxis', mypraxis)
+        Session.set('editpraxis', mypraxis);
+        Session.set('editOpenings', mypraxis.openings)
         this.setState({
             edit: true,
             title: this.props.praxis.title,
@@ -115,8 +112,10 @@ export class PraxisEditor extends React.Component {
             email: this.props.praxis.email,
             telefon: this.props.praxis.telefon,
             mitarbeiter: this.props.praxis.mitarbeiter,
-            patienten: this.props.praxis.patienten
+            patienten: this.props.praxis.patienten,
+            openings: this.props.praxis.openings
         });
+
     }
     getTitleValue(){
         if(this.state.edit){
@@ -128,8 +127,10 @@ export class PraxisEditor extends React.Component {
     handleEditCancel(e) {
         e.preventDefault();
         this.setState({
-            edit: false
+            edit: false,
+            openings:[]
         })
+        this.props.praxis.openings = Session.get('editOpenings');
     }
     handleChangeMitarbeiter = (mitarbeiter) => {
         console.log(mitarbeiter)
@@ -140,6 +141,43 @@ export class PraxisEditor extends React.Component {
         console.log(patienten)
         this.setState({patienten});
     }
+
+    addOpenings(e){
+        
+        if(this.state.openings.length < 7){
+            this.setState({ openings: [...this.state.openings, {
+                day:'',
+                start: moment().format('HH:mm'),
+                end: moment().format('HH:mm')
+            }]})
+           
+        } else {
+            console.log("Eine Woche kann leider nur 7 Tage haben!")
+        }
+        
+    }
+    handleChangeOpeningDay(e, index) {
+        
+        this.state.openings[index]['day'] = e.target.value;
+
+        this.setState({openings: this.state.openings})
+    }
+    handleChangeOpeningStart(e, index){
+        this.state.openings[index]['start'] = e.target.value;
+
+        this.setState({openings: this.state.openings})
+    }
+    handleChangeOpeningEnd(e, index){
+        this.state.openings[index]['end'] = e.target.value;
+
+        this.setState({openings: this.state.openings})
+    }
+    handleRemoveOpening(e, index) {
+        this.state.openings.splice(index, 1);
+
+        this.setState({openings: this.state.openings})
+    }
+
     render() {
        if(this.props.praxis) {   
         return (
@@ -149,7 +187,7 @@ export class PraxisEditor extends React.Component {
                     !this.state.edit ? <button type="button" className="button button--edit" onClick={this.startEdit.bind(this)}>bearbeiten</button> : undefined
                 }
                 </div>
-                {/* boxed-view__form */}
+                
                 <form onSubmit={this.onSubmit.bind(this)} className="praxis-editor__input">
                     
                     {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
@@ -225,7 +263,84 @@ export class PraxisEditor extends React.Component {
                             onChange={this.onChangeEmail.bind(this)} 
                             autoComplete="off"/>
                     </div>
-                    
+                    <h5 className="item__message item__status-message praxis--subheading">Öffnungszeiten</h5>
+                    {this.state.edit ? (
+                        <button 
+                            disabled = {this.state.edit ? "" : "disabled"}
+                            type="button" 
+                            className="button button--cancel button--add-opening" 
+                            onClick={this.addOpenings.bind(this)}>Öffnungszeiten hinzufügen</button>
+                    ) 
+                    : 
+                    undefined }
+                    {this.state.edit ? 
+                        ( this.state.openings ?
+                            this.state.openings.map((open, index) => {
+                                return (
+                                    <div className="praxis-opening-time--container" key={index}>
+                                        <div className="praxis-opening-box praxis-opening-box--header ">
+                                            <h5>Tag {index + 1}</h5>
+                                            {this.state.edit? <button
+                                                disabled = {this.state.edit ? "" : "disabled"}
+                                                className="button--remove-opening" 
+                                                onClick={(e) => {this.handleRemoveOpening(e, index)}}>
+                                                    entfernen
+                                            </button> : undefined}
+                                        </div>
+                                        <div className="desktop-opening-container">
+                                            <input
+                                                className="opening-day" 
+                                                disabled = {this.state.edit ? "" : "disabled"}
+                                                type="text" 
+                                                name="tag" 
+                                                placeholder="Wochentag" 
+                                                onChange={(e) => this.handleChangeOpeningDay(e, index)} 
+                                                value={open.day} 
+                                                autoComplete="false" />
+                                            <div className="praxis-opening-box">
+                                                <div className="time-box time-box--editor">
+                                                    <label className="opening-label" htmlFor="open-time">von:</label>
+                                                    <input 
+                                                        disabled = {this.state.edit ? "" : "disabled"}
+                                                        type="time" 
+                                                        name="open-time" 
+                                                        placeholder="von" 
+                                                        onChange={(e) => this.handleChangeOpeningStart(e, index)} 
+                                                        value={open.start} />
+                                                </div>
+                                                <div className="time-box time-box--editor">
+                                                    <label className="opening-label" htmlFor="close-time">bis:</label>
+                                                    <input
+                                                        disabled = {this.state.edit ? "" : "disabled"} 
+                                                        type="time" 
+                                                        name="close-time" 
+                                                        placeholder="bis" 
+                                                        onChange={(e) => this.handleChangeOpeningEnd(e, index)} 
+                                                        value={open.end} />
+                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }) : 
+                            (<p className="editor--message">
+                                Es wurden noch keine Öffnungszeiten angegeben
+                            </p>)
+                        ) 
+                    : 
+                        (this.props.praxis.openings.length != 0 ?
+                            this.props.praxis.openings.map((open, index) => {
+                                return (
+                                    <p className="item__message item-title" key={index}>
+                                        <strong>{open.day}</strong>, von {open.start}Uhr bis {open.end}Uhr
+                                    </p>
+                                )
+                            }) :
+                            (<p className="editor--message">
+                                Es wurden noch keine Öffnungszeiten angegeben
+                            </p>)
+                    )}
+                    <h5 className="item__message item__status-message praxis--subheading">Mitarbeiter</h5>
                     <Select 
                         value={this.state.edit ? this.state.mitarbeiter : this.props.praxis.mitarbeiter}
                         onChange={this.handleChangeMitarbeiter}
@@ -237,6 +352,7 @@ export class PraxisEditor extends React.Component {
                         className="select-box"
                         classNamePrefix="Mitarbeiter auswählen..."
                     />
+                    <h5 className="item__message item__status-message praxis--subheading">Patienten</h5>
                     <Select
                         value={this.state.edit ? this.state.patienten : this.props.praxis.patienten}
                         onChange={this.handleChangePatienten}
