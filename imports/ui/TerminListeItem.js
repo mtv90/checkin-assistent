@@ -4,14 +4,17 @@ import PropTypes from 'prop-types';
 import swal from 'sweetalert';
 import Modal from 'react-modal';
 import Spinner from 'react-spinkit';
+import moment from 'moment';
 
 export default class TerminListeItem extends React.Component {
     constructor(props){
         super(props);
         this.state= {
             isLoading: false,
-            isOpen: false
+            isOpen: false,
+            moment: moment(),
         }
+        this.interval = null;
     }
 
     handleRemoveItem(e){
@@ -51,9 +54,37 @@ export default class TerminListeItem extends React.Component {
             );
         }
     }
+    checkDelay(){
+        if(this.state.moment.diff(this.props.start, 'minutes') >= -30 && this.state.moment.diff(this.props.start, 'minutes') < -15){
+            return 'termin-list-item min30';
+        }
+        if(this.state.moment.diff(this.props.start, 'minutes') >= -15 && this.state.moment.diff(this.props.start, 'minutes') < 0){
+            return 'termin-list-item min15'
+        }
+        if(this.state.moment.diff(this.props.start, 'minutes') >= 0 ){
+            return 'termin-list-item too-late'
+        }  
+    }
+    componentDidMount(){
+        const self = this;
+        self.interval = setInterval(function() {
+          self.setState({
+            moment: moment(),
+          });
+        }, 300000);    
+    }
+    componentWillUnmount(){
+        clearInterval(this.interval);
+    }
     render() {
+        const className = this.checkDelay() ? this.checkDelay() : 'termin-list-item';
+        
+        // console.log(mo.diff(this.props.start, 'minutes'))
+        // mo.diff(this.props.start, 'seconds')
+        // console.log(moment(this.props.start).fromNow()) 
         return (
-            <div className="item" id={this.props._id}>
+            
+            <div className={className} id={this.props._id}>
                 <Modal
                     isOpen={this.state.isLoading}  
                     appElement={document.getElementById('app')}
@@ -67,10 +98,12 @@ export default class TerminListeItem extends React.Component {
                     <Spinner name='ball-grid-pulse' className="spinner-box" color="#92A8D1" />
                     
                 </Modal>
-                <h4>{this.props.title}</h4>
-                {/* <p className="item__message">Hier sollen mal Termin etc. stehen</p> */}
+                <h5>{this.props.title}</h5>
+                <p className="item__message">
+                    <small>{moment(this.props.start).format('HH:mm')} Uhr <br/>
+                    {this.props.subject}</small>
+                </p>
                 <button type="button" className="button button--pill" onClick={this.checkIn.bind(this)}>einchecken</button>
-                <button type="button" className="button button--pill" onClick={() => alert('Test 2')}>bearbeiten</button>
                 <button type="button" className="button button--pill" onClick={this.handleRemoveItem.bind(this)}>löschen</button>
             </div>
         )

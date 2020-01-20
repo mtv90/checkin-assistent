@@ -28,7 +28,7 @@ export default class Ressourcenkalender extends React.Component {
         new Draggable(containerEl, {
             itemSelector: '.drag-it',
             eventData: function(eventEl) {
-                console.log(eventEl.firstChild.innerText)
+                // console.log(eventEl.firstChild.innerText)
                 return {
                     title: eventEl.firstChild.innerText
                 };

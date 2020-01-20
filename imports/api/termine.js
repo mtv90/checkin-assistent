@@ -16,7 +16,12 @@ if(Meteor.isServer){
     );
     Meteor.publish(
         'termineToday', function (){
-            return Termine.find({$and: [ { user_id: this.userId }, { checkedIn: false }, { start: {$gte: moment().format('YYYY-MM-DD') } } ]});
+            return Termine.find({$and: [ { checkedIn: false }, { start: {$gte: moment().format('YYYY-MM-DD') } } ]});
+        }
+    );
+    Meteor.publish(
+        'termineWaitingToday', function (){
+            return Termine.find({$and: [ { checkedIn: true }, { start: {$gte: moment().format('YYYY-MM-DD') } } ]});
         }
     );
     Meteor.publish(

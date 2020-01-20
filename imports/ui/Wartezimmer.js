@@ -107,9 +107,9 @@ export class Wartezimmer extends React.Component {
                 </div>
                 <div className="wrapper">
                     <div id="external-events" className="termin-liste">
-                        <Warteliste/>
+                        <Warteliste praxisId={this.props.praxisId_warte}/>
                         <hr/>
-                        <TerminListe/>
+                        <TerminListe praxisId={this.props.praxisId_warte}/>
                     </div>
                     {/* <div className="resource-cal resource-spacing">
                         <FullCalendar id="calendarEl"

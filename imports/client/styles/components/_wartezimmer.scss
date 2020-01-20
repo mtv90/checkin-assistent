@@ -87,3 +87,19 @@
         display: none;
     }
 }
+
+.termin-list-item{
+    border-left: $praxis-item-border*2 solid grey;
+    padding: $space;
+    transition: background-color .3s ease, border-left .3s ease; 
+}
+.min30 {
+    border-left: $praxis-item-border*2 solid $serenty;
+}
+.min15 {
+
+    border-left: $praxis-item-border*2 solid #FFD662;
+}
+.too-late{
+    border-left: $praxis-item-border*2 solid #DD4132;
+}

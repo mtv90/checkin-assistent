@@ -37,9 +37,11 @@ export default class WartelisteItem extends React.Component {
     render() {
         return (
             <div className="item drag-it" id={this.props._id}>
-                
-                <h4>{this.props.title}</h4>
-                
+                <h5>{this.props.title}</h5>
+                    <p className="item__message">
+                        <small>{moment(this.props.start).format('HH:mm')} Uhr <br/>
+                        {this.props.subject}</small>
+                    </p>
                 <button type="button" className="button button--pill" onClick={this.uncheckItem.bind(this)}>checkout</button>
             </div>
         )
