@@ -165,7 +165,7 @@ render(){
 Kalender.propTypes = {
   user: PropTypes.object.isRequired,
   praxis: PropTypes.object,
-  termine: PropTypes.object,
+  termine: PropTypes.array,
 }
 
 export default withTracker( () => {

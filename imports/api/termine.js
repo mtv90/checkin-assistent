@@ -26,9 +26,6 @@ if(Meteor.isServer){
     );
     Meteor.publish(
         'patiententermine', function() {
-            let data = Termine.find({}, {patient: {
-                _id: this.userId
-            }})
             return Termine.find({'patient._id': this.userId}, {sort: {start: 1}});
             // Termine.find({ $query: {"patient._id": this.userId}, $orderby: { start : 1 } });
         }
@@ -73,27 +70,26 @@ Meteor.methods({
             }
         }).validate({patient_id, subject, notes});
 
-        let res = Meteor.users.findOne({_id: patient_id});
-        let patient = {
-            _id: res._id,
-            emails: res.emails,
-            profile: res.profile
-        }
-        let title = `${res.profile.nachname}, ${res.profile.vorname}` 
+        const patient = Meteor.users.findOne({_id: patient_id}, {fields:{services: 0, role: 0, createdAt: 0}});
+        if(patient){
+            let title = `${patient.profile.nachname}, ${patient.profile.vorname}` 
         
-        return Termine.insert({
-            title,
-            patient,
-            subject,
-            start,
-            end,
-            notes,
-            praxis,
-            checkedIn: false,
-            user_id: this.userId,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        });
+            return Termine.insert({
+                title,
+                patient,
+                subject,
+                start,
+                end,
+                notes,
+                praxis,
+                checkedIn: false,
+                status: 'open',
+                user_id: this.userId,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            });
+        }
+
     },
 
     'termine.remove'(_id) {
@@ -114,30 +110,55 @@ Meteor.methods({
     },
 
     'termin.check'(_id, termin) {
+        const checkAccess = Termine.findOne(_id)
+        
+        let mitarbeiter_access = false;         
+        
         if(!this.userId) {
             throw new Meteor.Error('Nicht authorisiert!');
         }
-        const checkedIn = termin.checkedIn;
-        new SimpleSchema({
-            _id: {
-                type: String,
-                min: 1
-            },
-            checkedIn: {
-                type: Boolean,
-                allowedValues: [true, false]
+        checkAccess.praxis.mitarbeiter.map( (mitarbeiter) => {
+            if(mitarbeiter._id === this.userId){
+                mitarbeiter_access = true;
+                return true;
+            } else {
+                mitarbeiter_access = false;
+                return false;
             }
-        }).validate({_id, checkedIn});
+        });
 
-        Termine.update({
-            _id,
-            user_id: this.userId
-        },{
-            $set: {
-                ...termin,
-                updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
-                
-            }
-        }); 
+
+        if(checkAccess.patient._id === this.userId ||  checkAccess.user_id === this.userId || mitarbeiter_access){
+            const checkedIn = termin.checkedIn;
+            const status = termin.status;
+            new SimpleSchema({
+                _id: {
+                    type: String,
+                    min: 1
+                },
+                checkedIn: {
+                    type: Boolean,
+                    allowedValues: [true, false]
+                },
+                status: {
+                    type: String,
+                    allowedValues: ['open', 'waiting', 'in-behandlung', 'abgeschlossen', 'storniert', 'gesperrt', 'verspaetet']
+                }
+            }).validate({_id, checkedIn, status});
+    
+            Termine.update({
+                _id,
+                user_id: termin.user_id
+            },{
+                $set: {
+                    ...termin,
+                    updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
+                    
+                }
+            }); 
+        } else {
+            throw new Meteor.Error('Sie dürfen keine Status-Updates durchführen');
+        }
+
     }
 });

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import swal from 'sweetalert';
-
+import { withTracker  } from 'meteor/react-meteor-data';
 import moment from 'moment';
 import Modal from 'react-modal';
 import { Tracker } from 'meteor/tracker';
 import {Session} from 'meteor/session';
+import { Praxen } from '../api/praxen';
 
 export default class AddTermin extends React.Component {
     constructor(props){
@@ -65,16 +66,16 @@ export default class AddTermin extends React.Component {
     }
     componentDidMount() {
         this.patientTracker = Tracker.autorun((run) => {
-            Meteor.subscribe('userList');
-            let patientsArray = [];
-            const patients = Meteor.users.find({role: "patient"}).fetch();
-            patients.map(patient => {
-                    patient["label"] = `${patient.profile.nachname}, ${patient.profile.vorname}`;
-                    patientsArray.push(patient);
-            })
+            // Meteor.subscribe('userList');
+            // let patientsArray = [];
+            // const patients = Meteor.users.find({role: "patient"}).fetch();
+            // patients.map(patient => {
+            //         patient["label"] = `${patient.profile.nachname}, ${patient.profile.vorname}`;
+            //         patientsArray.push(patient);
+            // })
 
             this.setState({
-                patients:patientsArray, 
+                // patients:patientsArray, 
                 isOpen: Session.get('isOpen'), 
                 start: moment(Session.get('start')).format('YYYY-MM-DDTHH:mm:ss'),
                 end: moment(Session.get('start')).add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
@@ -82,7 +83,7 @@ export default class AddTermin extends React.Component {
         });
     }
     componentWillUnmount(){
-        Meteor.subscribe('userList').stop();
+        // Meteor.subscribe('userList').stop();
         this.patientTracker.stop()
     }
     getDate(date){
@@ -90,12 +91,17 @@ export default class AddTermin extends React.Component {
         this.setState({date})
     }
     renderOptions(){
-        if(this.state.patients.length === 0) {
+        if(!this.props.praxis.patienten){
             return (
                 <option className="item__status-message">Keine Patienten vorhanden!</option>
             )
         }
-        return this.state.patients.map((patient) => {
+        if(this.props.praxis.patienten.length === 0) {
+            return (
+                <option className="item__status-message">Keine Patienten vorhanden!</option>
+            )
+        }
+        return this.props.praxis.patienten.map((patient) => {
             return (
                 <option key={patient._id} ref="pat_id" value={patient._id}>{patient.label}</option>
             )
@@ -117,12 +123,8 @@ export default class AddTermin extends React.Component {
     }
     onChangeEndtime(e){
         const end = e.target.value;
-        if(end > this.state.start) {
+        if(end ) {
             this.setState({end, timeError: ''});
-        } else {
-            this.setState({
-                timeError: 'Endzeitpunkt muss größer sein!'
-            })
         }
         
     }
@@ -134,9 +136,9 @@ export default class AddTermin extends React.Component {
     }
     onChangeSubject(e){
         const subject = e.target.value;
-        if(subject) {
-            this.setState({subject});
-        }
+        // if(subject) {
+        this.setState({subject});
+        // }
     }
     openTerminModal(){
         this.setState({isOpen: true});

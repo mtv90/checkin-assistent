@@ -17,12 +17,13 @@ export class PatTerminItem extends React.Component {
         
     }
     render() {
+        const className = this.props.termin.selected ? 'pat-termin-item pat-termin-item--selected' : 'pat-termin-item'
         return (
-            <div className="item" id={this.props.termin._id} onClick={ () => {
+            <div className={className} id={this.props.termin._id} onClick={ () => {
                 this.props.Session.set('selectedTerminId', this.props.termin._id)
             }}>
                 <h5>{this.props.termin.subject}</h5>
-                { this.props.termin.selected ? 'selected' : undefined}
+                
                 <p className="item__message">{moment(this.props.termin.start).format("HH:mm")} Uhr | {moment(this.props.termin.start).format("DD.MM.YYYY")}</p>
             </div>
         )

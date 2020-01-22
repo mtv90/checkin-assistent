@@ -22,6 +22,8 @@ export default class WartelisteItem extends React.Component {
         
         if(!!termin._id){
             termin['checkedIn'] = false;
+            termin['status'] ="open";
+
             Meteor.call('termin.check', termin._id, termin,
                 (err, res) => {
                     if(err) {

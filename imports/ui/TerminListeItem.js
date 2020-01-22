@@ -41,6 +41,7 @@ export default class TerminListeItem extends React.Component {
         
         if(!!termin._id){
             termin['checkedIn'] = true;
+            termin['status'] = 'waiting';
             Meteor.call('termin.check', termin._id, termin,
                 (err, res) => {
                     if(err) {

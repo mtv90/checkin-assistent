@@ -392,7 +392,7 @@ export class PraxisEditor extends React.Component {
                                                 type="text" 
                                                 name="title" 
                                                 placeholder="Ressourcentitel" 
-                                                onChange={(e) => this.handleChangeResourcetitle(e, index)} 
+                                                onChange={(e) => this.handleChangeResourceTitle(e, index)} 
                                                 value={resource.title} 
                                                 autoComplete="false" />
                                         </div>

@@ -174,12 +174,12 @@ export class AddPraxis extends React.Component {
     addResources(){
         console.log(this.state.resources.length)
         this.setState({ resources: [...this.state.resources, {
-            _id: Random.id(),
+            id: Random.id(),
             title:'',
         }]})
     }
 
-    handleChangeResoureTitle(e, index) {
+    handleChangeResourceTitle(e, index) {
         
         this.state.resources[index]['title'] = e.target.value;
 

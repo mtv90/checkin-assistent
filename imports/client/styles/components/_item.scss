@@ -42,3 +42,15 @@
     background-color: $light-grey;
     border-left: $praxis-item-border solid $serenty;
 }
+
+.pat-termin-item{
+    border-left: $praxis-item-border*2 solid transparent;
+    cursor: pointer;
+    padding: $space;
+    transition: background-color .3s ease, border-left .3s ease;
+}
+
+.pat-termin-item--selected, .pat-termin-item--selected:hover {
+    background-color: $light-grey;
+    border-left: $praxis-item-border solid $mint-green;
+}

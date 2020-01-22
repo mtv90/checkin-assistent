@@ -144,11 +144,18 @@
     color: white;
 }
 
-.minus{
-    // border: 1px solid #CE5B78;
-    // background-color: #CE5B78;
-    // border-radius: 100%;
-    // color: white;
-    // padding: $space;
-    // font-weight: 800;
+.button--checkin{
+    margin: 0 auto;
+    display: inline-block;
+    border: none;
+    background-color: $dark-green;
+    color: white;
+    width: 40%;
+}
+
+.button--checkin:focus{
+    outline: none;
+}
+.button--checkin:hover{
+    background-color: $dark-grey;
 }

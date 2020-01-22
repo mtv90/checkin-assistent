@@ -7,6 +7,7 @@ import PatTerminItem from './PatTerminItem';
 import {Session} from 'meteor/session';
 import Patientheader from './Patientheader';
 import FlipMove from 'react-flip-move';
+import Patiententerminliste from './Patiententerminliste';
 import Editor from './Editor';
 
 export const Patiententermine = (props) => {
@@ -14,13 +15,19 @@ export const Patiententermine = (props) => {
     return (
         <div>
             <Patientheader title={`${Session.get('user').profile.nachname}, ${Session.get('user').profile.vorname}`}/>
-            Patiententerminliste:
-            <FlipMove maintainContainerHeight={true}>
-                {props.patiententermine.map( (termin) => {
-                    return <PatTerminItem key={termin._id} termin={termin}/> 
-                })}
-            </FlipMove>
-            <Editor/>
+            <div className="page-content editor-container">
+                <div className="page-content__sidebar">
+                    {/* <FlipMove maintainContainerHeight={true}>
+                        {props.patiententermine.map( (termin) => {
+                            return <PatTerminItem key={termin._id} termin={termin}/> 
+                        })}
+                    </FlipMove> */}
+                    <Patiententerminliste/>
+                </div>
+                <div className="page-content__main">
+                    <Editor/>
+                </div>
+            </div>
         </div>
     );
 };

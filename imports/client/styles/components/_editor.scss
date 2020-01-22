@@ -127,3 +127,61 @@
         width: 30vw;
     }  
 }
+.termin-header{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: darken($dark-grey, 10%);
+    border-bottom: 1px solid $dark-grey;
+    margin-bottom: $space;
+}
+.praxis-anschrift{
+    padding: $space;
+}
+.mein-termin{
+    display: flex;
+    flex-direction: column;
+    padding: $space;
+    border-bottom: 1px solid $dark-grey;
+}
+.termin-status{
+    font-size: $base-font-size*1.1;
+    background-color: darken($light-grey, 10%);
+    border: none;
+    border-radius: 10%;
+    padding: $space/3;
+}
+.termin-zeit{
+    font-size: $base-font-size*1.1;
+    padding: $space/3;
+
+    @include desktop{
+        font-size: $base-font-size*1.5;
+    } 
+}
+.termin-aktion-container{
+    display: flex;
+    flex-direction: column;
+    padding: $space;
+    border-bottom: 1px solid $dark-grey;
+}
+.export-cal{
+    background-color: #CE5B78;
+    border: none;
+    display: inline-block;
+    border-radius: 5%;
+    color: #CE5B78;
+    // margin: 0 ($space / 2) 0 0;
+    padding: $space;
+}
+.waiting{
+    background-color: #FFD662;
+}
+.in-behandlung{
+    background-color: $dark-green;
+    color: white;
+}
+.storno{
+    background-color: #CE5B78;
+    color: white;
+}

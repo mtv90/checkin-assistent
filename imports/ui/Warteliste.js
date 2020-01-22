@@ -30,7 +30,7 @@ export class Warteliste extends React.Component {
         if(this.props.termine.length === 0) {
             return (
                 <div className="item">
-                    <p className="item__status-message">Noch keine Termine im Wartezimmer</p>
+                    <p className="item__status-message">Keine Termine im Wartezimmer</p>
                 </div>
             )
         }
@@ -69,7 +69,7 @@ export default withTracker( (props) => {
     const praxisId = props.praxisId
 
     Meteor.subscribe('termineWaitingToday');
-    const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, {"praxis._id": praxisId}, {"checkedIn": true}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
+    const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, {"praxis._id": praxisId},{"status": "waiting"} , {"checkedIn": true}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
     
     return {
         termine

@@ -7,7 +7,7 @@ export const Praxen = new Mongo.Collection('praxen');
 if(Meteor.isServer){
     Meteor.publish(
         'praxen', function() {
-            return Praxen.find({user_id: this.userId});
+            return Praxen.find({$or:[{user_id: this.userId}, {mitarbeiter: {$elemMatch: {_id: this.userId}}}]});
             
         }
     );
@@ -89,12 +89,12 @@ Meteor.methods({
                 label: 'Ressource',
                 optional: true
             },
-            'resources.$.name':{
+            'resources.$.title':{
                 type: String,
                 label: 'Name',
                 optional: true
             },
-            'resources.$._id':{
+            'resources.$.id':{
                 type: String,
                 label: 'Ressource-ID',
                 optional: true
@@ -283,7 +283,7 @@ Meteor.methods({
                 label: 'Titel',
                 optional: true
             },
-            'resources.$._id':{
+            'resources.$.id':{
                 type: String,
                 label: 'Ressource-ID',
                 optional: true

@@ -15,8 +15,10 @@ export default class Account extends React.Component{
     render() {
         return (
             <div>
-                <Patientheader/>
-                
+                <Patientheader title={`${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}`}/>
+                <div className="editor">
+                    <h1>{this.props.user.profile.nachname}, {this.props.user.profile.vorname}</h1>
+                </div>
             </div>
         )
     }
