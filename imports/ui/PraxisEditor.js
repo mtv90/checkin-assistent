@@ -146,10 +146,14 @@ export class PraxisEditor extends React.Component {
     }
 
     addResources(){
-        this.setState({ resources: [...this.state.resources, {
-            _id: Random.id(),
-            title:'',
-        }]})
+        if(this.state.resources){
+            this.setState({ resources: [...this.state.resources, {
+                _id: Random.id(),
+                title:'',
+                    }
+                ]
+            });
+        }
     }
 
     handleChangeResourceTitle(e, index) {
@@ -161,17 +165,17 @@ export class PraxisEditor extends React.Component {
 
     addOpenings(e){
         
-        if(this.state.openings.length < 7){
-            this.setState({ openings: [...this.state.openings, {
-                day:'',
-                start: moment().format('HH:mm'),
-                end: moment().format('HH:mm')
-            }]})
-           
-        } else {
-            console.log("Eine Woche kann leider nur 7 Tage haben!")
-        }
-        
+        if(this.state.openings){
+            if(this.state.openings.length < 7){
+                this.setState({ openings: [...this.state.openings, {
+                    day:'',
+                    start: moment().format('HH:mm'),
+                    end: moment().format('HH:mm')
+                }]})
+            } else {
+                console.log("Eine Woche kann leider nur 7 Tage haben!")
+            }
+        } 
     }
     handleChangeOpeningDay(e, index) {
         
