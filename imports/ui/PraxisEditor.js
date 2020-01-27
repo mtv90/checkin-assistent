@@ -349,7 +349,7 @@ export class PraxisEditor extends React.Component {
                             </p>)
                         ) 
                     : 
-                        (this.props.praxis.openings.length != 0 ?
+                        (this.props.praxis.openings ?
                             this.props.praxis.openings.map((open, index) => {
                                 return (
                                     <p className="item__message item-title" key={index}>
@@ -404,7 +404,7 @@ export class PraxisEditor extends React.Component {
                             </p>)
                         ) 
                     : 
-                        (this.props.praxis.resources.length != 0 ?
+                        (this.props.praxis.resources ?
                             this.props.praxis.resources.map((resource, index) => {
                                 return (
                                     <p className="item__message item-title" key={index}>
