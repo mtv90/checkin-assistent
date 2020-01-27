@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
+import {WebApp} from 'meteor/webapp'
 import { Tracker } from 'meteor/tracker';
-
+import { withTracker  } from 'meteor/react-meteor-data';
 import React from 'react';
 import history from './history';
 
@@ -13,6 +14,7 @@ import NotVerified from '../ui/NotVerified';
 import Patiententermine from '../ui/Patiententermine';
 import Account from '../ui/Account';
 import Kalender from '../ui/Kalender';
+import Loading from '../ui/Loading';
 import Wartezimmer from '../ui/Wartezimmer';
 import AdminDashboard from '../ui/AdminDashboard';
 import PatientenDashboard from '../ui/PatientenDashboard';
@@ -67,9 +69,11 @@ const checkUserRole = (user) => {
     if(role) {
         this.role = role;
         return role;
-    } else {
-        throw new Meteor.Error("Es wurde keine Benutzerrolle zugewiesen!")
-    }
+    } 
+    // if(!role) {
+    //     return <Loading/>
+    //     // throw new Meteor.Error("Es wurde keine Benutzerrolle zugewiesen!")
+    // }
 }
 
 
@@ -100,17 +104,22 @@ const onEnterPublicPage = () => {
 }
 
 const onEnterDashboard = (props) => {
-    if(isLoggedIn() && this.user && this.role === 'admin'){
-        // if(!(props.match.params.id === 'undefined')){
-            Session.set('praxisId', props.match.params.id)
-            Session.set('dashboard_path', props.match.path)
-        // }
-        return <AdminDashboard user={this.user}/>
-   } else if(isLoggedIn() && this.user && this.role === 'patient') {
-       return <PatientenDashboard user={this.user} />
-   } else {
-       throw new Meteor.Error('Es wurde keine Benutzerrolle zugewiesen!');
-   }
+
+    if(isLoggedIn() && this.user && Roles.userIsInRole(Meteor.userId(), 'admin')){
+            
+                Session.set('praxisId', props.match.params.id)
+                Session.set('dashboard_path', props.match.path)
+                        return <AdminDashboard user={this.user}/>
+       } else if(isLoggedIn() && this.user && Roles.userIsInRole(Meteor.userId(), 'patient')) {
+           return <PatientenDashboard user={this.user} />
+       } 
+    
+
+    else {
+        console.log('Es wurde keine Benutzerrolle zugewiesen!')
+        return <Loading/>
+        throw new Meteor.Error('Es wurde keine Benutzerrolle zugewiesen!');
+    }
 }
 
 const onEnterTermine = (props) => {
@@ -152,16 +161,22 @@ const onEnterWartezimmer = (props) => {
     }
 } 
 
-    export const Routes = (
-        <Router history={history}>
+const onEnterLoadingPage = (props) => {
+    console.log(props)
+}
+
+export const Routes = (
+    <Router history={history}>
         <Switch>
-            <Route exact path="/" render={() => { onEnterPublicPage(); return <Login/> }}/>
+            <Route exact path="/" privacy="unauth" render={() => { onEnterPublicPage(); return <Login/> }}/>
             <Route exact path="/signup" render={() => { onEnterPublicPage(); return <Signup/> }}/>
+            
             <Route exact path="/dashboard" render={(props) => onEnterDashboard(props) ? onEnterDashboard(props) : <Redirect to="/" />} />
+            
             <Route exact path="/dashboard/:id" render={(props) => onEnterDashboard(props) ? onEnterDashboard(props) : <Redirect to="/" />} />
             <Route exact path="/dashboard/:id/termine" render= { (props) => onEnterKalender(props) ? ( <Kalender user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
             <Route exact path="/dashboard/:id/wartezimmer" render= { (props) => onEnterWartezimmer(props) ? ( <Wartezimmer user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
-            
+                
             <Route exact path="/praxisverwaltung" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
             <Route exact path="/praxisverwaltung/:id" render= { (props) => onEnterPraxen(props) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
             <Route exact path="/meine-termine" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? (<Patiententermine user={this.user}/>) : (<Redirect to="/not-verified" />) } /> 
@@ -171,5 +186,4 @@ const onEnterWartezimmer = (props) => {
             <Route exact path="*" render= { () => <NotFound/> }/>
         </Switch>
     </Router>
-
 )

@@ -1,6 +1,10 @@
 import { Meteor } from 'meteor/meteor';
+import { Email } from 'meteor/email'
+import { WebApp } from 'meteor/webapp';
 import SimpleSchema from 'simpl-schema';
 import { Accounts } from 'meteor/accounts-base';
+import moment from 'moment';
+import { check } from 'meteor/check'
 
 export const validateNewUser = (user) => {
     const email = user.emails[0].address;
@@ -53,7 +57,7 @@ if(Meteor.isServer) {
         this.ready()
       }
     });
-      
+
     Meteor.publish('userList', function (){ 
       
       const role = Roles.userIsInRole(this.userId, 'admin')
@@ -124,6 +128,41 @@ Meteor.methods({
             }
          };
         Accounts.sendVerificationEmail(this.userId, email);
+    },
+
+    'sendMailToUser'(
+      patient_id,
+      sub,
+      start,
+      end,
+      notes,
+      praxisTitle,
+      praxisStrasse,
+      praxisNummer,
+      praxisPlz,
+      praxisStadt,
+      praxisTelefon,
+      praxisEmail
+      ){
+        process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+        if(!this.userId){
+          throw new Meteor.Error('Nicht authorisiert');
+      }
+    let user = Meteor.users.findOne({_id: patient_id}, {fields:{services: 0, role: 0, createdAt: 0, role: 0}});
+  
+    if(user){
+      let to = user.emails[0].address;
+      let from = `${praxisTitle}-Checkin <app151404387@heroku.com>`;
+      let subject = sub;
+      let text = `Hallo ${user.profile.vorname} ${user.profile.nachname},\n\ \n\ \n\hiermit bestätigen wir Ihnen folgenden Termin:\n\ \n\Datum: ${moment(start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Grund: ${subject}\n\ \n\Hinweise: ${notes}\n\ \n\Kontakt: ${praxisTitle}, ${praxisStrasse} ${praxisNummer}, ${praxisPlz} ${praxisStadt}\n\ \n\Telefon: ${praxisTelefon}, E-mail: ${praxisEmail}\n\ \n\ \n\Falls Sie den Termin nicht wahrnehmen können, melden Sie sich bitte über den oben genannten Kontakt oder über die App.\n\ \n\Vielen Dank und bis bald!`
+      // Make sure that all arguments are strings.
+      check([to, from, subject, text], [String]);
+      // Let other method calls from the same client start running, without
+     // waiting for the email sending to complete.
+      this.unblock();
+      Email.send({to, from, subject, text});
+    }
+
     },
 
     'resentEmail'() {

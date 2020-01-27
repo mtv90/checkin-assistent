@@ -2,23 +2,26 @@ import './main.html';
 
 import {Meteor} from 'meteor/meteor';
 import {Tracker} from 'meteor/tracker';
-
+import { Accounts } from 'meteor/accounts-base';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import history from './../imports/routes/history'
 import {Router} from 'react-router-dom';
-import { onAuthChange, Routes, checkUserService, goBack } from '../imports/routes/routes';
+import { onAuthChange, Routes, checkUserService } from '../imports/routes/routes';
+import Route from '../imports/routes/routes';
 import '../imports/startup/simple-schema-configuration';
 
 import App from '../imports/ui/App';
 import Loading from '../imports/ui/Loading';
 import moment from 'moment';
 import {Session} from 'meteor/session';
+import swal from 'sweetalert';
 
 Tracker.autorun(() => {
 
   const isAuth = !!Meteor.userId();
+  
   onAuthChange(isAuth);
 
 });
@@ -26,9 +29,10 @@ Tracker.autorun(() => {
 let handle = Meteor.subscribe('user');
 Tracker.autorun(() => {
   if(handle.ready()) {
+    let user = Meteor.users.findOne({_id: Meteor.userId()}, {fields:{services: 0, createdAt: 0}});
     
-    let user = Meteor.user();
     checkUserService(user);
+   
   }
   
 })
@@ -92,6 +96,44 @@ Tracker.autorun(() => {
   } 
 });
 
+// Implementierung, gemäß Datenschutz, wenn der Patient >= 10 min inaktiv war, meldet sich das System automatisch ab 
+var html5api = new Html5Api();
+var logTimer;
+var pageVisibility = html5api.pageVisibility();
+Tracker.autorun(() => {
+  if(pageVisibility && Roles.userIsInRole(Meteor.userId(), 'patient')){
+    pageVisibility.onChange(() => {
+      switch (!(history.location.pathname === '/signup') || !(history.location.pathname === '/')) {
+        
+        case (pageVisibility.state() === 'hidden'):
+            
+            logTimer = setTimeout(function(props){
+              Accounts.logout();
+              swal("Sitzung abgelaufen", "Das System hat Sie wegen Inaktivität abgemeldet", "danger")         
+            }, 600000);
+          break;
+      
+        case (pageVisibility.state() === 'visible'):
+          console.log(000)
+            clearTimeout(logTimer);
+          break;
+        default: 
+          break;
+      }
+    });
+  }
+
+
+  //   pageVisibility.onChange(function (props) {
+  //     console.log("The Current Page Visibility is " + pageVisibility.state(), props);
+  //     var logTimer;
+      
+  //     console.log(Session.get('timer'));
+
+  // });
+
+});
+
 Accounts.onEmailVerificationLink((token, done) => {
   Accounts.verifyEmail(token, (error) => { 
     console.log(error);
@@ -103,6 +145,7 @@ Meteor.startup(() => {
     selectedTerminId: undefined,
     selectedPraxisId: undefined,
     isNavOpen: false,
+    isOpen: false,
     // praxisId: undefined,
     praxisId_termin: undefined,
     praxisId_warte: undefined,
@@ -112,8 +155,9 @@ Meteor.startup(() => {
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
   })
   // Session.setDefault( 'praxisId', undefined)
-  
-  ReactDOM.render(<Loading/>, document.getElementById('app'));
+  // if(!this.user){
+  //   ReactDOM.render(<Loading/>, document.getElementById('app'));
+  // }
   
   window.setTimeout(() => {
     ReactDOM.render(
@@ -123,5 +167,6 @@ Meteor.startup(() => {
       Routes
       , document.getElementById('app'));
   }, 1000);
+
 
 });

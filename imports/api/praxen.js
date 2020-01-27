@@ -2,6 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 import moment from 'moment';
+import { Termine } from './termine';
 export const Praxen = new Mongo.Collection('praxen');
 
 if(Meteor.isServer){
@@ -348,6 +349,18 @@ Meteor.methods({
             _id,
             ...updates
         });
+        const praxis = updates
+        console.log(_id, updates, praxis)
+        
+        Termine.update(
+            {"praxis._id": _id, user_id: this.userId},
+            {
+                $set:{
+                    praxis: praxis,
+                    updatedAt: new Date()
+                }
+            },
+            { multi: true })
 
         Praxen.update({
             _id,

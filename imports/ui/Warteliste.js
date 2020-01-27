@@ -6,6 +6,7 @@ import { Tracker } from 'meteor/tracker';
 import {Termine} from '../api/termine';
 import WartelisteItem from './WartelisteItem';
 import FlipMove from 'react-flip-move';
+import swal from 'sweetalert';
 
 export class Warteliste extends React.Component {
     constructor(props){
@@ -70,7 +71,7 @@ export default withTracker( (props) => {
 
     Meteor.subscribe('termineWaitingToday');
     const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, {"praxis._id": praxisId},{"status": "waiting"} , {"checkedIn": true}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
-    
+
     return {
         termine
     };

@@ -26,11 +26,14 @@ export class PrivateHeader extends React.Component {
         Session.set('isNavOpen', !Session.get('isNavOpen'))
     }
     render(){
+        // var patt = /dashboard.*/
+        // var str = history.location.pathname
+        // console.log(str.match(patt), history.location.pathname, patt)
     const imgSrc = this.props.isNavOpen ? '/img/x.svg' : '/img/bars.svg';
     return (
         <div className="header">
             <div className="header__content">
-                <img className="header__nav-toggle" src={imgSrc} onClick={this.navToggle.bind(this)}/>
+               {history.location.pathname.startsWith("/dashboard") ? undefined : <img className="header__nav-toggle" src={imgSrc} onClick={this.navToggle.bind(this)}/>}
                 <h1 className="header__title">{this.props.title}</h1>
                 <span className="header-container-right">
                     {this.renderDashboard(this.props)}

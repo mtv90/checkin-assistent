@@ -17,7 +17,14 @@ export class Editor extends React.Component {
         super(props);
     }
     componentDidMount(){
-
+        if(this.props.termin){
+            this.props.termin.patient === false ? swal("Neues zu Ihrem Termin", `Der neue Status ihres Termins ist: ${this.props.termin.status}`, 'warning'): undefined;
+                // .then((val) => {
+                //     if(val){
+                //         Meteor.call('termin.check')
+                //     }
+                // })
+        }
     }
     renderTerminStatus(){
         const status = this.props.termin.status
@@ -47,6 +54,7 @@ export class Editor extends React.Component {
         
         if(!!termin._id){
             termin['checkedIn'] = true;
+            termin['adminRead'] = false;
             termin['status'] = 'waiting';
             Meteor.call('termin.check', termin._id, termin,
                 (err, res) => {
@@ -55,7 +63,7 @@ export class Editor extends React.Component {
                         swal("Fehler", `${err.error}`, "error");
                     } else {
                         
-                        swal("Patient erfolgreich eingechecked", "Er kann nun einem Behandlungszimmer zugewiesen werden.", "success");
+                        swal("Erfolgreich eingechecked", "Bitte nehmen Sie im Wartezimmer Platz.", "success");
                     }
                 }
             );
@@ -71,7 +79,15 @@ export class Editor extends React.Component {
                         <div className="praxis-anschrift">
                             <p className="item__message">{this.props.termin.praxis.strasse} {this.props.termin.praxis.nummer}, {this.props.termin.praxis.plz} {this.props.termin.praxis.stadt}</p>
                             <p className="item__message"> Telefon: {this.props.termin.praxis.telefon}, E-Mail: {this.props.termin.praxis.email}</p>
-                            <div className="item__message"><p>Hier stehen die Öffnungszeiten</p></div>
+                            <h5 className="item__message item__status-message praxis--subheading">Öffnungszeiten</h5>
+                            <div className="item__message">
+                                {this.props.termin.praxis.openings.map((open, index) => {
+                                    return (
+                                        <p className="item__message item-title" key={index}>
+                                            <strong>{open.day}</strong>, von {open.start}Uhr bis {open.end}Uhr
+                                        </p>)
+                                })}  
+                            </div>
                         </div>
                     </div>
                     <div className="mein-termin">
@@ -115,7 +131,23 @@ export default withTracker( () => {
     
     if(termin){
         const behandlung = Behandlungen.findOne({termin_id: termin._id})
-      
+        console.log(termin)
+        if(termin.patientRead === false){
+            swal("Neues zu Ihrem Termin", `Der neue Status ihres Termins ist: ${termin.status}`, 'warning')
+                .then(() => {
+                    termin['adminRead'] = true;
+                    termin['patientRead'] = true;
+                    Meteor.call('termin.check', termin._id, termin, (err, res) => {
+                        if(err) {
+                            console.log(err)
+                            swal("Fehler", `${err.error}`, "error");
+                        } else {
+                            
+                            swal("Mitteilung als gelesen markiert", "", "success");
+                        }
+                    })
+                })
+        }
         return {
             selectedTerminId,
             termin,

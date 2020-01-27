@@ -1,7 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import history from '../routes/history'
+import history from '../routes/history';
+import {Session} from 'meteor/session';
 
 export default class Login extends React.Component{
     constructor(props){
@@ -17,13 +18,18 @@ export default class Login extends React.Component{
       let email = this.refs.email.value.trim();
       let password = this.refs.password.value.trim();
     
-      Meteor.loginWithPassword({email}, password, (err) => {
+      Meteor.loginWithPassword({email}, password, (err, res) => {
+
         if(err){
           this.setState({error: 'Login nicht möglich. Bitte Email und Passwort überprüfen.'});
-        } else {
+        } 
+        else {
+          // console.log(Meteor.user())
+          
           this.setState({error: ''});
           window.location.replace('/dashboard')
-          // history.push('/dashboard')
+          
+          // history.replace('/dashboard')
         }
       });
         

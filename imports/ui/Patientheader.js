@@ -10,12 +10,15 @@ export class Patientheader extends React.Component {
     navToggle = () => {
         Session.set('isNavOpen', !Session.get('isNavOpen'))
     }
+    // history.location.pathname === '/dashboard'
     render(){
         const imgSrc = this.props.isNavOpen ? '/img/x.svg' : '/img/bars.svg';
+    
         return (
+           
             <div className="header patient-header">
                 <div className="header__content">
-                    <img className="header__nav-toggle" src={imgSrc} onClick={this.navToggle.bind(this)}/>
+                   {history.location.pathname.startsWith("/dashboard") ? undefined : <img className="header__nav-toggle" src={imgSrc} onClick={this.navToggle.bind(this)}/>}
                     <h1 className="header__title">{this.props.title}</h1>
                     <span className="header-container-right">
                         { !(history.location.pathname === '/dashboard') ? (<Link className="button button--link button--dashboard button--patient" to="/dashboard"><h3>Dashboard</h3></Link>) : undefined}

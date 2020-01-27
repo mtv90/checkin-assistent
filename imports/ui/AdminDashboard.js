@@ -28,7 +28,9 @@ const getPraxis = (props) => {
     }
     return {};
 }
+
 export const AdminDashboard = (props) => {
+    
     return (
         <div className="" >
             <PrivateHeader title={renderTitle(props)}/>

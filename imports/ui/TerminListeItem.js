@@ -56,10 +56,11 @@ export default class TerminListeItem extends React.Component {
         }
     }
     checkDelay(){
-        if(this.state.moment.diff(this.props.start, 'minutes') >= -30 && this.state.moment.diff(this.props.start, 'minutes') < -15){
+        if(this.state.moment.diff(this.props.start, 'minutes') >= -120 && this.state.moment.diff(this.props.start, 'minutes') < -30){
+
             return 'termin-list-item min30';
         }
-        if(this.state.moment.diff(this.props.start, 'minutes') >= -15 && this.state.moment.diff(this.props.start, 'minutes') < 0){
+        if(this.state.moment.diff(this.props.start, 'minutes') >= -30 && this.state.moment.diff(this.props.start, 'minutes') < 0){
             return 'termin-list-item min15'
         }
         if(this.state.moment.diff(this.props.start, 'minutes') >= 0 ){

@@ -84,6 +84,8 @@ Meteor.methods({
                 praxis,
                 checkedIn: false,
                 status: 'open',
+                patientRead: false,
+                adminRead:true,
                 user_id: this.userId,
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -131,6 +133,8 @@ Meteor.methods({
         if(checkAccess.patient._id === this.userId ||  checkAccess.user_id === this.userId || mitarbeiter_access){
             const checkedIn = termin.checkedIn;
             const status = termin.status;
+            const patientRead = termin.patientRead;
+            const adminRead = termin.adminRead;
             new SimpleSchema({
                 _id: {
                     type: String,
@@ -140,11 +144,19 @@ Meteor.methods({
                     type: Boolean,
                     allowedValues: [true, false]
                 },
+                patientRead: {
+                    type: Boolean,
+                    allowedValues: [true, false]
+                },
+                adminRead: {
+                    type: Boolean,
+                    allowedValues: [true, false]
+                },
                 status: {
                     type: String,
                     allowedValues: ['open', 'waiting', 'in-behandlung', 'abgeschlossen', 'storniert', 'gesperrt', 'verspaetet']
                 }
-            }).validate({_id, checkedIn, status});
+            }).validate({_id, checkedIn, status, patientRead, adminRead});
     
             Termine.update({
                 _id,

@@ -36,6 +36,9 @@ export default class WartelisteItem extends React.Component {
             );
         }
     }
+    componentDidMount(){
+       console.log(this.props)
+    }
     render() {
         return (
             <div className="item drag-it" id={this.props._id}>

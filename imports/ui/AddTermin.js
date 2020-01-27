@@ -41,6 +41,25 @@ export default class AddTermin extends React.Component {
                     swal("Fehler", `${error.error}`, "error");
                 } else {
                     swal("Daten erfolgreich gespeichert", '', "success");
+                    Meteor.call('sendMailToUser',
+                    patient_id,
+                    subject,
+                    start,
+                    end,
+                    notes,
+                    praxis.title,
+                    praxis.strasse,
+                    praxis.nummer,
+                    praxis.plz,
+                    praxis.stadt,
+                    praxis.telefon,
+                    praxis.email,
+                    (error, result) =>{
+                        if(result){
+                            swal("Benachrichtigung versendet","", "success");
+                        }
+                    }
+                    );
                     this.handleModalClose();
                 }
             }
@@ -60,6 +79,7 @@ export default class AddTermin extends React.Component {
             isOpen: false, 
             titel: '',
             subject: '',
+            notes:'',
             timeError: '',
             patient_id:''
         })
