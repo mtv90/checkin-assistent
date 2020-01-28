@@ -148,7 +148,7 @@ export class PraxisEditor extends React.Component {
     addResources(){
         if(this.state.resources){
             this.setState({ resources: [...this.state.resources, {
-                _id: Random.id(),
+                id: Random.id(),
                 title:'',
                     }
                 ]
