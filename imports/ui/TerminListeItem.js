@@ -5,6 +5,8 @@ import swal from 'sweetalert';
 import Modal from 'react-modal';
 import Spinner from 'react-spinkit';
 import moment from 'moment';
+import { MdInfo, MdDone } from "react-icons/md";
+import { IconContext } from "react-icons";
 
 export default class TerminListeItem extends React.Component {
     constructor(props){
@@ -42,6 +44,8 @@ export default class TerminListeItem extends React.Component {
         if(!!termin._id){
             termin['checkedIn'] = true;
             termin['status'] = 'waiting';
+            termin['patientRead'] = false;
+            termin['adminRead'] = true;
             Meteor.call('termin.check', termin._id, termin,
                 (err, res) => {
                     if(err) {
@@ -68,6 +72,7 @@ export default class TerminListeItem extends React.Component {
         }  
     }
     componentDidMount(){
+        console.log(this.props.patientRead)
         const self = this;
         self.interval = setInterval(function() {
           self.setState({
@@ -78,6 +83,17 @@ export default class TerminListeItem extends React.Component {
     componentWillUnmount(){
         clearInterval(this.interval);
     }
+    renderIcon(){
+        if(this.props){
+            if(this.props.patientRead === true){
+                return (
+                    <IconContext.Provider value={{size: "1em", className: "termin-icon--check" }}>
+                        <MdDone />
+                    </IconContext.Provider>
+                );
+            }
+        }
+    }
     render() {
         const className = this.checkDelay() ? this.checkDelay() : 'termin-list-item';
         
@@ -87,20 +103,10 @@ export default class TerminListeItem extends React.Component {
         return (
             
             <div className={className} id={this.props._id}>
-                <Modal
-                    isOpen={this.state.isLoading}  
-                    appElement={document.getElementById('app')}
-                    contentLabel="Warte auf Datenübermittlung"
-                    // onAfterOpen={() => this.refs.titel.focus()}
-                    // onRequestClose={this.handleModalClose.bind(this)}
-                    className="boxed-view__box"
-                    overlayClassName="boxed-view boxed-view--modal"
-                >
-                    <h2>Warte, bis Daten übermittelt wurden...</h2>
-                    <Spinner name='ball-grid-pulse' className="spinner-box" color="#92A8D1" />
-                    
-                </Modal>
-                <h5>{this.props.title}</h5>
+                <div className="listitem-title">
+                    {this.renderIcon()}
+                    <h5>{this.props.title}</h5>
+                </div>
                 <p className="item__message">
                     <small>{moment(this.props.start).format('HH:mm')} Uhr <br/>
                     {this.props.subject}</small>

@@ -103,3 +103,8 @@
 .too-late{
     border-left: $praxis-item-border*2 solid #DD4132;
 }
+
+.listitem-title{
+    cursor: pointer;
+    display: flex;
+}

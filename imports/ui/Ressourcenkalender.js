@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/timeline/main.css';
@@ -81,8 +82,8 @@ export class Ressourcenkalender extends React.Component {
                     <div className="resource-cal resource-spacing">
                         <FullCalendar id="calendar"
                             schedulerLicenseKey= "GPL-My-Project-Is-Open-Source"
-                            plugins={[ resourceTimelinePlugin, interactionPlugin ]}
-                            defaultView= "resourceTimeline"
+                            plugins={[ resourceTimelinePlugin, resourceTimeGridPlugin, interactionPlugin ]}
+                            defaultView= "resourceTimeGridDay"
                             selectable={true}
                             locale= 'de'
                             height='parent'
@@ -99,7 +100,7 @@ export class Ressourcenkalender extends React.Component {
                                 
                             //   }}
                             minTime= '08:00:00'
-                            maxTime= '20:00:00'
+                            maxTime= '23:00:00'
                             buttonText={
                                 {
                                 today: 'heute',
@@ -157,7 +158,6 @@ export class Ressourcenkalender extends React.Component {
     }
 }
 export default withTracker( () => {
-    const test = Session.get('test');
     // let handle = 
     Meteor.subscribe('behandlungen');
     // if(handle.ready()){

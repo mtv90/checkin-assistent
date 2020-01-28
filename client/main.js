@@ -17,6 +17,8 @@ import Loading from '../imports/ui/Loading';
 import moment from 'moment';
 import {Session} from 'meteor/session';
 import swal from 'sweetalert';
+import swal2 from 'sweetalert2'
+import {Termine} from '../imports/api/termine';
 
 Tracker.autorun(() => {
 
@@ -114,7 +116,7 @@ Tracker.autorun(() => {
           break;
       
         case (pageVisibility.state() === 'visible'):
-          console.log(000)
+          
             clearTimeout(logTimer);
           break;
         default: 
@@ -134,6 +136,98 @@ Tracker.autorun(() => {
 
 });
 
+Tracker.autorun(() => {
+
+  
+  const praxisId = Session.get('praxisId_warte')
+  if(praxisId && Meteor.userId() && Roles.userIsInRole(Meteor.userId(), 'admin')){
+    const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, {"praxis._id": praxisId},{"adminRead": false} ]}).fetch();
+    termine.map(termin => {
+      if(termin.status === 'waiting' && termin.checkedIn === true && termin.adminRead === false){
+        swal2.fire({
+          position: 'top-end',
+          icon: 'info',
+          title: `${termin.title}`,
+          text: `Der Termin befindet sich im Status: ${termin.status}`,
+          showConfirmButton: false,
+          timer: 5000,
+          toast:true
+        })
+        // .then((value) => {
+        //   if(value){
+        //     termin['adminRead'] = true;
+        //     Meteor.call('termin.check', termin._id, termin,
+        //       (err, res) => {
+        //         if(err) {
+        //           swal("Fehler", `${err.error}`, "error");
+        //         }
+        //       });
+        //   }
+          
+        // })
+      } 
+    });
+  }
+  
+
+
+});
+
+const handles = [
+  Meteor.subscribe('patiententermine'),
+  Meteor.subscribe('getBehandlungsraum'),
+]
+Tracker.autorun(() => {
+  const areReady = handles.every( handle => handle.ready());
+  if(areReady && Meteor.userId() && Roles.userIsInRole(Meteor.userId(), 'patient')){
+    const termine = Termine.find({$and: [{"patient._id": Meteor.userId()}, {patientRead: false}]}).fetch();
+    
+    termine.map(termin => {
+      let title = '';
+      let sub = '';
+      if(termin.status=== 'open'){
+        title = 'Neuer Termin';
+        sub = '';
+      } else {
+        title = `Neues zu Ihrem Termin: ${termin.subject}`; 
+        sub = `Der neue Status ihres Termins ist: ${termin.status}`;
+      }
+      if(termin.patientRead === false){
+        swal(title, 
+          sub, 
+          'info', 
+          {
+            closeOnEsc: false,
+            closeOnClickOutside: false,
+            buttons: {
+              cancel: {
+                text: 'später ansehen',
+                value: null,
+                visible: true,
+                closeModal: true,
+              },
+              catch: {
+                text: "bestätigen",
+                value: true
+              }    
+            },
+          },
+        ).then(value => {
+          if(value){
+            termin['patientRead'] = true;
+            Meteor.call('termin.check', termin._id, termin,
+              (err, res) => {
+                if(err) {
+                  swal("Fehler", `${err.error}`, "error");
+                }
+              })
+          }
+        })
+      }
+    })
+  }
+});
+
 Accounts.onEmailVerificationLink((token, done) => {
   Accounts.verifyEmail(token, (error) => { 
     console.log(error);
@@ -141,6 +235,7 @@ Accounts.onEmailVerificationLink((token, done) => {
 });
 
 Meteor.startup(() => {
+
   Session.set({
     selectedTerminId: undefined,
     selectedPraxisId: undefined,

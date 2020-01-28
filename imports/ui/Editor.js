@@ -17,14 +17,7 @@ export class Editor extends React.Component {
         super(props);
     }
     componentDidMount(){
-        if(this.props.termin){
-            this.props.termin.patient === false ? swal("Neues zu Ihrem Termin", `Der neue Status ihres Termins ist: ${this.props.termin.status}`, 'warning'): undefined;
-                // .then((val) => {
-                //     if(val){
-                //         Meteor.call('termin.check')
-                //     }
-                // })
-        }
+     
     }
     renderTerminStatus(){
         const status = this.props.termin.status
@@ -131,23 +124,23 @@ export default withTracker( () => {
     
     if(termin){
         const behandlung = Behandlungen.findOne({termin_id: termin._id})
-        console.log(termin)
-        if(termin.patientRead === false){
-            swal("Neues zu Ihrem Termin", `Der neue Status ihres Termins ist: ${termin.status}`, 'warning')
-                .then(() => {
-                    termin['adminRead'] = true;
-                    termin['patientRead'] = true;
-                    Meteor.call('termin.check', termin._id, termin, (err, res) => {
-                        if(err) {
-                            console.log(err)
-                            swal("Fehler", `${err.error}`, "error");
-                        } else {
+        // console.log(termin)
+        // if(termin.patientRead === false){
+        //     swal("Neues zu Ihrem Termin", `Der neue Status ihres Termins ist: ${termin.status}`, 'warning')
+        //         .then(() => {
+        //             termin['adminRead'] = true;
+        //             termin['patientRead'] = true;
+        //             Meteor.call('termin.check', termin._id, termin, (err, res) => {
+        //                 if(err) {
+        //                     console.log(err)
+        //                     swal("Fehler", `${err.error}`, "error");
+        //                 } else {
                             
-                            swal("Mitteilung als gelesen markiert", "", "success");
-                        }
-                    })
-                })
-        }
+        //                     swal("Mitteilung als gelesen markiert", "", "success");
+        //                 }
+        //             })
+        //         })
+        // }
         return {
             selectedTerminId,
             termin,
