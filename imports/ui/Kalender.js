@@ -38,6 +38,7 @@ export class Kalender extends React.Component {
         appointments: [],
         calendarWeekends: false,
         termine: [],
+        modal: null
     }   
 }
 componentDidMount() {
@@ -74,11 +75,13 @@ componentWillUnmount() {
 }
 
 openModal(e){
- 
+  
   Session.set({
     isOpen: true,
-    start: e.dateStr
+    start: e.startStr,
+    end: e.endStr
   });
+
 }
 
 render(){
@@ -97,6 +100,7 @@ render(){
       <AddTermin praxis={this.props.praxis} />
       <div className="kalender-container" id="wide-calendar">
         <FullCalendar
+          selectable={true}
           defaultView="timeGridWeek"
           height='parent'
           minTime= '08:00:00'
@@ -120,10 +124,12 @@ render(){
           ref={ this.calendarComponentRef }
           weekends={ this.state.calendarWeekends }
           events={ this.props.termine }
-          dateClick={ this.openModal.bind(this) }
+          // dateClick={ this.openModal.bind(this) }
+          select={this.openModal.bind(this)}
           locale= 'de'
           weekNumbers={true}
           navLinks={true}
+          eventClick={info => console.log(info)}
         />
       </div>
       <div className="kalender-container" id="mobile-calendar">

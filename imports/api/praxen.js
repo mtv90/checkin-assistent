@@ -350,8 +350,7 @@ Meteor.methods({
             ...updates
         });
         const praxis = updates
-        console.log(_id, updates, praxis)
-        
+                
         Termine.update(
             {"praxis._id": _id, user_id: this.userId},
             {

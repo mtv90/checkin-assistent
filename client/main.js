@@ -39,18 +39,16 @@ Tracker.autorun(() => {
   
 })
 
-Tracker.autorun((run) => {
- 
-  if(!run.firstRun){
-
-    Session.set({
+// Tracker.autorun((run) => {
+//     console.log(Session.get('isOpen'))
+//     // Session.set({
     
-      isOpen: false,
-      start: moment().format('YYYY-MM-DDTHH:mm:ss'),
-      end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
-    });
-  }
-});
+//     //   isOpen: Session.get('isOpen'),
+//       // start: moment().format('YYYY-MM-DDTHH:mm:ss'),
+//       // end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
+//     // });
+  
+// });
 
 Tracker.autorun(() => {
   const selectedTerminId = Session.get('selectedTerminId');
@@ -135,6 +133,14 @@ Tracker.autorun(() => {
   // });
 
 });
+
+// Tracker.autorun(() => {
+//   Meteor.subscribe('termin_timer');
+//   if(Meteor.userId()){
+//     const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, 
+//     {"checkedIn": false} ]}).fetch();
+//   }
+// })
 
 Tracker.autorun(() => {
 
@@ -246,8 +252,8 @@ Meteor.startup(() => {
     praxisId_warte: undefined,
     termin_path: undefined,
     wartezimmer_path: undefined,
-    start: moment().format('YYYY-MM-DDTHH:mm:ss'),
-    end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
+    start: moment().format('YYYY-MM-DDTHH:mm'),
+    end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm')
   })
   // Session.setDefault( 'praxisId', undefined)
   // if(!this.user){

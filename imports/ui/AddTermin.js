@@ -72,8 +72,8 @@ export default class AddTermin extends React.Component {
     handleModalClose(){
         Session.set({
             isOpen: false,
-            start: moment().format('YYYY-MM-DDTHH:mm:ss'),
-            end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
+            start: moment().format('YYYY-MM-DDTHH:mm'),
+            end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm')
         })
         this.setState({
             isOpen: false, 
@@ -81,35 +81,12 @@ export default class AddTermin extends React.Component {
             subject: '',
             notes:'',
             timeError: '',
-            patient_id:''
+            patient_id:'',
+            start: moment().format('YYYY-MM-DDTHH:mm'),
+            end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm')
         })
     }
-    componentDidMount() {
-        this.patientTracker = Tracker.autorun((run) => {
-            // Meteor.subscribe('userList');
-            // let patientsArray = [];
-            // const patients = Meteor.users.find({role: "patient"}).fetch();
-            // patients.map(patient => {
-            //         patient["label"] = `${patient.profile.nachname}, ${patient.profile.vorname}`;
-            //         patientsArray.push(patient);
-            // })
-
-            this.setState({
-                // patients:patientsArray, 
-                isOpen: Session.get('isOpen'), 
-                start: moment(Session.get('start')).format('YYYY-MM-DDTHH:mm:ss'),
-                end: moment(Session.get('start')).add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
-            });
-        });
-    }
-    componentWillUnmount(){
-        // Meteor.subscribe('userList').stop();
-        this.patientTracker.stop()
-    }
-    getDate(date){
-
-        this.setState({date})
-    }
+ 
     renderOptions(){
         if(!this.props.praxis.patienten){
             return (
@@ -163,6 +140,17 @@ export default class AddTermin extends React.Component {
     openTerminModal(){
         this.setState({isOpen: true});
     }
+    componentDidMount(){
+        this.modalTracker = Tracker.autorun( () => {
+            const isOpen = Session.get('isOpen')
+            const start =  moment(Session.get('start')).format('YYYY-MM-DDTHH:mm')
+            const end = moment(Session.get('end')).format('YYYY-MM-DDTHH:mm')
+            
+            this.setState({
+                isOpen, start, end
+            })
+        })
+    }
     render() {
         return (
             <div className="add-termin--container">
@@ -186,7 +174,7 @@ export default class AddTermin extends React.Component {
                         {/* <label htmlFor="date">Datum:</label>
                         <input name="date" type="date" placeholder="Datum auswählen" value={this.state.date} onChange={this.onChangeDate.bind(this)}/> */}
                         <label htmlFor="starttime">von:</label>
-                        <input name="starttime" type="datetime-local" placeholder="Startzeit wählen" value={this.state.start} onChange={this.onChangeStarttime.bind(this)} />
+                        <input name="starttime" type="datetime-local" placeholder="Startzeit wählen" value={this.state.start } onChange={this.onChangeStarttime.bind(this)} />
                         <label htmlFor="endtime">bis:</label>
                         {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
                         <input name="endtime" type="datetime-local" placeholder="Ende wählen" value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
@@ -199,3 +187,17 @@ export default class AddTermin extends React.Component {
         );
     }
 }
+// export default withTracker( (props) => {
+//     const isOpen = Session.get('isOpen')
+//     const start =  moment(Session.get('start')).format('YYYY-MM-DDTHH:mm')
+//     const end = moment(Session.get('end')).format('YYYY-MM-DDTHH:mm')
+//     console.log(props)
+//     const modal = props.modal
+//     return {
+//         modal,
+//         isOpen,
+//         start,
+//         end,
+        
+//     };
+//   })(AddTermin);

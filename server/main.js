@@ -8,6 +8,7 @@ import '../imports/api/behandlungen';
 import '../imports/interfaces/fhir_appointments';
 import '../imports/startup/simple-schema-configuration';
 
+
 Meteor.startup(() => {
 
     Roles.createRole('admin', {unlessExists: true});

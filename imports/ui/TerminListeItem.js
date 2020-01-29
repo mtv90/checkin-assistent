@@ -72,7 +72,7 @@ export default class TerminListeItem extends React.Component {
         }  
     }
     componentDidMount(){
-        console.log(this.props.patientRead)
+        
         const self = this;
         self.interval = setInterval(function() {
           self.setState({

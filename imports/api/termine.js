@@ -5,6 +5,38 @@ import moment from 'moment';
 export const Termine = new Mongo.Collection('termine');
 
 if(Meteor.isServer){
+    
+
+    Meteor.publish(null, () => {
+        if(this.userId && Roles.userIsInRole(this.userId, 'admin')){
+            const user_id = this.userId;
+            const role = Roles.userIsInRole(this.userId, 'admin');
+
+        
+            // Meteor.setInterval(() => {
+            //     termine = Termine.find({$and: [{"praxis.mitarbeiter._id": user_id}, 
+            //     {"checkedIn": false} ]}).fetch();
+            //     console.log('Daten aktualisiert!');
+            // }, 360000);
+            
+            
+                
+            Meteor.setInterval(function() {
+                const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": user_id}, 
+                    {"checkedIn": false} ]}).fetch();
+                    termine.map(termin => {
+                        console.log(moment().diff(termin.start, "minutes"))
+                        if(moment().diff(termin.start, "minutes") >= -118 && moment().diff(termin.start, "minutes") <= -123){
+                            console.log(termin.start, moment().diff(termin.start, "minutes"));
+
+                        }
+                        console.log('Daten aktualisiert!');
+                    });
+            }, 300000);
+            
+        }
+    })
+
     Meteor.publish(
         'termine', function (){
             return Termine.find({user_id: this.userId});
