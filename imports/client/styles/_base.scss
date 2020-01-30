@@ -78,6 +78,9 @@ label {
     text-align: end;
     // margin-bottom: $space / 3;
 }
+label[for=endtime], label[for=starttime]{
+    text-align: start;
+}
 textarea {
     border: 1px solid $input-border;
     font-size: $base-font-size;

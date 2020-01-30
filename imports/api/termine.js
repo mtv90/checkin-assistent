@@ -1,8 +1,10 @@
 import {Meteor} from 'meteor/meteor';
+import { Email } from 'meteor/email'
 import {Mongo} from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 import moment from 'moment';
 export const Termine = new Mongo.Collection('termine');
+import { check } from 'meteor/check'
 
 if(Meteor.isServer){
     
@@ -137,7 +139,7 @@ Meteor.methods({
             }
         }).validate({_id});
 
-        Termine.remove({
+        return Termine.remove({
             _id,
             user_id: this.userId
         });
@@ -190,7 +192,7 @@ Meteor.methods({
                 }
             }).validate({_id, checkedIn, status, patientRead, adminRead});
     
-            Termine.update({
+           return Termine.update({
                 _id,
                 user_id: termin.user_id
             },{
@@ -202,6 +204,44 @@ Meteor.methods({
             }); 
         } else {
             throw new Meteor.Error('Sie dürfen keine Status-Updates durchführen');
+        }
+
+    },
+
+    'termin.update'(_id, termin){
+        let found = termin.praxis.mitarbeiter.map( user => {
+            user._id === this.userId ? true : false;
+        })
+        if(!this.userId && !found) {
+            throw new Meteor.Error('Nicht authorisiert!');
+        }
+
+        if(termin){
+            // Bestätigungsmail versenden 
+            
+            let to = termin.patient.emails[0].address;
+            let from = `${termin.praxis.title}-Checkin <app151404387@heroku.com>`;
+            let subject = termin.subject;
+            let text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Der Status Ihres Termins hat sich geändert:\n\ \n\Status: ${termin.status}\n\ \n\ Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Grund: ${termin.subject}\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
+            
+            process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+            // Make sure that all arguments are strings.
+            check([to, from, subject, text], [String]);
+            // Let other method calls from the same client start running, without
+            // waiting for the email sending to complete.
+            this.unblock();
+            Email.send({to, from, subject, text});
+
+            return Termine.update({
+                _id,
+            },{
+                $set: {
+                    ...termin,
+                    updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss')
+                }
+            });
+        } else {
+            throw new Meteor.Error('Es konnte kein Termin gefunden und aktualisiert werden');
         }
 
     }

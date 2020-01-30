@@ -64,8 +64,6 @@ export default class AddTermin extends React.Component {
                 }
             }
         );
-
-        e.preventDefault();
     }
     onChange = date => this.setState({ date })
 
@@ -115,7 +113,6 @@ export default class AddTermin extends React.Component {
         const start = e.target.value;
         if(start) {
             this.setState({start})
-
         }
     }
     onChangeEndtime(e){
@@ -164,7 +161,7 @@ export default class AddTermin extends React.Component {
                     className="boxed-view__box"
                     overlayClassName="boxed-view boxed-view--modal"
                 >
-                    <h1>Termin hinzufügen</h1>
+                    <h1>Termin erstellen</h1>
                     <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
                         <select name="patienten" onChange={this.onChangePatient.bind(this)}>
                             <option>Patienten auswählen...</option>
