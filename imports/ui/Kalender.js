@@ -265,6 +265,16 @@ handleStorno(e){
                 swal(`${error.error}`,"","error")
               }
               if(result){
+                Meteor.call('termin.update_mail',
+                this.state.termin.patient.emails[0].address, 
+                this.state.termin.praxis.title, 
+                this.state.termin.subject, 
+                this.state.termin,
+                (error, result) => {
+                  if(error){
+                    swal('Fehler', `${error.error}`, 'error');
+                  }
+                });
                 swal('Termin storniert',"","success")
               }
             });
