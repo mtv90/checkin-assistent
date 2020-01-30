@@ -83,11 +83,17 @@ openEvent(e){
       createdAt: event.extendedProps.createdAt,
       updatedAt: event.extendedProps.updatedAt,
     }
-    this.setState({isOpen:true, termin});
+    this.setState({
+      isOpen:true, 
+      termin,
+      subject: event.extendedProps.subject,
+      start: moment(event.start).format('YYYY-MM-DDTHH:mm'),
+      end: moment(event.end).format('YYYY-MM-DDTHH:mm'),
+      notes: event.extendedProps.notes,
+    });
   }
 }
 openModal(e){
-  console.log(e)
   this.setState({
     isOpen: true,
     start: moment(e.startStr).format('YYYY-MM-DDTHH:mm'),
@@ -114,6 +120,40 @@ onSubmit(e){
   const {patient_id, start, end, notes, subject} = this.state;
   const praxis = this.props.praxis;
 
+  console.log(this.state.termin)
+  if(this.state.termin){
+    this.state.termin['patientRead'] = false;
+    this.state.termin['subject'] = this.state.subject;
+    this.state.termin['start'] = this.state.start;
+    this.state.termin['end'] = this.state.end;
+    this.state.termin['notes'] = this.state.notes;
+
+    this.setState({termin: this.state.termin});
+    Meteor.call('termin.update', 
+      this.state.termin._id, 
+      this.state.termin,
+      (error, result) => {
+        if(error){
+          swal(`${error.error}`,"","error")
+        }
+        if(result){
+          
+          Meteor.call('termin.update_mail',
+            this.state.termin.patient.emails[0].address, 
+            this.state.termin.praxis.title, 
+            this.state.termin.subject, 
+            this.state.termin,
+            (error, result) => {
+              if(error){
+                swal('Fehler', `${error.error}`, 'error');
+              }
+            });
+          this.handleModalClose();
+          swal('Termin aktualisiert',"","success");
+        }
+      }
+    );
+  } else {
   Meteor.call('termine.insert', 
             patient_id,
             start,
@@ -149,6 +189,8 @@ onSubmit(e){
                 }
             }
         );
+  }
+
 }
 onChangeSubject(e){
   const subject = e.target.value;
@@ -225,7 +267,7 @@ handleStorno(e){
               if(result){
                 swal('Termin storniert',"","success")
               }
-            })
+            });
           
         } else {
           throw new Meteor.Error("Falsche Eingabe")
@@ -365,22 +407,22 @@ render(){
           <input  name="subject" type="text" 
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
                   placeholder="Betreff" 
-                  value={this.state.termin.subject} 
+                  value={this.state.subject} 
                   onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
           <label htmlFor="starttime">von:</label>
           <input  name="starttime" type="datetime-local" 
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
-                  placeholder="Startzeit wählen" value={this.state.termin.start } 
+                  placeholder="Startzeit wählen" value={this.state.start } 
                   onChange={this.onChangeStarttime.bind(this)} />
           <label htmlFor="endtime">bis:</label>
           {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
           <input  name="endtime" type="datetime-local" 
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
                   placeholder="Ende wählen" 
-                  value={this.state.termin.end} onChange={this.onChangeEndtime.bind(this)} />
+                  value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
           <textarea ref="notes" 
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
-                  placeholder="Bemerkungen eingeben"value={this.state.termin.notes} onChange={this.onChangeNotes.bind(this)}/>
+                  placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
           {this.state.termin.status === 'storniert' ? (
             <div>
               <p className="editor--message"><small className="error--text">Der Termin wurde am {moment(this.state.termin.updatedAt).format('DD.MM.YYYY')} um {moment(this.state.termin.updatedAt).format('HH:mm')} Uhr storniert</small></p>

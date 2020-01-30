@@ -153,6 +153,7 @@ Meteor.methods({
         if(!this.userId) {
             throw new Meteor.Error('Nicht authorisiert!');
         }
+        // Prüfe, ob der Benutzer ein Praxismitarbeiter ist 
         checkAccess.praxis.mitarbeiter.map( (mitarbeiter) => {
             if(mitarbeiter._id === this.userId){
                 mitarbeiter_access = true;
@@ -163,7 +164,7 @@ Meteor.methods({
             }
         });
 
-
+        // Prüfe, ob der Benutzer der entsprechende Patient ist 
         if(checkAccess.patient._id === this.userId ||  checkAccess.user_id === this.userId || mitarbeiter_access){
             const checkedIn = termin.checkedIn;
             const status = termin.status;
@@ -222,7 +223,26 @@ Meteor.methods({
             let to = termin.patient.emails[0].address;
             let from = `${termin.praxis.title}-Checkin <app151404387@heroku.com>`;
             let subject = termin.subject;
-            let text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Der Status Ihres Termins hat sich geändert:\n\ \n\Status: ${termin.status}\n\ \n\ Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Grund: ${termin.subject}\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
+            
+
+            return Termine.update({
+                _id,
+            },{
+                $set: {
+                    ...termin,
+                    updatedBy: this.userId,
+                    updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss')
+                }
+            });
+        } else {
+            throw new Meteor.Error('Es konnte kein Termin gefunden und aktualisiert werden');
+        }
+
+    },
+    'termin.update_mail'(to, myName, subject, termin){
+        if(termin){
+            const from = `${myName}-Checkin <app151404387@heroku.com>`;
+            const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\ Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Grund: ${termin.subject}\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
             
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
             // Make sure that all arguments are strings.
@@ -231,18 +251,6 @@ Meteor.methods({
             // waiting for the email sending to complete.
             this.unblock();
             Email.send({to, from, subject, text});
-
-            return Termine.update({
-                _id,
-            },{
-                $set: {
-                    ...termin,
-                    updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss')
-                }
-            });
-        } else {
-            throw new Meteor.Error('Es konnte kein Termin gefunden und aktualisiert werden');
         }
-
     }
 });
