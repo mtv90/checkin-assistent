@@ -8,36 +8,37 @@ import { check } from 'meteor/check'
 
 if(Meteor.isServer){
     
-
-    Meteor.publish(null, () => {
-        if(this.userId && Roles.userIsInRole(this.userId, 'admin')){
-            const user_id = this.userId;
-            const role = Roles.userIsInRole(this.userId, 'admin');
-
-        
-            // Meteor.setInterval(() => {
-            //     termine = Termine.find({$and: [{"praxis.mitarbeiter._id": user_id}, 
-            //     {"checkedIn": false} ]}).fetch();
-            //     console.log('Daten aktualisiert!');
-            // }, 360000);
-            
-            
-                
-            Meteor.setInterval(function() {
-                const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": user_id}, 
-                    {"checkedIn": false} ]}).fetch();
-                    termine.map(termin => {
-                        console.log(moment().diff(termin.start, "minutes"))
-                        if(moment().diff(termin.start, "minutes") >= -118 && moment().diff(termin.start, "minutes") <= -123){
-                            console.log(termin.start, moment().diff(termin.start, "minutes"));
-
+    Meteor.setInterval(() => {
+        const termine = Termine.find({$and: [{"status": "open"}, {"checkedIn": false} ]}).fetch();
+        termine.map(termin => {
+            const difference = moment().diff(termin.start, "minutes");
+            if(termin.reminder === false){
+                if(difference > -120){
+                    
+                    const to = termin.patient.emails[0].address;
+                    const from = `${termin.praxis.title}-Checkin <app151404387@heroku.com>`;
+                    const subject = termin.subject
+                    const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Ihr Termin steht kurz bevor!\n\ \n\Sie haben noch etwa ${difference*-1} min Zeit.\n\ \n\Bitte denken Sie außerdem an Ihre Unterlagen, wie ihre Krankenversichertenkarte!\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen oder falls Sie den Termin doch nicht wahrnehmen können, wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
+                    
+                    Meteor.call('termin.send_reminder',
+                    to, from, subject, text,
+                    (error, result) => {
+                        if(error){
+                            console.log(error)
                         }
-                        console.log('Daten aktualisiert!');
-                    });
-            }, 300000);
+                        termin['reminder'] = true;
+                        Meteor.call('termin.update',
+                        termin._id, termin,
+                        (error, result) => {
+                            error ? console.log(error) : '';
+                        });
+                    } );
+                }
+            }
             
-        }
-    })
+        });
+    }, 60000)
+
 
     Meteor.publish(
         'termine', function (){
@@ -120,6 +121,7 @@ Meteor.methods({
                 status: 'open',
                 patientRead: false,
                 adminRead:true,
+                reminder: false,
                 user_id: this.userId,
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -170,12 +172,17 @@ Meteor.methods({
             const status = termin.status;
             const patientRead = termin.patientRead;
             const adminRead = termin.adminRead;
+            const reminder = termin.reminder;
             new SimpleSchema({
                 _id: {
                     type: String,
                     min: 1
                 },
                 checkedIn: {
+                    type: Boolean,
+                    allowedValues: [true, false]
+                },
+                reminder: {
                     type: Boolean,
                     allowedValues: [true, false]
                 },
@@ -191,7 +198,7 @@ Meteor.methods({
                     type: String,
                     allowedValues: ['open', 'waiting', 'in-behandlung', 'abgeschlossen', 'storniert', 'gesperrt', 'verspaetet']
                 }
-            }).validate({_id, checkedIn, status, patientRead, adminRead});
+            }).validate({_id, checkedIn, status, patientRead, adminRead, reminder});
     
            return Termine.update({
                 _id,
@@ -244,6 +251,19 @@ Meteor.methods({
             const from = `${myName}-Checkin <app151404387@heroku.com>`;
             const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\ Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Grund: ${termin.subject}\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
             
+            process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+            // Make sure that all arguments are strings.
+            check([to, from, subject, text], [String]);
+            // Let other method calls from the same client start running, without
+            // waiting for the email sending to complete.
+            this.unblock();
+            if(to && from && subject && text){
+                Email.send({to:to, from:from, subject:subject, text:text});
+            }
+        }
+    },
+    'termin.send_reminder'(to, from, subject, text){
+        if(to){
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
             // Make sure that all arguments are strings.
             check([to, from, subject, text], [String]);

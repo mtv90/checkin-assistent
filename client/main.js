@@ -66,6 +66,14 @@ Tracker.autorun(() => {
 })
 
 Tracker.autorun(() => {
+  const selectedTerminId = Session.get('selectedTerminId');
+  Session.set('isNavOpen', false);
+  if(selectedTerminId) {
+    history.replace(`/meine-termine/${selectedTerminId}`);
+  }
+})
+
+Tracker.autorun(() => {
   
   const praxisId = Session.get('praxisId');
   const dashboard_path = Session.get('dashboard_path');
@@ -257,7 +265,7 @@ Meteor.startup(() => {
   })
   // Session.setDefault( 'praxisId', undefined)
   // if(!this.user){
-  //   ReactDOM.render(<Loading/>, document.getElementById('app'));
+    ReactDOM.render(<Loading/>, document.getElementById('app'));
   // }
   
   window.setTimeout(() => {

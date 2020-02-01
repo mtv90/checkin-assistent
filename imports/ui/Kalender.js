@@ -120,7 +120,6 @@ onSubmit(e){
   const {patient_id, start, end, notes, subject} = this.state;
   const praxis = this.props.praxis;
 
-  console.log(this.state.termin)
   if(this.state.termin){
     this.state.termin['patientRead'] = false;
     this.state.termin['subject'] = this.state.subject;
