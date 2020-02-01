@@ -56,36 +56,34 @@ Meteor.methods({
         let end = moment(date).add(duration, 'minutes').format('YYYY-MM-DDTHH:mm:ss')
 
         // moment(date) < moment(termin.start) && 
-        if(moment(date) < moment()){
-            // throw new Meteor.Error('Sie können keine Termine in die Vergangenheit schieben');
-            const startdate = moment().format('YYYY-MM-DDTHH:mm:ss');
+        // if(moment(date) < moment()){
+        //     // throw new Meteor.Error('Sie können keine Termine in die Vergangenheit schieben');
+        //     const startdate = moment().format('YYYY-MM-DDTHH:mm:ss');
            
-            Termine.update({
-                _id,
-                user_id: this.userId
-            },{
-                $set: {
-                    ...termin,
-                    updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
-                    status: 'in-behandlung'
-                }
-            });
-            return Behandlungen.insert({
-                resourceId,
-                start: startdate,
-                end: moment(startdate).add(duration, 'minutes').format('YYYY-MM-DDTHH:mm:ss'),
-                resourceTitle: resourceTitle,
-                title: termin.title,
-                termin_id: termin._id,
-                user_id: this.userId,
-                status: 'in-behandlung',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            })
-        }
+        //     Termine.update({
+        //         _id
+        //     },{
+        //         $set: {
+        //             ...termin,
+        //             updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
+        //             status: 'in-behandlung'
+        //         }
+        //     });
+        //     return Behandlungen.insert({
+        //         resourceId,
+        //         start: startdate,
+        //         end: moment(startdate).add(duration, 'minutes').format('YYYY-MM-DDTHH:mm:ss'),
+        //         resourceTitle: resourceTitle,
+        //         title: termin.title,
+        //         termin_id: termin._id,
+        //         user_id: this.userId,
+        //         status: 'in-behandlung',
+        //         createdAt: new Date(),
+        //         updatedAt: new Date()
+        //     })
+        // }
         Termine.update({
-            _id,
-            user_id: this.userId
+            _id
         },{
             $set: {
                 ...termin,
@@ -95,6 +93,7 @@ Meteor.methods({
         });
         return Behandlungen.insert({
             resourceId,
+            resourceTitle,
             start: moment(date).format('YYYY-MM-DDTHH:mm:ss'),
             end,
             title: termin.title,
@@ -104,5 +103,27 @@ Meteor.methods({
             createdAt: new Date(),
             updatedAt: new Date()
         })
+    },
+
+    'behandlung.update'( id, behandlung) {
+        if(!this.userId){
+            throw new Meteor.Error('Nicht authorisiert!');
+        }
+        let termin = Termine.findOne(behandlung.termin_id)
+
+        Termine.update({_id: termin._id},{
+            $set: {
+                ...termin,
+                updatedAt: new Date()
+            }
+        });
+
+        return Behandlungen.update({_id: id}, {
+            $set: {
+                ...behandlung,
+                updatedAt: new Date()
+            }
+        })
     }
+
 });

@@ -52,6 +52,9 @@ if(Meteor.isServer) {
       return user;
     });
 
+    if(this.userId){
+      Meteor.setTimeout()
+    }
     
     Meteor.publish(null, function () {
       if (this.userId) {

@@ -32,9 +32,10 @@ export class Ressourcenkalender extends React.Component {
         new Draggable(containerEl, {
             itemSelector: '.drag-it',
             eventData: function(eventEl) {
-                // console.log(eventEl.firstChild.innerText)
+                
                 return {
-                    title: eventEl.firstChild.innerText
+                    title: eventEl.firstChild.innerText,
+                    create: false
                 };
             }
         });
@@ -46,8 +47,6 @@ export class Ressourcenkalender extends React.Component {
         const resourceId = dragged_resource.id;
         const date = dragged_date;
 
-        // console.log(resource)
-        // return 23
         if(termin_id){
             Meteor.call('behandlung.insert',
                 id,
@@ -66,9 +65,31 @@ export class Ressourcenkalender extends React.Component {
             )
         }
     }
-    onSubmit(){
+    updateBehandlung(behandlung_id, resource, dragged_event, termin_id){
+        
+        const behandlung= {
+            id: behandlung_id,
+            resourceTitle: resource.title,
+            resourceId: resource.id,
+            start: dragged_event.start,
+            end: dragged_event.end,
+            termin_id: termin_id 
+        }
 
+        Meteor.call('behandlung.update',
+            behandlung.id,
+            behandlung,
+            (error, result) => {
+                if(error){
+                    swal("Fehler", `${error.error}`, "error");
+                }
+                if(result){
+                    swal("Termin akualisiert","", "success")
+                }
+            }
+        );
     }
+    onSubmit(){}
     render(){
         var Spinner = require('react-spinkit');
         if(!this.props.behandlungen){
@@ -114,16 +135,51 @@ export class Ressourcenkalender extends React.Component {
                             // }
                             eventOverlap={false}
                             droppable={true}
-                            
+                            // Drag n Drop Funktionalität innerhalb des Ressourcenkalenders
+                            eventDrop={info => {
+                                
+                                const behandlung_id = info.event._def.extendedProps._id;
+                                let resource;
+                                if(info.newResource){
+                                    resource= info.newResource;
+                                } else{
+                                    resource = {
+                                        id: info.event._def.resourceIds[0],
+                                        title: info.event._def.extendedProps.resourceTitle
+                                    }
+                                }
+                                
+                                const event = info.event;
+                                const termin_id = info.event._def.extendedProps.termin_id
+
+                                this.updateBehandlung(behandlung_id, resource, event, termin_id )
+                        
+                            }}
+                            // Drag n Drop Funktionalität vom Wartezimmer in den Ressourcenkalender 
                             drop={(info) => {
-                                console.log(info, info.resource, info.draggedEl.id)
+                                
                                 this.startBehandlung(info.draggedEl.id, info.resource, info.date)
                                 info.draggedEl.parentNode.removeChild(info.draggedEl)
                             }} 
+                            // Funktion, um die Behandlungsdauer zu verlängern 
+                            eventResize={(info) => {
+                                const behandlung_id = info.event.id;
+                                const resource = {
+                                    id: info.event._def.resourceIds[0],
+                                    title: info.event._def.extendedProps.resourceTitle
+                                }
+                                const event = {
+                                    start: info.event.start,
+                                    end: info.event.end
+                                }
+                                const termin_id = info.event._def.extendedProps.termin_id;
+                                this.updateBehandlung(behandlung_id, resource, event, termin_id )
+                            }}
                             resourceLabelText= "Behandlungsräume"
                             // resourceGroupField= 'groupId'
                             // resourceGroupText='Praxis'
                             resources= {this.props.praxis.resources}
+                            
                         />
                 <Modal 
                     isOpen={this.state.isOpen} 
