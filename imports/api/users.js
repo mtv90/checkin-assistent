@@ -37,6 +37,9 @@ export const validateNewUser = (user) => {
 // Benutzer-Validierung
 if(Meteor.isServer) {
     
+  Accounts.config({
+    loginExpirationInDays: 1
+  })
     Accounts.validateNewUser(validateNewUser);
 
     Accounts.onCreateUser(function(options, user) {

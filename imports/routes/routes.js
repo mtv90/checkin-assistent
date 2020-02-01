@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor';
-import {WebApp} from 'meteor/webapp'
+import { Accounts } from 'meteor/accounts-base';
 import { Tracker } from 'meteor/tracker';
 import { withTracker  } from 'meteor/react-meteor-data';
 import React from 'react';
@@ -22,7 +22,7 @@ import Praxisverwaltung from '../ui/Praxisverwaltung';
 import {Session} from 'meteor/session';
 
 const unauthPages = ['/signup', '/'];
-const authPages = ['/dashboard', '/termine', '/wartezimmer'];
+const authPages = ['/dashboard', '/termine', '/wartezimmer', 'praxisverwaltung'];
 const verfiedPages = ['/termine', '/wartezimmer'];
 let user = {};
 let isVerified = false;
@@ -33,7 +33,14 @@ export const onAuthChange = (isAuth) => {
         const pathname = history.location.pathname;
         const isUnAuthPage = unauthPages.includes(pathname);
         const isAuthPage = authPages.includes(pathname);
-      
+
+        const user = Meteor.user();
+        if(user){
+            console.log(user.role);
+            (authPages && user.role === 'patient') ? inactivityTimer() : undefined;
+        }
+        
+        
         if(isUnAuthPage && isAuth) {
           history.replace('/dashboard')
         }
@@ -42,12 +49,38 @@ export const onAuthChange = (isAuth) => {
         }
 
 
-}
-// export const goBack = (id) => {
-//     if(id === 'undefined'){
-//         history.replace('/');
-//     }
-// }
+} 
+
+function inactivityTimer() {
+    var t;
+    resetTimer();
+    window.onmousemove = resetTimer; // catches mouse movements
+    window.onmousedown = resetTimer; // catches mouse movements
+    window.onclick = resetTimer;     // catches mouse clicks
+    window.onscroll = resetTimer;    // catches scrolling
+    window.onkeypress = resetTimer;  //catches keyboard actions
+  
+    function logout() {
+      console.log('Logged out due inactivity')
+      swal("Sie wurden abgemeldet","", "warning").then(() => {
+        Accounts.logout() 
+        })
+        // window.location.href = '/action';  //Adapt to actual logout script
+    }
+  
+//    function reload() {
+//           window.location = self.location.href;  //Reloads the current page
+//    }
+  
+   function resetTimer() {
+        clearTimeout(t);
+        
+        t = setTimeout(logout, 600000);  // time is in milliseconds (1000 is 1 second)
+        // t= setTimeout(reload, 30000);  // time is in milliseconds (1000 is 1 second)
+    }
+  }
+  
+
 const checkUserIsVerified = (user) => {
     
     const isVerified = user.emails[0].verified;

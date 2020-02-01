@@ -104,52 +104,6 @@ Tracker.autorun(() => {
   } 
 });
 
-// Implementierung, gemäß Datenschutz, wenn der Patient >= 10 min inaktiv war, meldet sich das System automatisch ab 
-var html5api = new Html5Api();
-var logTimer;
-var pageVisibility = html5api.pageVisibility();
-Tracker.autorun(() => {
-  if(pageVisibility && Roles.userIsInRole(Meteor.userId(), 'patient')){
-    pageVisibility.onChange(() => {
-      switch (!(history.location.pathname === '/signup') || !(history.location.pathname === '/')) {
-        
-        case (pageVisibility.state() === 'hidden'):
-            
-            logTimer = setTimeout(function(props){
-              Accounts.logout();
-              swal("Sitzung abgelaufen", "Das System hat Sie wegen Inaktivität abgemeldet", "danger")         
-            }, 600000);
-          break;
-      
-        case (pageVisibility.state() === 'visible'):
-          
-            clearTimeout(logTimer);
-          break;
-        default: 
-          break;
-      }
-    });
-  }
-
-
-  //   pageVisibility.onChange(function (props) {
-  //     console.log("The Current Page Visibility is " + pageVisibility.state(), props);
-  //     var logTimer;
-      
-  //     console.log(Session.get('timer'));
-
-  // });
-
-});
-
-// Tracker.autorun(() => {
-//   Meteor.subscribe('termin_timer');
-//   if(Meteor.userId()){
-//     const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, 
-//     {"checkedIn": false} ]}).fetch();
-//   }
-// })
-
 Tracker.autorun(() => {
 
   
