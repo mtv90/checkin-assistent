@@ -179,7 +179,10 @@ export class Editor extends React.Component {
                     <div className="termin-aktion-container">
                         <h5 className="item__message item__status-message praxis--subheading">Aktionen</h5>
                         {!this.props.termin.checkedIn ? 
-                            this.props.konto? 
+                            this.props.konto? this.props.termin.status === 'storniert' ? 
+                                <div>
+                                    <p className="editor--message error--text">Der Termin wurde <strong>strorniert</strong>! Bitte wenden Sie sich an die Praxis oder vereinbaren einen neuen Termin.</p>
+                                </div> :
                                 <div className="editor--button-group">
                                     <button type="button" className="editor-button button--checkin" onClick={this.checkIn.bind(this)}>einchecken</button>
                                     <button type="button" className="editor-button button--checkin waiting" onClick={this.handleDelay.bind(this)}>Verspätung melden</button>
