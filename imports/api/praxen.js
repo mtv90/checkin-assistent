@@ -231,7 +231,7 @@ Meteor.methods({
                 required: false,
                 optional: true
             },
-            'mitarbeiter.$._id': {type: String, required: false},
+            'mitarbeiter.$._id': {type: String, optional: false},
             'mitarbeiter.$.role': {type: String, optional: true},
             'mitarbeiter.$.label': {type: String, optional: true},
             'mitarbeiter.$.value': {type: String, optional: true},

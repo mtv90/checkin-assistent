@@ -6,6 +6,7 @@ import moment from 'moment';
 export const Termine = new Mongo.Collection('termine');
 import { check } from 'meteor/check'
 
+
 if(Meteor.isServer){
     
     Meteor.setInterval(() => {

@@ -104,9 +104,7 @@ export default class AddTermin extends React.Component {
     }
     onChangeNotes(e){
         const notes = e.target.value;
-        if(notes) {
-            this.setState({notes});
-        }
+        this.setState({notes});
     }
 
     onChangeStarttime(e){
@@ -163,19 +161,19 @@ export default class AddTermin extends React.Component {
                 >
                     <h1>Termin erstellen</h1>
                     <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
-                        <select name="patienten" onChange={this.onChangePatient.bind(this)}>
+                        <select className="admin-input" name="patienten" onChange={this.onChangePatient.bind(this)}>
                             <option>Patienten auswählen...</option>
                             {this.renderOptions()}
                         </select>
-                        <input name="subject" type="text" placeholder="Betreff" value={this.state.subject} onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
+                        <input className="admin-input" name="subject" type="text" placeholder="Betreff" value={this.state.subject} onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
                         {/* <label htmlFor="date">Datum:</label>
                         <input name="date" type="date" placeholder="Datum auswählen" value={this.state.date} onChange={this.onChangeDate.bind(this)}/> */}
                         <label htmlFor="starttime">von:</label>
-                        <input name="starttime" type="datetime-local" placeholder="Startzeit wählen" value={this.state.start } onChange={this.onChangeStarttime.bind(this)} />
+                        <input className="admin-input" name="starttime" type="datetime-local" placeholder="Startzeit wählen" value={this.state.start } onChange={this.onChangeStarttime.bind(this)} />
                         <label htmlFor="endtime">bis:</label>
                         {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
-                        <input name="endtime" type="datetime-local" placeholder="Ende wählen" value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
-                        <textarea ref="notes" placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
+                        <input className="admin-input" name="endtime" type="datetime-local" placeholder="Ende wählen" value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
+                        <textarea name="notes" placeholder="Bemerkungen eingeben" value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
                         <button type="submit" className="button">Termin anlegen</button>
                         <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                     </form>

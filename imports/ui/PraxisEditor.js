@@ -451,13 +451,13 @@ export class PraxisEditor extends React.Component {
             </div>
         )
        } else {
-           return (
+            return (
                <div className="editor">
                     <p className="editor--message">
                         {this.props.selectedPraxisId ? 'Keine Praxis gefunden' : 'Bitte eine Praxis auswählen.'}
                     </p>
                </div>
-           )
+            )
        }
     }
 }

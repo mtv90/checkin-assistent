@@ -28,7 +28,7 @@ export class ChangePraxis extends React.Component {
     render() {
         return (
             <div className="dashboard-content">
-                <select name="praxis" onChange={(e) => {
+                <select name="select-praxis" className="admin-input" onChange={(e) => {
                     this.props.Session.set('praxisId', e.target.value)
                 } }
                     value={this.props.praxisId}> 

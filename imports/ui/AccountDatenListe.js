@@ -3,48 +3,71 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker  } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import history from '../routes/history';
-import {Termine} from '../api/termine';
+import {Konten} from '../api/konten';
 import {Link} from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
 import {Session} from 'meteor/session';
 import AccountItem from './AccountItem';
 import FlipMove from 'react-flip-move';
-import AddPraxis from './AddPraxis';
-import Praxis from './Praxis';
+import Loading from './Loading';
+import AddAccountDetails from './AddAccountDetails';
+
 
 
 export const AccountDatenListe = (props) => {
-    
+    var Spinner = require('react-spinkit');
+    if(props.isLoading){
+        return (
+            <div className="pacman-view">
+                <Spinner name='pacman' color="#92A8D1" />
+            </div>
+        )
+    }
     return (
         <div className="praxisliste">
-            <div className="sidebar-button--wrapper">
+            {props.konto ? (
+                    props.konto.kategorien.map( (item) => {
+                        return <AccountItem key={item._id} item={item} />
+                    }
+               ) 
+            ) : undefined }
+            {!props.konto ? <AddAccountDetails title="Stammdaten"/> : undefined}
+             
             
-                <Link className="button button--link button--dashboard" to={{pathname: `/dashboard`}}>Dashboard</Link>
             
-                <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
-            </div>
-            {/* <AddPraxis/> */}
-            <h2 className="item-title">Meine Termine</h2>
-            <FlipMove maintainContainerHeight={true}>
+            {/* <FlipMove maintainContainerHeight={true}>
                 {props.patiententermine.map( (termin) => {
-                    return <AccountItem key={termin._id} termin={termin}/> 
+                    return <AccountItem key={account._id} account={account}/> 
                 })}
             </FlipMove>
+            Stammdaten
+            Fragebogen
+            Nachrichten */}
         </div>
     );
 };
 
 export default withTracker( () => {
-    const selectedTerminId = Session.get('selectedTerminId');
+    const selectedKontoDetails = Session.get('selectedKontoDetails');
+    const isLoading = Session.get('isLoading');
+    Meteor.subscribe('meinKonto')
+    let konto = Konten.findOne({user_id: Meteor.userId()});
     
-    Meteor.subscribe('patiententermine');
+    if(konto){
+        let konten_ed = []
+        konto.kategorien = konto.kategorien.map( (kategorie) => {
+            return {
+                ...kategorie,
+                selected: kategorie._id === selectedKontoDetails
+            }
+        });
+        
         return {
-            patiententermine: Termine.find({}, {sort: {start: 1}}).fetch().map( (termin) => {
-                return {
-                    ...termin,
-                    selected: termin._id === selectedTerminId
-                }
-            }),
-            Session
-        };   
+            konto,
+            isLoading
+        };
+    } else {
+        return <Loading/>
+    }
+       
 })(AccountDatenListe);

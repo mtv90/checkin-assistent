@@ -144,6 +144,16 @@
     padding: $space;
     border-bottom: 1px solid $dark-grey;
 }
+.account-stammdaten {
+    display: flex;
+    flex-direction: column;
+    padding: $space;
+    margin: 0 auto;
+    width: 80%;
+    @include desktop{
+        width: 70%;
+    }
+}
 .termin-status{
     font-size: $base-font-size*1.1;
     background-color: darken($light-grey, 10%);

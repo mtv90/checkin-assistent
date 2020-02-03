@@ -30,7 +30,12 @@
 .button--edit:hover {
     background: darken($serenty, 10%);
 }
-
+.button--edit-account{
+    background-color: $dark-green;
+}
+.button--edit-account:hover{
+    background-color: $mint-green;
+}
 .resent-button {
     border: none;
     cursor: pointer;
@@ -64,7 +69,16 @@
     background-color: $button-cancel-bg;
     margin-bottom: $space;
 }
-
+.button--cancel-account {
+    
+    color:  $mint-green;
+    border: 1px solid $mint-green;
+    background-color: $button-cancel-bg;
+    margin-bottom: $space;
+}
+.button--cancel-account:hover{
+    background-color: darken($button-cancel-bg, 20%);
+}
 .button--link-text {
     background: none;
     padding: 0;
@@ -79,16 +93,24 @@
     margin: 0px;
 }
 .button--add {
-    background-color: #CE5B78;
+    background-color: $custom-red;
 }
 .button--add-praxis {
     margin: 0 auto;
 }
-
+.button--add-account{
+    background-color: $mint-green;
+}
 .button--add:hover {
-    background-color: darken(#CE5B78, 10%);
+    background-color: darken($custom-red, 10%);
+}
+.button--add-account:hover {
+    background-color: darken($mint-green, 10%);
 }
 .button--add:focus {
+    outline: none;
+}
+.button--add-account:focus {
     outline: none;
 }
 .menu{

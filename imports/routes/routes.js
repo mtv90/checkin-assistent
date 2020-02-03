@@ -193,8 +193,14 @@ const onEnterWartezimmer = (props) => {
     }
 } 
 
-const onEnterLoadingPage = (props) => {
-    console.log(props)
+const onEnterKonto = (props) => {
+    if(isLoggedIn() && this.isVerified && (this.role === 'patient') ) {
+        
+        Session.set('selectedKontoDetails', props.match.params.id)
+        return true;
+    } else {
+        return false
+    }
 }
 
 export const Routes = (
@@ -214,6 +220,7 @@ export const Routes = (
             <Route exact path="/meine-termine" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? (<Patiententermine user={this.user}/>) : (<Redirect to="/not-verified" />) } /> 
             <Route exact path="/meine-termine/:id" render= {(props) => onEnterTermine(props) ? <Patiententermine user={this.user}/> : <Redirect to="/not-verified" />}  /> 
             <Route exact path="/patient/:user_id" render= {() => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? ( <Account user={this.user}/> ) : ( <Redirect to="/not-verified" /> )}/>
+            <Route exact path="/patient/:user_id/:id" render= {(props) => onEnterKonto(props) ? ( <Account user={this.user}/> ) : ( <Redirect to="/not-verified" /> )}/>
             <Route exact path="/not-verified" render = {() => (isLoggedIn() && !this.isVerified) ? ( <NotVerified/> ) : ( <Redirect to="/" />) } /> 
             <Route exact path="*" render= { () => <NotFound/> }/>
         </Switch>

@@ -228,13 +228,13 @@ export class AddPraxis extends React.Component {
                     <h1>Praxis hinzufügen</h1>
                     <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
                         {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
-                        <input name="title" ref="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="off"/>
-                        <input name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="off"/>
-                        <input name="nummer" type="text" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="off"/>
-                        <input name="plz"  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} autoComplete="off"/>
-                        <input name="stadt" type="text" placeholder="Stadt" onChange={this.onChangeStadt.bind(this)} autoComplete="off"/>
-                        <input name="telefon" type="tel" placeholder="Telefon" onChange={this.onChangeTelefon.bind(this)} autoComplete="off"/>
-                        <input name="email" type="email" placeholder="E-mail" onChange={this.onChangeEmail.bind(this)} autoComplete="off"/>
+                        <input className="admin-input" name="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="off"/>
+                        <input className="admin-input" name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="new-password"/>
+                        <input className="admin-input" name="nummer" type="text" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="new-password"/>
+                        <input className="admin-input" name="plz"  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} autoComplete="new-password"/>
+                        <input className="admin-input" name="stadt" type="text" placeholder="Stadt" onChange={this.onChangeStadt.bind(this)} autoComplete="new-password"/>
+                        <input className="admin-input" name="telefon" type="tel" placeholder="Telefon" onChange={this.onChangeTelefon.bind(this)} autoComplete="new-password"/>
+                        <input className="admin-input" name="email" type="email" placeholder="E-mail" onChange={this.onChangeEmail.bind(this)} autoComplete="new-password"/>
                         <Select
                             value={this.state.mitarbeiterList}
                             onChange={this.handleChange}
@@ -254,15 +254,15 @@ export class AddPraxis extends React.Component {
                                             <button className="button--remove-opening" onClick={(e) => {this.handleRemoveOpening(e, index)}}>entfernen</button>
                                         </div>
                                         
-                                        <input type="text" name="tag" placeholder="Wochentag" onChange={(e) => this.handleChangeOpeningDay(e, index)} value={open.day} autoComplete="false" />
+                                        <input className="admin-input" type="text" name="tag" placeholder="Wochentag" onChange={(e) => this.handleChangeOpeningDay(e, index)} value={open.day} autoComplete="new-password" />
                                         <div className="praxis-opening-box">
                                             <div className="time-box">
                                                 <label className="opening-label" htmlFor="open-time">von:</label>
-                                                <input type="time" name="open-time" placeholder="von" onChange={(e) => this.handleChangeOpeningStart(e, index)} value={open.start} />
+                                                <input className="admin-input" type="time" name="open-time" placeholder="von" onChange={(e) => this.handleChangeOpeningStart(e, index)} value={open.start} autoComplete="new-password" />
                                             </div>
                                             <div className="time-box">
                                                 <label className="opening-label" htmlFor="close-time">bis:</label>
-                                                <input type="time" name="close-time" placeholder="bis" onChange={(e) => this.handleChangeOpeningEnd(e, index)} value={open.end} />
+                                                <input className="admin-input" type="time" name="close-time" placeholder="bis" onChange={(e) => this.handleChangeOpeningEnd(e, index)} value={open.end} autoComplete="new-password" />
                                             </div>
                                         </div>
                                     </div>
@@ -278,7 +278,7 @@ export class AddPraxis extends React.Component {
                                             <h5>Resource {index + 1}</h5>
                                             <button className="button--remove-opening" onClick={(e) => {this.handleRemoveResource(e, index)}}>entfernen</button>
                                         </div>
-                                        <input type="text" name="title" placeholder="Name" onChange={(e) => this.handleChangeResourceTitle(e, index)} value={resource.title} autoComplete="false" />
+                                        <input className="admin-input" type="text" name="title" placeholder="Name" onChange={(e) => this.handleChangeResourceTitle(e, index)} value={resource.title} autoComplete="false" />
                                         {/* <div className="praxis-opening-box">
                                             <div className="time-box">
                                                 <label className="opening-label" htmlFor="open-time">von:</label>

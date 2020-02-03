@@ -409,29 +409,34 @@ render(){
           {this.state.termin.patient ? 
           <h2>{this.state.termin.patient.profile.nachname}, {this.state.termin.patient.profile.vorname}</h2> 
           : 
-            (<select name="patienten" onChange={this.onChangePatient.bind(this)}>
+            (<select 
+              className="admin-input"
+              name="patienten" onChange={this.onChangePatient.bind(this)}>
               <option>Patienten auswählen...</option>
                 {this.renderOptions()}
             </select>)}
-          <input  name="subject" type="text" 
+          <input  className="admin-input"
+                  name="subject" type="text" 
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
                   placeholder="Betreff" 
                   value={this.state.subject} 
                   onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
           <label htmlFor="starttime">von:</label>
           <input  name="starttime" type="datetime-local" 
+                  className="admin-input"
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
                   placeholder="Startzeit wählen" value={this.state.start } 
                   onChange={this.onChangeStarttime.bind(this)} />
           <label htmlFor="endtime">bis:</label>
           {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
           <input  name="endtime" type="datetime-local" 
+                  className="admin-input"
                   disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
                   placeholder="Ende wählen" 
                   value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
-          <textarea ref="notes" 
-                  disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
-                  placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
+          <textarea name="notes" 
+                    disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
+                    placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
           {this.state.termin.status === 'storniert' ? (
             <div>
               <p className="editor--message"><small className="error--text">Der Termin wurde am {moment(this.state.termin.updatedAt).format('DD.MM.YYYY')} um {moment(this.state.termin.updatedAt).format('HH:mm')} Uhr storniert</small></p>
@@ -449,25 +454,29 @@ render(){
           
           <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
           <h1>Termin erstellen</h1> 
-          <select name="patienten" onChange={this.onChangePatient.bind(this)}>
+          <select className="admin-input" name="patienten" onChange={this.onChangePatient.bind(this)}>
               <option>Patienten auswählen...</option>
                 {this.renderOptions()}
             </select>
           <input  name="subject" type="text" 
+                  className="admin-input"
                   placeholder="Betreff" 
                   value={this.state.subject} 
                   onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
           <label htmlFor="starttime">von:</label>
           <input  name="starttime" type="datetime-local" 
+                  className="admin-input"
                   placeholder="Startzeit wählen" value={this.state.start } 
                   onChange={this.onChangeStarttime.bind(this)} />
           <label htmlFor="endtime">bis:</label>
           {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
           <input  name="endtime" type="datetime-local" 
+                  className="admin-input"
                   placeholder="Ende wählen" 
                   value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
-          <textarea ref="notes" 
-                  placeholder="Bemerkungen eingeben" value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
+          <textarea name="notes" 
+                    
+                    placeholder="Bemerkungen eingeben" value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
          
               <button type="submit" className="button">speichern</button>
               <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>

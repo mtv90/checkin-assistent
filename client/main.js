@@ -17,7 +17,7 @@ import Loading from '../imports/ui/Loading';
 import moment from 'moment';
 import {Session} from 'meteor/session';
 import swal from 'sweetalert';
-import swal2 from 'sweetalert2'
+import swal2 from 'sweetalert2';
 import {Termine} from '../imports/api/termine';
 
 Tracker.autorun(() => {
@@ -82,7 +82,12 @@ Tracker.autorun(() => {
     } 
   
 });
-
+Tracker.autorun(() => {
+  const selectedKontoDetails = Session.get('selectedKontoDetails');
+  if(selectedKontoDetails){
+    history.replace(`/patient/${Meteor.userId()}/${selectedKontoDetails}`)
+  }
+});
 Tracker.autorun(() => {
   const isNavOpen = Session.get('isNavOpen');
   document.body.classList.toggle('is-nav-open', isNavOpen);
@@ -209,7 +214,7 @@ Meteor.startup(() => {
     selectedPraxisId: undefined,
     isNavOpen: false,
     isOpen: false,
-    // praxisId: undefined,
+    selectedKontoDetails: false,
     praxisId_termin: undefined,
     praxisId_warte: undefined,
     termin_path: undefined,
@@ -217,10 +222,10 @@ Meteor.startup(() => {
     start: moment().format('YYYY-MM-DDTHH:mm'),
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm')
   })
-  // Session.setDefault( 'praxisId', undefined)
-  // if(!this.user){
-    ReactDOM.render(<Loading/>, document.getElementById('app'));
-  // }
+  
+  
+  ReactDOM.render(<Loading/>, document.getElementById('app'));
+  
   
   window.setTimeout(() => {
     ReactDOM.render(

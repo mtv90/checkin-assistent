@@ -17,7 +17,7 @@
     background-color: white;
     width: 100vw;
     -webkit-overflow-scrolling: touch;
-
+    flex-direction: column;
     position: fixed;
     top: $header-height;
     left: -100vw;
@@ -59,4 +59,8 @@
     margin: 0 auto;
     max-width: $site-max-width;
     padding: $space;
+}
+
+.tabs-content{
+    width: 100%;
 }
