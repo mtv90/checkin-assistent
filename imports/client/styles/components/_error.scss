@@ -5,3 +5,13 @@ a.disabled--link {
     pointer-events: none;
     display: none;
 }
+.error--link {
+    transition: all .2s ease-in-out;
+    color: $custom-red;
+    margin: 5px;
+    text-decoration: none;
+}
+.error--link:hover {
+    font-size: $base-font-size*1.2;
+    text-decoration: underline;
+}

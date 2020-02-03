@@ -1,3 +1,39 @@
 .add-account__box:focus{
     outline: none;
 }
+.info-box{
+    border: 1px solid $dark-grey;
+    width: 100%;
+    padding: $space;
+    text-align: left;
+    color: $dark-grey;
+    margin-bottom: $space;
+}
+.fragen-box{
+    display: flex;
+    width: 100%;
+    padding: $space*0.8;
+    margin-bottom: $space;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: $space;
+}
+
+input[name=operationRadio]{
+    margin-bottom: $space;
+}
+
+textarea[name=medikamente], textarea[name=operation], textarea[name=handycap] {
+    border: 1px solid $mint-green;
+    outline: none;
+    resize: none;
+    height: $large-space*4;
+}
+input[name=alkohol] {
+    margin-bottom: $large-space;
+}
+textarea[name=medikamente]:focus, textarea[name=operation]:focus, textarea[name=handycap]:focus {
+    box-shadow: 3px 3px $mint-green;
+}

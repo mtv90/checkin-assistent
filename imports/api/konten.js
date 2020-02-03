@@ -129,11 +129,9 @@ Meteor.methods({
                     kontakt,
                     versicherungsdaten,
                 }
-        const formulare ={}
         return Konten.insert({
             kategorien:[
-                konto,
-                formulare
+                konto
             ],
             user_id: this.userId,
             createdAt: new Date(),
@@ -142,6 +140,18 @@ Meteor.methods({
     },
 
     'konto.update'(_id, konto){
+        if(!this.userId){
+            throw new Meteor.Error('Nicht authorisiert!');
+        }
+
+        return Konten.update({
+            _id
+        },{
+            $set:{
+                ...konto,
+                updatedAt: new Date()
+            }
+        })
 
     }
 });

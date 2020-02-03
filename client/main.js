@@ -214,6 +214,7 @@ Meteor.startup(() => {
     selectedPraxisId: undefined,
     isNavOpen: false,
     isOpen: false,
+    modalIsOpen: false,
     selectedKontoDetails: false,
     praxisId_termin: undefined,
     praxisId_warte: undefined,

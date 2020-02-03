@@ -52,34 +52,7 @@ export class Wartezimmer extends React.Component {
         }
 
     }
-    componentDidMount(){
 
-        // let containerEl = document.getElementById('external-events');
-        // let calendarEl = document.getElementById('calendar');
-
-        // new Draggable(containerEl, {
-        //     itemSelector: '.drag-it',
-        //     eventData: function(eventEl) {
-        //         console.log(eventEl.firstChild.innerText)
-        //         return {
-        //             title: eventEl.firstChild.innerText
-        //         };
-        //     }
-        // });
-
-        // this.terminTracker = Tracker.autorun(() => {
-        //     const praxisId_warte = Session.get('praxisId_warte');
-        //     console.log(praxisId_warte)
-        //     // Meteor.subscribe('termine');
-        //     const praxis = Praxen.findOne(praxisId_warte);
-        //     console.log(praxis)
-        //     if(praxis && praxisId_warte) {
-  
-        //       this.setState({praxis, isLoading: false, praxisId_warte})
-        //     }
-            
-        //   });
-    }
     openNav(){
         document.getElementById("mySidenav").style.width = "250px";
         
@@ -111,33 +84,6 @@ export class Wartezimmer extends React.Component {
                         <hr/>
                         <TerminListe praxisId={this.props.praxisId_warte}/>
                     </div>
-                    {/* <div className="resource-cal resource-spacing">
-                        <FullCalendar id="calendarEl"
-                            schedulerLicenseKey= "GPL-My-Project-Is-Open-Source"
-                            plugins={[ resourceTimelinePlugin, interactionPlugin ]}
-                            defaultView= "resourceTimeline"
-                            locale= 'de'
-                            // height='parent'
-                            minTime= '08:00:00'
-                            maxTime= '18:00:00'
-                            buttonText={
-                                {
-                                today: 'heute',
-                                }
-                            }
-                            editable={true}
-                            events={ this.state.termine }
-                            droppable={true}
-                            drop={(info) => {
-                                console.log(info)
-                                info.draggedEl.parentNode.removeChild(info.draggedEl)
-                            }} 
-                            resourceLabelText= "Behandlungsräume"
-                            resourceGroupField= 'groupId'
-                            resourceGroupText='Praxis'
-                            resources= {this.props.praxis.resources}
-                        />
-                    </div> */}
                     <Ressourcenkalender praxis={this.props.praxis}/>
                 </div>
             </div>

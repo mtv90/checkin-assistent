@@ -27,7 +27,9 @@ export const AccountDatenListe = (props) => {
         <div className="praxisliste">
             {props.konto ? (
                     props.konto.kategorien.map( (item) => {
-                        return <AccountItem key={item._id} item={item} />
+                        if(item._id){
+                            return <AccountItem key={item._id} item={item} />
+                        }
                     }
                ) 
             ) : undefined }

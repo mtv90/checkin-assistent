@@ -95,6 +95,16 @@
 .button--add {
     background-color: $custom-red;
 }
+.button--add-patient-info{
+    background-color: $custom-red;
+    font-size: $space*0.8;
+    padding: $input-spacing*.8;
+    display: flex;
+    margin: 0 auto;
+}
+.button--add-patient-info:focus{
+    outline: none;
+}
 .button--add-praxis {
     margin: 0 auto;
 }
@@ -184,4 +194,5 @@
 }
 .button--checkin:hover{
     background-color: $dark-grey;
+    color: white;
 }

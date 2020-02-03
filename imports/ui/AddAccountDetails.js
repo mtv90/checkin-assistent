@@ -233,30 +233,31 @@ export class AddAccountDetails extends React.Component{
                             <option value="Frau">Frau</option>
                         </select>
                         <input name="vorname" 
+                            className="patient--input"
                             value={this.state.user.profile.vorname} type="text" placeholder="Vorname" onChange={this.onChangeVorname.bind(this)} autoComplete="off"/>
-                        <input name="nachname" 
+                        <input name="nachname" className="patient--input" 
                             value={this.state.user.profile.nachname} type="text" placeholder="Nachname" onChange={this.onChangeNachname.bind(this)} autoComplete="off"/>
-                        <input name="geburtsdatum" 
+                        <input name="geburtsdatum" className="patient--input" 
                             value={this.state.geburtsdatum} type="date" placeholder="Geburtsdatum" onChange={this.onChangeGebDate.bind(this)} autoComplete="off"/>
                         <h5 className="item__message item__status-message praxis--subheading">Kontaktdaten</h5>
-                        <input name="straße"
+                        <input name="straße" className="patient--input"
                             value={this.state.strasse} type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="off"/>
-                        <input name="nummer"
+                        <input name="nummer" className="patient--input"
                             value={this.state.nummer} type="text" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="off"/>
-                        <input name="plz"
+                        <input name="plz" className="patient--input"
                             value={this.state.plz}  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} autoComplete="off"/>
-                        <input name="stadt"
+                        <input name="stadt" className="patient--input"
                             value={this.state.stadt} type="text" placeholder="Stadt" onChange={this.onChangeStadt.bind(this)} autoComplete="off"/>
-                        <input name="telefon"
+                        <input name="telefon" className="patient--input"
                             value={this.state.telefon} type="tel" placeholder="Telefon" onChange={this.onChangeTelefon.bind(this)} autoComplete="off"/>
-                        <input name="email"
+                        <input name="email" className="patient--input"
                             value={this.state.user.emails[0].address} type="email" placeholder="E-mail" onChange={this.onChangeEmail.bind(this)} autoComplete="off"/>
                         <h5 className="item__message item__status-message praxis--subheading">Versichertenstammdaten</h5>
-                        <input name="versicherung"
+                        <input name="versicherung" className="patient--input"
                             value={this.state.versicherung} ref="versicherungTitle" type="text" placeholder="Name der Versicherung" onChange={this.onChangeVersicherung.bind(this)} autoComplete="off"/>
-                        <input name="versicherungNr"
+                        <input name="versicherungNr" className="patient--input"
                             value={this.state.versicherungNr} ref="versicherungNr" type="number" placeholder="Nummer der Versicherung" onChange={this.onChangeVersicherungNr.bind(this)} autoComplete="off"/>
-                        <input name="versichertenNr"
+                        <input name="versichertenNr" className="patient--input"
                             value={this.state.versichertenNr} ref="versichertenNr" type="text" placeholder="Versicherten-Nummer" onChange={this.onChangeVersichertenNr.bind(this)} autoComplete="off"/>
                         <button type="submit" className="button button--add-account">speichern</button>
                         <button type="button" className="button button--cancel-account" onClick={this.handleModalClose.bind(this)}>abbrechen</button>

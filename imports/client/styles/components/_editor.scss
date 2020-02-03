@@ -141,6 +141,7 @@
 }
 .waiting{
     background-color: #FFD662;
+    color: $dark-grey;
 }
 .in-behandlung{
     background-color: $dark-green;
@@ -149,4 +150,30 @@
 .storno{
     background-color: #CE5B78;
     color: white;
+}
+.editor-button{
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 70%;
+    font-size: $base-font-size*0.9;
+    line-height: 1.2;
+    padding: $input-spacing;
+    margin: 0 auto;
+    margin-bottom: $input-spacing;
+    @include desktop{
+        font-size: $base-font-size;
+        margin: $input-spacing;
+    }
+}
+.editor--button-group{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    
+    @include desktop{
+        flex-direction: row;
+    }
 }

@@ -1,8 +1,10 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {Meteor} from 'meteor/meteor'
 import { withTracker  } from 'meteor/react-meteor-data';
 import {Session} from 'meteor/session';
 import {Termine} from '../api/termine';
+import {Konten} from '../api/konten';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import swal from 'sweetalert';
@@ -15,6 +17,9 @@ import 'react-add-to-calendar/dist/react-add-to-calendar.css'
 export class Editor extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            termin: null
+        }
     }
     componentDidMount(){
      
@@ -62,6 +67,86 @@ export class Editor extends React.Component {
             );
         }
     }
+    handleStorno(e){
+        this.setState({
+            termin: this.props.termin
+        })
+        swal({
+            title:"Termin absagen",
+            icon: "warning",
+            buttons: ["abbrechen", true],
+            dangerMode: true,
+            content: {
+              element: "input",
+              attributes: {
+                placeholder: "Bitte geben Sie einen Grund an",
+                type: "text",
+              },
+            },
+          }).then((value) => {
+            if(value){
+              const random = Random.hexString(4);
+              this.setState({
+                termin: {
+                  ...this.state.termin,
+                  stornoGrund: value},
+                random
+              });
+              swal({
+                title: "Eingabebestätigung",
+                text: `Bitte geben Sie die Zeichenfolge ein: ${random}`,
+                buttons: ["abbrechen", true],
+                dangerMode: true,
+                content: {
+                  element: "input",
+                  attributes: {
+                    placeholder: "",
+                    type: "text",
+                  },
+                }
+              }).then((result) => {
+                  
+                if(result === this.state.random){
+                  this.state.termin['status'] = 'storniert',
+                  this.state.termin['adminRead'] = false,
+                  this.state.termin['checkedIn'] = false
+        
+                  this.setState({termin: this.state.termin})
+                  Meteor.call('termin.update', 
+                    this.state.termin._id, 
+                    this.state.termin,
+                    (error, result) => {
+                      if(error){
+                        swal(`${error.error}`,"","error")
+                      }
+                      if(result){
+                        Meteor.call('termin.update_mail',
+                        this.state.termin.praxis.email, 
+                        this.state.termin.patient.emails[0].address, 
+                        this.state.termin.subject, 
+                        this.state.termin,
+                        (error, result) => {
+                          if(error){
+                            swal('Fehler', `${error.error}`, 'error');
+                          }
+                        });
+                        swal('Termin storniert',"","success")
+                      }
+                    });
+                  
+                } 
+              }).catch((err) => {
+                swal(`Falsche Eingabe`, "Die eingegebene Zeichenfolge stimmt nicht überein", "error");
+              }); 
+            } 
+          }).catch( (err) => {
+            console.log(err);
+            swal(`${err.error}`, "", "error");
+          })
+    }
+    handleDelay(e){
+
+    }
     render() {
         if(this.props.termin) {
             const statusClass = this.props.termin.status === 'waiting' ? 'termin-status waiting': this.props.termin.status === 'in-behandlung' ? 'termin-status in-behandlung' : this.props.termin.status === 'storniert' ? 'termin-status storno' : 'termin-status';
@@ -93,7 +178,19 @@ export class Editor extends React.Component {
                     </div>
                     <div className="termin-aktion-container">
                         <h5 className="item__message item__status-message praxis--subheading">Aktionen</h5>
-                        {!this.props.termin.checkedIn ? <button type="button" className="button button--checkin" onClick={this.checkIn.bind(this)}>einchecken</button> : <p className="editor--message">Sie sind bereits eingechecked</p>}
+                        {!this.props.termin.checkedIn ? 
+                            this.props.konto? 
+                                <div className="editor--button-group">
+                                    <button type="button" className="editor-button button--checkin" onClick={this.checkIn.bind(this)}>einchecken</button>
+                                    <button type="button" className="editor-button button--checkin waiting" onClick={this.handleDelay.bind(this)}>Verspätung melden</button>
+                                    <button type="button" className="editor-button button--checkin storno" onClick={this.handleStorno.bind(this)}>absagen</button>
+                                </div> :
+                            <div>
+                                <p className="editor--message error--text">Um einchecken zu können, müssen Sie ihre Daten hinterlegen. Dies ist unter <Link className="error--link" to={`/patient/${Meteor.userId}`}><strong>Mein Konto</strong></Link> möglich.</p>
+                            </div>
+                              
+                        : 
+                            <p className="editor--message">Sie sind bereits eingechecked</p>}
                     </div>
                 </div>
             )
@@ -112,15 +209,17 @@ export class Editor extends React.Component {
 Editor.propTypes = {
     selectedTerminId: PropTypes.string,
     termin: PropTypes.object,
-    event: PropTypes.object
+    event: PropTypes.object,
+    konto: PropTypes.object
 }
 
 export default withTracker( () => {
     const selectedTerminId = Session.get('selectedTerminId');
     Meteor.subscribe('patiententermine')
     Meteor.subscribe('getBehandlungsraum');
+    Meteor.subscribe('meinKonto')
     const termin = Termine.findOne(selectedTerminId)
-    
+    const konto = Konten.findOne({user_id: Meteor.userId()})
     
     if(termin){
         const behandlung = Behandlungen.findOne({termin_id: termin._id})
@@ -144,6 +243,7 @@ export default withTracker( () => {
         return {
             selectedTerminId,
             termin,
+            konto,
             event: {
                 title: `${termin.title} / ${termin.subject}`,
                 description: termin.notes,
