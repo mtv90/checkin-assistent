@@ -160,7 +160,7 @@ export default class AddTermin extends React.Component {
                     overlayClassName="boxed-view boxed-view--modal"
                 >
                     <h1>Termin erstellen</h1>
-                    <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
+                    <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form termin--modal">
                         <select className="admin-input" name="patienten" onChange={this.onChangePatient.bind(this)}>
                             <option>Patienten auswählen...</option>
                             {this.renderOptions()}

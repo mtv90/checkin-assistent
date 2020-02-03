@@ -17,7 +17,7 @@ import 'react-tabs/style/react-tabs.css';
 export const Account = (props) => {
     var Spinner = require('react-spinkit');
 
-    if(props.isLoading === true){
+    if(!props.konto){
         return (
             <div className="pacman-view">
                 <Spinner name='pacman' color="#1BBC9B" />
@@ -68,17 +68,10 @@ Account.propTypes = {
 } 
 export default withTracker( () => {
     Meteor.subscribe('meinKonto')
-    const konto = Konten.findOne({user_id: Meteor.userId()});
+    // const konto = Konten.findOne({user_id: Meteor.userId()});
     
-    if(konto){
-        return {
-            konto,
-            isLoading: false
-        };
-    }
-    else {
-        return {
-            isLoading: true
-        }
-    }
+    return {
+        konto: Konten.findOne({user_id: Meteor.userId()}),
+        isLoading: false
+    };
 })(Account);

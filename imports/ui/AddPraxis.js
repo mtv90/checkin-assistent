@@ -226,7 +226,7 @@ export class AddPraxis extends React.Component {
                     overlayClassName="boxed-view boxed-view--modal"
                 >
                     <h1>Praxis hinzufügen</h1>
-                    <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
+                    <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form termin--modal">
                         {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
                         <input className="admin-input" name="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="new-password"/>
                         <input className="admin-input" name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="new-password"/>

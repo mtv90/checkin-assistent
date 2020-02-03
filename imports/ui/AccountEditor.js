@@ -151,7 +151,7 @@ export class AccountEditor extends React.Component {
     render(){
         var Spinner = require('react-spinkit');
 
-        if(this.props.isLoading === true){
+        if(!this.props.konto){
             
             return (
                 <div className="pacman-view">

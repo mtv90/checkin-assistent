@@ -62,7 +62,8 @@ function inactivityTimer() {
     function logout() {
       console.log('Logged out due inactivity')
       swal("Sie wurden abgemeldet","", "warning").then(() => {
-        Accounts.logout() 
+        Accounts.logout();
+        history.replace('/') 
         })
         // window.location.href = '/action';  //Adapt to actual logout script
     }
@@ -136,22 +137,15 @@ const onEnterPublicPage = () => {
 }
 
 const onEnterDashboard = (props) => {
-
+    
     if(isLoggedIn() && this.user && Roles.userIsInRole(Meteor.userId(), 'admin')){
             
-                Session.set('praxisId', props.match.params.id)
-                Session.set('dashboard_path', props.match.path)
-                        return <AdminDashboard user={this.user}/>
-       } else if(isLoggedIn() && this.user && Roles.userIsInRole(Meteor.userId(), 'patient')) {
-           return <PatientenDashboard user={this.user} />
-       } 
-    
-
-    else {
-        console.log('Es wurde keine Benutzerrolle zugewiesen!')
-        return <Loading/>
-        throw new Meteor.Error('Es wurde keine Benutzerrolle zugewiesen!');
-    }
+        Session.set('praxisId', props.match.params.id)
+        Session.set('dashboard_path', props.match.path)
+        return <AdminDashboard user={this.user}/>
+    } else if(isLoggedIn() && this.user && Roles.userIsInRole(Meteor.userId(), 'patient')) {
+        return <PatientenDashboard user={this.user} />
+    } 
 }
 
 const onEnterTermine = (props) => {

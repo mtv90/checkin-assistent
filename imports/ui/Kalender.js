@@ -404,7 +404,7 @@ render(){
         overlayClassName="boxed-view boxed-view--modal"
       >
         {this.state.termin ? (
-          <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
+          <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form termin--modal">
           <h1>Termin bearbeiten</h1>
           {this.state.termin.patient ? 
           <h2>{this.state.termin.patient.profile.nachname}, {this.state.termin.patient.profile.vorname}</h2> 
@@ -452,7 +452,7 @@ render(){
           </form>
         ) : (
           
-          <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
+          <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form termin--modal">
           <h1>Termin erstellen</h1> 
           <select className="admin-input" name="patienten" onChange={this.onChangePatient.bind(this)}>
               <option>Patienten auswählen...</option>
