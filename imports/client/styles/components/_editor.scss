@@ -32,50 +32,7 @@
     flex-flow: wrap row;
     justify-content: space-between;
 }
-.praxis--hausnummer{
-    width: 20%;
-}
-.praxis--strasse{
-    width: 70%
-}
-.praxis--plz{
-    width: 30%;
-    @include desktop{
-        width: 20%;
-    }
-    
-}
 
-.praxis--stadt{
-    width: 65%;
-    @include desktop{
-        width: 70%;
-    }
-}
-.praxis--telefon{
-    width: 100%;
-    @include desktop{
-        width: 70%;
-    }
-}
-.praxis--email{
-    width: 100%;
-    @include desktop{
-        width: 70%;
-    }
-}
-.praxis--label{
-    width: 100%;
-    @include desktop{
-        padding-top: $space;
-        width: 20%;
-    }
-}
-.praxis--subheading{
-    display: flex;
-    flex-direction: column;
-    margin: $space 0;
-}
 
 .praxis-editor--select{
     border: 1px solig red;
@@ -91,8 +48,8 @@
 }
 .praxis-opening-box{
     width: 100%;
-    display: flex;
-    flex-direction: row;
+    // display: flex;
+    // flex-direction: row;
 }
 .praxis-opening-box--header {
     background-color: $light-grey;
@@ -135,9 +92,7 @@
     border-bottom: 1px solid $dark-grey;
     margin-bottom: $space;
 }
-.praxis-anschrift{
-    padding: $space;
-}
+
 .mein-termin{
     display: flex;
     flex-direction: column;

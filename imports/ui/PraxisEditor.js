@@ -217,7 +217,7 @@ export class PraxisEditor extends React.Component {
                     
                     {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
                     <input 
-                            className="praxis-title"
+                            className="praxis-title admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="title" 
                             ref="title" 
@@ -227,66 +227,70 @@ export class PraxisEditor extends React.Component {
                             onChange={this.onChangeTitle.bind(this)} 
                             autoComplete="off"/>
                     <h5 className="item__message item__status-message praxis--subheading">Adresse</h5>
-                    <div className="adress-container">
+                    <div className="account-stammdaten">
+                        <label htmlFor="straße">Straße:</label>
                         <input 
-                            className="praxis--strasse"
+                            className="admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="straße" 
                             type="text" 
                             placeholder="Straße" 
                             value={this.state.edit ? this.state.strasse : this.props.praxis.strasse}
                             onChange={this.onChangeStrasse.bind(this)} 
-                            autoComplete="off"/>
+                            autoComplete="new-password"/>
+                        <label htmlFor="nummer" className="praxis--label">Hausnr.:</label>
                         <input 
-                            className="praxis--hausnummer"
+                            className="admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="nummer" 
                             type="text" 
                             placeholder="Hausnr."
                             value={this.state.edit ? this.state.nummer : this.props.praxis.nummer} 
                             onChange={this.onChangeNummer.bind(this)} 
-                            autoComplete="off"/>
+                            autoComplete="new-password"/>
+                        <label htmlFor="plz">PLZ:</label>
                         <input 
-                            className="praxis--plz"
+                            className="admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="plz"  
                             type="number" 
                             placeholder="Postleitzahl"
                             value={this.state.edit ? this.state.plz : this.props.praxis.plz} 
                             onChange={this.onChangePLZ.bind(this)} 
-                            autoComplete="off"/>
+                            autoComplete="new-password"/>
+                        <label htmlFor="stadt">Stadt:</label>
                         <input 
-                            className="praxis--stadt"
+                            className="admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="stadt" type="text" 
                             placeholder="Stadt"
                             value={this.state.edit ? this.state.stadt : this.props.praxis.stadt} 
                             onChange={this.onChangeStadt.bind(this)} 
-                            autoComplete="off"/>
+                            autoComplete="new-password"/>
                     </div>
                     <h5 className="item__message item__status-message praxis--subheading">Kontaktdaten</h5>
-                    <div className="adress-container">
+                    <div className="account-stammdaten">
                         <label htmlFor="telefon" className="praxis--label">Telefon:</label>
                         <input 
-                            className="praxis--telefon"
+                            className="admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="telefon" 
                             type="tel" 
                             placeholder="Telefon" 
                             value={this.state.edit ? this.state.telefon : this.props.praxis.telefon}
                             onChange={this.onChangeTelefon.bind(this)} 
-                            autoComplete="off"/>
-                    </div>
-                    <div className="adress-container">
+                            autoComplete="new-password"/>
+                    
+                    
                         <label htmlFor="email" className="praxis--label">E-Mail:</label>
                         <input 
-                            className="praxis--email"
+                            className="admin-input"
                             disabled = {this.state.edit ? "" : "disabled"} 
                             name="email" type="email" 
                             placeholder="E-mail" 
                             value={this.state.edit ? this.state.email : this.props.praxis.email}
                             onChange={this.onChangeEmail.bind(this)} 
-                            autoComplete="off"/>
+                            autoComplete="new-password"/>
                     </div>
                     <h5 className="item__message item__status-message praxis--subheading">Öffnungszeiten</h5>
                     {this.state.edit ? (
@@ -314,7 +318,8 @@ export class PraxisEditor extends React.Component {
                                         </div>
                                         <div className="desktop-opening-container">
                                             <input
-                                                className="opening-day" 
+                                            // opening-day
+                                                className="admin-input" 
                                                 disabled = {this.state.edit ? "" : "disabled"}
                                                 type="text" 
                                                 name="tag" 
@@ -391,7 +396,7 @@ export class PraxisEditor extends React.Component {
                                         </div>
                                         <div className="desktop-opening-container">
                                             <input
-                                                className="opening-day" 
+                                                className="admin-input" 
                                                 disabled = {this.state.edit ? "" : "disabled"}
                                                 type="text" 
                                                 name="title" 
@@ -425,7 +430,7 @@ export class PraxisEditor extends React.Component {
                         value={this.state.edit ? this.state.mitarbeiter : this.props.praxis.mitarbeiter}
                         onChange={this.handleChangeMitarbeiter}
                         isMulti
-                        name="Mitarbeiter"
+                        name="mitarbeiter"
                         options={this.props.mitarbeiter}
                         // isOptionDisabled = {this.state.edit ? 'yes' : false}
                         isDisabled={this.state.edit ? false : true}

@@ -475,9 +475,8 @@ render(){
                   placeholder="Ende wählen" 
                   value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
           <textarea name="notes" 
-                    
-                    placeholder="Bemerkungen eingeben" value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
-         
+            placeholder="Bemerkungen eingeben" value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
+            
               <button type="submit" className="button">speichern</button>
               <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
           

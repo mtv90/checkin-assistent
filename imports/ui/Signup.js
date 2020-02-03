@@ -91,15 +91,15 @@ export default class Signup extends React.Component{
             <h1 className="">Registrieren</h1>
             {this.state.error ? <p className="red darken-1">{this.state.error}</p> : undefined}
             <form className="boxed-view__form" onSubmit={this.onSubmit.bind(this)}>
-              <input className="" type="text" placeholder="Vorname" name="vorname" ref="vorname" required autoFocus/>
-              <input className="" type="text" placeholder="Nachname" name="nachname" ref="nachname" required/>
-              <input className="" type="email" placeholder="Email" name="email" ref="email" required/>
-              <input className="" type="password" placeholder="Passwort" name="password" ref="password" required/>
-              <input className="" type="password" placeholder="Passwort wiederholen" name="passwordconfirm" ref="confirmPassword" required/>
+              <input className="admin-input" type="text" placeholder="Vorname" name="vorname" ref="vorname" autoComplete="new-password" required autoFocus/>
+              <input className="admin-input" type="text" placeholder="Nachname" name="nachname" ref="nachname" autoComplete="new-password" required/>
+              <input className="admin-input" type="email" placeholder="Email" name="email" ref="email" autoComplete="new-password" required/>
+              <input className="admin-input" type="password" placeholder="Passwort" name="password" ref="password" autoComplete="new-password" required/>
+              <input className="admin-input" type="password" placeholder="Passwort wiederholen" name="passwordconfirm" autoComplete="new-password" ref="confirmPassword" required/>
               <div className="">
                 <label htmlFor="rolle">Benutzerrolle</label>
                   <Select
-                    className=""
+                    className="select-box"
                       placeholder="auswählen..."
                       value={selectedOption}
                       onChange={this.handleChangeRollen.bind(this)}

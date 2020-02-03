@@ -41,8 +41,8 @@ export default class Login extends React.Component{
                     <h1 className="card-title">Anmelden</h1>
                     {this.state.error ? <p className=" red-text text-darken-1">{this.state.error}</p> : undefined}
                     <form onSubmit={this.onLogin.bind(this)} className="boxed-view__form">
-                        <input placeholder="Email" type="email" ref="email" required />
-                        <input placeholder="Passwort" type="password" ref="password" required />
+                        <input className="admin-input" placeholder="Email" type="email" ref="email" required />
+                        <input className="admin-input" placeholder="Passwort" type="password" ref="password" required />
                         <button className="button" type="submit" name="action">anmelden</button>   
                     </form>
                     <Link className="" to="/signup"><small>Noch keinen Account? Jetzt registrieren..</small></Link>

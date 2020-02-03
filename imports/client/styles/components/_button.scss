@@ -158,12 +158,16 @@
     border: 1px solid $serenty;
 }
 .button--remove-opening{
-    display: inline-block;
+    display: flex;
     border: none;
+    width: 100%;
     background-color: #CE5B78;
     font-size: $base-font-size/1.3;
     padding: $space/3;
     color: white;
+    @include desktop{
+        display: inline-block;
+    }
 }
 
 .button--checkin{

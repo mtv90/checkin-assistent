@@ -220,7 +220,7 @@ export class AddPraxis extends React.Component {
                     isOpen={this.state.isOpen} 
                     contentLabel="Termin anlegen" 
                     appElement={document.getElementById('app')}
-                    onAfterOpen={() => this.refs.title.focus()}
+                    // onAfterOpen={() => this.refs.title.focus()}
                     onRequestClose={this.handleModalClose.bind(this)}
                     className="boxed-view__box"
                     overlayClassName="boxed-view boxed-view--modal"
@@ -228,7 +228,7 @@ export class AddPraxis extends React.Component {
                     <h1>Praxis hinzufügen</h1>
                     <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
                         {this.state.error ? (<p className="error--text"><small>{this.state.error}</small></p>) : undefined}
-                        <input className="admin-input" name="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="off"/>
+                        <input className="admin-input" name="title" type="text" placeholder="Praxisname" onChange={this.onChangeTitle.bind(this)} autoComplete="new-password"/>
                         <input className="admin-input" name="straße" type="text" placeholder="Straße" onChange={this.onChangeStrasse.bind(this)} autoComplete="new-password"/>
                         <input className="admin-input" name="nummer" type="text" placeholder="Hausnr." onChange={this.onChangeNummer.bind(this)} autoComplete="new-password"/>
                         <input className="admin-input" name="plz"  type="number" placeholder="Postleitzahl" onChange={this.onChangePLZ.bind(this)} autoComplete="new-password"/>

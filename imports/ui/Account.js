@@ -32,9 +32,9 @@ export const Account = (props) => {
                    
                     <div className="sidebar-button--wrapper">
                     
-                    <Link className="button button--link button--dashboard" to={{pathname: `/dashboard`}}>Dashboard</Link>
+                    <Link className="button button--link button--cancel-account" to={{pathname: `/dashboard`}}>Dashboard</Link>
                 
-                    <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
+                    <button className="button button--link button--cancel-account" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
                 </div>
                     
                     
