@@ -17,13 +17,13 @@ import 'react-tabs/style/react-tabs.css';
 export const Account = (props) => {
     var Spinner = require('react-spinkit');
 
-    if(!props.konto){
-        return (
-            <div className="pacman-view">
-                <Spinner name='pacman' color="#1BBC9B" />
-            </div>
-        )
-    }
+    // if(!props.konto){
+    //     return (
+    //         <div className="pacman-view">
+    //             <Spinner name='pacman' color="#1BBC9B" />
+    //         </div>
+    //     )
+    // }
     return (
         <div>
             <Patientheader title={`${Session.get('user').profile.nachname}, ${Session.get('user').profile.vorname}`}/>
@@ -57,7 +57,12 @@ export const Account = (props) => {
                     </Tabs>
                 </div>
                 <div className="page-content__main">
-                    <AccountEditor konto={props.konto}/>
+                    {props.konto ? <AccountEditor konto={props.konto}/> : <div className="editor">
+                     <p className="editor--message">
+                        Es wurden noch keine Stammdaten hinterlegt
+                     </p>
+                </div>}
+                    
                 </div>
             </div>
         </div>
@@ -72,6 +77,5 @@ export default withTracker( () => {
     
     return {
         konto: Konten.findOne({user_id: Meteor.userId()}),
-        isLoading: false
     };
 })(Account);
