@@ -591,7 +591,7 @@ export class AccountEditor extends React.Component {
 }
 
 export default withTracker( (props) => {
-    console.log(props.konto.kategorien.length)
+    
     const selectedKontoDetails = Session.get('selectedKontoDetails');
     const isLoading = Session.get('isLoading');
     const user = Meteor.user()

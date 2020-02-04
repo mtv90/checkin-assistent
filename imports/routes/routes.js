@@ -36,7 +36,7 @@ export const onAuthChange = (isAuth) => {
 
         const user = Meteor.user();
         if(user){
-            (authPages && user.role === 'patient') ? inactivityTimer() : undefined;
+            (authPages && user.role === 'patient') ? (inactivityTimer()) : undefined;
         }
         
         

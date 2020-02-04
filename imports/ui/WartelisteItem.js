@@ -31,7 +31,6 @@ export default class WartelisteItem extends React.Component {
                     if(err) {
                         swal("Fehler", `${err.error}`, "error");
                     } else {
-                        console.log(termin)
                         swal("Patient ausgechecked", "", "warning");
                     }
                 }

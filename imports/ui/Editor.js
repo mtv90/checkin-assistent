@@ -6,6 +6,8 @@ import {Session} from 'meteor/session';
 import {Termine} from '../api/termine';
 import {Konten} from '../api/konten';
 import PropTypes from 'prop-types';
+import { IconContext } from "react-icons";
+import { MdDone } from "react-icons/md";
 import moment from 'moment';
 import swal from 'sweetalert';
 import AddToCalendar from 'react-add-to-calendar';
@@ -145,9 +147,84 @@ export class Editor extends React.Component {
           })
     }
     handleDelay(e){
-
+        this.setState({
+            termin: this.props.termin
+        })
+        swal({
+            title:"Verspätung melden",
+            icon: "warning",
+            buttons: ["abbrechen", true],
+            dangerMode: true,
+            content: {
+              element: "input",
+              attributes: {
+                placeholder: "Bitte geben Sie einen Grund an",
+                type: "text",
+              },
+            },
+          }).then((value) => {
+            if(value){
+              const random = Random.hexString(4);
+              this.setState({
+                termin: {
+                  ...this.state.termin,
+                  stornoGrund: value},
+                random
+              });
+              swal({
+                title: "Eingabebestätigung",
+                text: `Bitte geben Sie die Zeichenfolge ein: ${random}`,
+                buttons: ["abbrechen", true],
+                dangerMode: true,
+                content: {
+                  element: "input",
+                  attributes: {
+                    placeholder: "",
+                    type: "text",
+                  },
+                }
+              }).then((result) => {
+                  
+                if(result === this.state.random){
+                  this.state.termin['status'] = 'verspaetet',
+                  this.state.termin['adminRead'] = false,
+                  this.state.termin['checkedIn'] = false
+        
+                  this.setState({termin: this.state.termin})
+                  Meteor.call('termin.update', 
+                    this.state.termin._id, 
+                    this.state.termin,
+                    (error, result) => {
+                      if(error){
+                        swal(`${error.error}`,"","error")
+                      }
+                      if(result){
+                        Meteor.call('termin.update_mail',
+                        this.state.termin.praxis.email, 
+                        this.state.termin.patient.emails[0].address, 
+                        this.state.termin.subject, 
+                        this.state.termin,
+                        (error, result) => {
+                          if(error){
+                            swal('Fehler', `${error.error}`, 'error');
+                          }
+                        });
+                        swal('Verspätung gemeldet',"","success")
+                      }
+                    });
+                  
+                } 
+              }).catch((err) => {
+                swal(`Falsche Eingabe`, "Die eingegebene Zeichenfolge stimmt nicht überein", "error");
+              }); 
+            } 
+          }).catch( (err) => {
+            console.log(err);
+            swal(`${err.error}`, "", "error");
+          })
     }
     render() {
+        var Spinner = require('react-spinkit');
         if(this.props.termin) {
             const statusClass = this.props.termin.status === 'waiting' ? 'termin-status waiting': this.props.termin.status === 'in-behandlung' ? 'termin-status in-behandlung' : this.props.termin.status === 'storniert' ? 'termin-status storno' : 'termin-status';
             return (
@@ -169,8 +246,19 @@ export class Editor extends React.Component {
                         </div>
                     </div>
                     <div className="mein-termin">
-                        <AddToCalendar displayItemIcons={true} buttonLabel="export" event={this.props.event}/>
-                        <p>Status: <span className={statusClass}>{this.props.termin.status}</span> </p>
+                        <div className="add-cal-box">
+                            <AddToCalendar displayItemIcons={true} buttonLabel="export" event={this.props.event}/>
+                        </div>
+                        
+                        <p>Status: <span className={statusClass}>{this.props.termin.status=== 'in-behandlung' ? 'In Behandlung' : this.props.termin.status}</span>
+                            {this.props.termin.adminRead ? 
+                                (
+                                    <IconContext.Provider value={{size: "1.4em", className: "termin-icon--check" }}>
+                                        <MdDone />
+                                    </IconContext.Provider>
+                                ) : undefined
+                            }
+                        </p>
                        
                         <p>Uhrzeit:<span className="termin-zeit">{moment(this.props.termin.start).format("DD.MM.YYYY, HH:mm")} Uhr - {moment(this.props.termin.end).format("HH:mm")} Uhr</span></p>
                         {this.props.termin.status === 'in-behandlung' && this.props.behandlung ? <p>Raum:<span className="termin-zeit">{this.props.behandlung.resourceTitle}</span></p> : undefined}
@@ -229,6 +317,7 @@ export default withTracker( () => {
     const konto = Konten.findOne({user_id: Meteor.userId()})
     
     if(termin){
+        
         const behandlung = Behandlungen.findOne({termin_id: termin._id})
         // console.log(termin)
         // if(termin.patientRead === false){

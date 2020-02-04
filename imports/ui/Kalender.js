@@ -120,7 +120,7 @@ onSubmit(e){
   const {patient_id, start, end, notes, subject} = this.state;
   const praxis = this.props.praxis;
 
-  if(this.state.termin){
+  if(this.state.termin && (this.state.termin.status === 'open')){
     this.state.termin['patientRead'] = false;
     this.state.termin['subject'] = this.state.subject;
     this.state.termin['start'] = this.state.start;
@@ -420,25 +420,25 @@ render(){
             </select>)}
           <input  className="admin-input"
                   name="subject" type="text" 
-                  disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
+                  disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
                   placeholder="Betreff" 
                   value={this.state.subject} 
                   onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
           <label htmlFor="starttime">von:</label>
           <input  name="starttime" type="datetime-local" 
                   className="admin-input"
-                  disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
+                  disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
                   placeholder="Startzeit wählen" value={this.state.start } 
                   onChange={this.onChangeStarttime.bind(this)} />
           <label htmlFor="endtime">bis:</label>
           {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
           <input  name="endtime" type="datetime-local" 
                   className="admin-input"
-                  disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
+                  disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
                   placeholder="Ende wählen" 
                   value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
           <textarea name="notes" 
-                    disabled = {this.state.termin.status === 'storniert' ? 'disabled' : ''}
+                    disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
                     placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
           {this.state.termin.status === 'storniert' ? (
             <div>
@@ -447,9 +447,9 @@ render(){
             </div>
            ) : (
             <div className="boxed-view__form">
-              <button type="submit" className="button">speichern</button>
+              {this.state.termin.status === 'open' ? <button type="submit" className="button">speichern</button> : this.state.termin.status === 'verspaetet' ? <p className="editor--message">Der Patient wird sich verspäten. Sie können den Termin lediglich <u>stornieren</u>!</p> : <p className="editor--message">Der Patient befindet sich bereits im Wartezimmer. Eine Terminbearbeitung ist daher nicht mehr möglich!</p>}
               <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
-              <button type="button" className="button button--remove-opening" onClick={this.handleStorno.bind(this)}>stornieren</button>
+              {this.state.termin.status === 'open' || this.state.termin.status === 'verspaetet' ? <button type="button" className="button button--remove-opening" onClick={this.handleStorno.bind(this)}>stornieren</button> : undefined}
             </div>
           )}
           </form>
@@ -508,9 +508,21 @@ export default withTracker( () => {
   let termine = Termine.find({"praxis._id": praxisId_termin}).fetch();
   
   // Prüfe, welche Termine storniert wurden und färbe sie grau 
+  // Prüfe, welche Termine eingecheckt sind und färbe sie grün 
+  // Prüfe, welche Termine sich verspätet gemeldet haben und färbe sie gelb
   termine.map(termin => {
     if(termin.status === 'storniert'){
       return (termin['color'] = '#cccccc',
+              termin['textColor'] = '#666666'
+              );
+    }
+    if(termin.status === 'waiting'){
+      return (termin['color'] = '#1BBC9B',
+              termin['textColor'] = '#FFFFFF'
+              );
+    }
+    if(termin.status === 'verspaetet'){
+      return (termin['color'] = '#FFD662',
               termin['textColor'] = '#666666'
               );
     } else {

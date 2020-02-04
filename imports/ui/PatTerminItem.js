@@ -42,7 +42,8 @@ export class PatTerminItem extends React.Component {
                         <IconContext.Provider value={{size: "1.4em", className: "termin-icon--info" }}>
                             <MdInfo />
                         </IconContext.Provider>
-                    )}
+                    )
+                }
                 
                 <p className="item__message">{moment(this.props.termin.start).format("HH:mm")} Uhr | {moment(this.props.termin.start).format("DD.MM.YYYY")}</p>
             </div>

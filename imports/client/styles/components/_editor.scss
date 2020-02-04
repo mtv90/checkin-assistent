@@ -146,7 +146,14 @@
 .in-behandlung{
     background-color: $dark-green;
     color: white;
+    animation: changeColor 3s ease-in-out  infinite;
+    animation-fill-mode: forwards;
 }
+@keyframes changeColor {
+    from{background-color: $dark-green;}
+    to{background-color: $light-grey;}
+}
+
 .storno{
     background-color: #CE5B78;
     color: white;
@@ -158,7 +165,7 @@
     cursor: pointer;
     text-transform: uppercase;
     width: 70%;
-    font-size: $base-font-size*0.9;
+    font-size: $base-font-size*0.8;
     line-height: 1.2;
     padding: $input-spacing;
     margin: 0 auto;
@@ -176,4 +183,10 @@
     @include desktop{
         flex-direction: row;
     }
+}
+
+.add-cal-box{
+    display: block;
+    margin-bottom: $large-space;
+    text-align: end;
 }

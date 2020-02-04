@@ -88,7 +88,8 @@ Meteor.methods({
             $set: {
                 ...termin,
                 updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
-                status: 'in-behandlung'
+                status: 'in-behandlung',
+                patientRead: false
             }
         });
         return Behandlungen.insert({
@@ -114,6 +115,7 @@ Meteor.methods({
         Termine.update({_id: termin._id},{
             $set: {
                 ...termin,
+                patientRead: false,
                 updatedAt: new Date()
             }
         });
