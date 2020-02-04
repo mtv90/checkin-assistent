@@ -178,6 +178,10 @@ export class Editor extends React.Component {
                     </div>
                     <div className="termin-aktion-container">
                         <h5 className="item__message item__status-message praxis--subheading">Aktionen</h5>
+                        {/* Überprüfen, ob der Patient Stammdaten zum Übertragen hinterlegt hat
+                        Prüfe anschließend, ob der Termin schon storniert wurde 
+                        Prüfe, ob der Patient schon eingecheckt ist
+                        */}                        
                         {!this.props.termin.checkedIn ? 
                             this.props.konto? this.props.termin.status === 'storniert' ? 
                                 <div>
