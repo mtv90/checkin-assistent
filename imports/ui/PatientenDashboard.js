@@ -23,7 +23,6 @@ export const PatientenDashboard = (props) => {
                 <div className="boxed-view__dashboard">
                     <Link className="boxed-view__dashboardbox--patient" to="/meine-termine">Meine Termine</Link>
                     <Link className="boxed-view__dashboardbox--patient" to={{pathname:`/patient/${props.user._id}`, state: {_id: props.user._id}}}>Mein Konto</Link>
-                    {/* <Link className="boxed-view__dashboardbox--patient" to="/termine">Item 3</Link> */}
                 </div>
             </div>
         </div>
@@ -35,19 +34,3 @@ PatientenDashboard.propTypes = {
 }
 
 export default PatientenDashboard;
-// PatientenDashboard.propTypes = {
-//     // patient: PropTypes.object.isRequired,
-//     isReady: PropTypes.bool.isRequired
-// }
-// let handle = Meteor.subscribe('patient');
-// export default withTracker( () => {
-//     let handle = Meteor.subscribe('patient');
-//     if(handle.ready()) {
-//         Session.set('patient_user', Meteor.user())
-//         return {
-//             patient: Meteor.user(),
-//             isReady: handle.ready()
-//         };
-//     }
-//     return { isReady: handle.ready()}
-// })(PatientenDashboard);

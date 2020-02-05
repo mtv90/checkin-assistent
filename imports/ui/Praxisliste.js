@@ -12,14 +12,6 @@ import FlipMove from 'react-flip-move';
 import AddPraxis from './AddPraxis';
 import Praxis from './Praxis';
 
-const renderPraxen = (props) => {
-    if(props.praxen.length != 0){
-        console.log(props.praxen.length)
-        
-    } else {
-        return 
-    }
-}
 export const Praxisliste = (props) => {
     
     return (
@@ -44,10 +36,9 @@ export const Praxisliste = (props) => {
 
 export default withTracker( () => {
     const selectedPraxisId = Session.get('selectedPraxisId');
-    // let handle = 
+
     Meteor.subscribe('praxen');
-    // if(handle.ready()){
-        
+
         return {
             praxen: Praxen.find().fetch().map( (praxis) => {
                 return {
@@ -57,6 +48,4 @@ export default withTracker( () => {
             }),
             Session
         };   
-    // }
-
 })(Praxisliste);

@@ -16,17 +16,6 @@ export class Warteliste extends React.Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.wartelistTracker = Tracker.autorun(() => {
-    //         Meteor.subscribe('termineWaiting');
-    //         const termine = Termine.find({$and: [{user_id: Meteor.userId()}, {checkedIn: true}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
-    //         this.setState({termine})
-    //     });
-    // }
-
-    // componentWillUnmount() {
-    //     this.wartelistTracker.stop();
-    // }
     renderTerminListeItemCheckedIn() {
         if(this.props.termine.length === 0) {
             return (
@@ -63,7 +52,7 @@ export class Warteliste extends React.Component {
 
 Warteliste.propTypes = {
     termine: PropTypes.array,
-    // praxisId_warte: PropTypes.string,
+    
 }
 
 export default withTracker( (props) => {

@@ -7,12 +7,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import history from './../imports/routes/history'
-import {Router} from 'react-router-dom';
+
 import { onAuthChange, Routes, checkUserService } from '../imports/routes/routes';
-import Route from '../imports/routes/routes';
+
 import '../imports/startup/simple-schema-configuration';
 
-import App from '../imports/ui/App';
 import Loading from '../imports/ui/Loading';
 import moment from 'moment';
 import {Session} from 'meteor/session';
@@ -39,17 +38,6 @@ Tracker.autorun(() => {
   }
   
 })
-
-// Tracker.autorun((run) => {
-//     console.log(Session.get('isOpen'))
-//     // Session.set({
-    
-//     //   isOpen: Session.get('isOpen'),
-//       // start: moment().format('YYYY-MM-DDTHH:mm:ss'),
-//       // end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm:ss')
-//     // });
-  
-// });
 
 Tracker.autorun(() => {
   const selectedTerminId = Session.get('selectedTerminId');
@@ -123,12 +111,12 @@ Tracker.autorun(() => {
         let sub = '';
         
         if (termin.status === 'storniert') {
-          console.log('storniert')
+          
           title = `Termin-Update: Storno`;
           sub = `Patient/in ${termin.patient.profile.vorname} ${termin.patient.profile.nachname} hat den Termin abgesagt.`
         }
         if (termin.status === 'verspaetet') {
-          console.log('verspätet')
+          
           title = `Termin-Update: Verspätung`;
           sub = `Patient/in ${termin.patient.profile.vorname} ${termin.patient.profile.nachname} verspätet sich.`
         } 

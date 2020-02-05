@@ -234,7 +234,7 @@ export class Editor extends React.Component {
         let termin = this.props.termin;
         let random;
         if((this.state.kvDaten && this.state.fragebogen && this.state.dsgvo && this.state.agb && this.state.uptodate)){
-            console.log(this.props.konto)
+            
             random = Random.hexString(4);
             termin = {
                 ...termin,

@@ -349,9 +349,6 @@ render(){
           height='parent'
           minTime= '08:00:00'
           maxTime= '18:00:00'
-          click={(info) => {
-            console.log(info)
-          }}
           header={{
             left: 'prev,next today',
             center: 'title',

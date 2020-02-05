@@ -49,7 +49,6 @@ export class TerminListe extends React.Component {
 }
 TerminListe.propTypes = {
     termine: PropTypes.array,
-    // praxisId_warte: PropTypes.string,
 }
 
 export default withTracker( (props) => {
@@ -57,7 +56,7 @@ export default withTracker( (props) => {
 
     Meteor.subscribe('termineToday');
     const termine = Termine.find({$and: [{"praxis.mitarbeiter._id": Meteor.userId()}, {"praxis._id": praxisId}, {"checkedIn": false}, {start:  {$gte: moment().format('YYYY-MM-DD') } }]}).fetch();
-    // console.log(termine)
+
     return {
         termine
     };

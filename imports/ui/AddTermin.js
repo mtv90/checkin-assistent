@@ -154,7 +154,6 @@ export default class AddTermin extends React.Component {
                     isOpen={this.state.isOpen} 
                     contentLabel="Termin anlegen" 
                     appElement={document.getElementById('app')}
-                    // onAfterOpen={() => this.refs.titel.focus()}
                     onRequestClose={this.handleModalClose.bind(this)}
                     className="boxed-view__box"
                     overlayClassName="boxed-view boxed-view--modal"
@@ -166,8 +165,6 @@ export default class AddTermin extends React.Component {
                             {this.renderOptions()}
                         </select>
                         <input className="admin-input" name="subject" type="text" placeholder="Betreff" value={this.state.subject} onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
-                        {/* <label htmlFor="date">Datum:</label>
-                        <input name="date" type="date" placeholder="Datum auswählen" value={this.state.date} onChange={this.onChangeDate.bind(this)}/> */}
                         <label htmlFor="starttime">von:</label>
                         <input className="admin-input" name="starttime" type="datetime-local" placeholder="Startzeit wählen" value={this.state.start } onChange={this.onChangeStarttime.bind(this)} />
                         <label htmlFor="endtime">bis:</label>
@@ -182,17 +179,3 @@ export default class AddTermin extends React.Component {
         );
     }
 }
-// export default withTracker( (props) => {
-//     const isOpen = Session.get('isOpen')
-//     const start =  moment(Session.get('start')).format('YYYY-MM-DDTHH:mm')
-//     const end = moment(Session.get('end')).format('YYYY-MM-DDTHH:mm')
-//     console.log(props)
-//     const modal = props.modal
-//     return {
-//         modal,
-//         isOpen,
-//         start,
-//         end,
-        
-//     };
-//   })(AddTermin);

@@ -66,8 +66,7 @@ export class PraxisEditor extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         let old = Session.get('editpraxis')
-        // console.log(this.state.mitarbeiter)
-        // return this.state.mitarbeiter;
+
         let edited = {
             title: this.state.title,
             strasse: this.state.strasse,

@@ -21,10 +21,7 @@ export class ChangePraxis extends React.Component {
             )
         });
     }
-    componentDidUpdate(){
-        
-        
-    }
+
     render() {
         return (
             <div className="dashboard-content">

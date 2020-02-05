@@ -92,7 +92,8 @@ export class Ressourcenkalender extends React.Component {
         );
     }
     handleEventOpen(e){
-        if(e.editable || e.editable === undefined){
+        console.log(e)
+        if(e.event._def.extendedProps.status !== 'abgeschlossen'){
             const termin_id = e.event._def.extendedProps.termin_id
             Meteor.subscribe('termine');
             Meteor.subscribe('getBehandlungsraum')
@@ -159,7 +160,7 @@ export class Ressourcenkalender extends React.Component {
                   
                   }
               });
-        } else {
+        } else{
             swal2.fire({
                 position: 'top-end',
                 icon: 'warning',

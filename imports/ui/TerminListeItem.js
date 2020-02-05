@@ -84,9 +84,7 @@ export default class TerminListeItem extends React.Component {
                 moment: moment(),
             });
             
-            if(moment().diff(termin.start, 'minutes') >= 15 && moment().diff(termin.start, 'minutes')){
-                console.log('Termin wird in 10 min automatisch storniert!')
-                
+            if(moment().diff(termin.start, 'minutes') >= 15 && moment().diff(termin.start, 'minutes')){               
                 
                 if(termin.status !== 'storniert' && !termin.checkedIn  ){
                     swal2.fire({
@@ -99,7 +97,7 @@ export default class TerminListeItem extends React.Component {
                         toast:true
                       }).then((value) => {
                           if(value){
-                              console.log(termin)
+
                             termin['status'] = 'storniert'
                             termin['patientRead'] = false
                             termin['checkedIn'] = false
@@ -160,9 +158,6 @@ export default class TerminListeItem extends React.Component {
     render() {
         const className = this.checkDelay() ? this.checkDelay() : 'termin-list-item';
         
-        // console.log(mo.diff(this.props.start, 'minutes'))
-        // mo.diff(this.props.start, 'seconds')
-        // console.log(moment(this.props.start).fromNow()) 
         return (
             
             <div className={className} id={this.props._id}>

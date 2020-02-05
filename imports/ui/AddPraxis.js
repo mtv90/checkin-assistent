@@ -67,7 +67,6 @@ export class AddPraxis extends React.Component {
         const openings = this.state.openings;
         const resources = this.state.resources;
         
-        console.log(resources)
         var pattern = new RegExp("[0-9]{5}");
         var result = pattern.test(plz);
 
@@ -172,7 +171,7 @@ export class AddPraxis extends React.Component {
         
     }
     addResources(){
-        console.log(this.state.resources.length)
+        
         this.setState({ resources: [...this.state.resources, {
             id: Random.id(),
             title:'',

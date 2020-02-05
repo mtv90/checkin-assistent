@@ -17,11 +17,6 @@ export const Patiententermine = (props) => {
             <Patientheader title={`${Session.get('user').profile.nachname}, ${Session.get('user').profile.vorname}`}/>
             <div className="page-content editor-container">
                 <div className="page-content__sidebar">
-                    {/* <FlipMove maintainContainerHeight={true}>
-                        {props.patiententermine.map( (termin) => {
-                            return <PatTerminItem key={termin._id} termin={termin}/> 
-                        })}
-                    </FlipMove> */}
                     <Patiententerminliste/>
                 </div>
                 <div className="page-content__main">

@@ -9,17 +9,8 @@ import { Accounts } from 'meteor/accounts-base';
 import {Session} from 'meteor/session';
 import PatTerminItem from './PatTerminItem';
 import FlipMove from 'react-flip-move';
-import AddPraxis from './AddPraxis';
-import Praxis from './Praxis';
 
-const renderPraxen = (props) => {
-    if(props.praxen.length != 0){
-        console.log(props.praxen.length)
-        
-    } else {
-        return 
-    }
-}
+
 export const Patiententerminliste = (props) => {
     
     return (
@@ -30,7 +21,6 @@ export const Patiententerminliste = (props) => {
             
                 <button className="button button--link button--cancel-account" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
             </div>
-            {/* <AddPraxis/> */}
             <h2 className="item-title">Meine Termine</h2>
             <FlipMove maintainContainerHeight={true}>
                 {props.patiententermine.map( (termin) => {

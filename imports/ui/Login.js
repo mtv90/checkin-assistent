@@ -24,12 +24,10 @@ export default class Login extends React.Component{
           this.setState({error: 'Login nicht möglich. Bitte Email und Passwort überprüfen.'});
         } 
         else {
-          // console.log(Meteor.user())
           
           this.setState({error: ''});
           window.location.replace('/dashboard')
           
-          // history.replace('/dashboard')
         }
       });
         

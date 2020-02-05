@@ -10,7 +10,7 @@ export class Patientheader extends React.Component {
     navToggle = () => {
         Session.set('isNavOpen', !Session.get('isNavOpen'))
     }
-    // history.location.pathname === '/dashboard'
+    
     render(){
         const imgSrc = this.props.isNavOpen ? '/img/x.svg' : '/img/bars.svg';
     
@@ -33,7 +33,7 @@ export class Patientheader extends React.Component {
 Patientheader.propTypes = {
     title: PropTypes.string.isRequired
 }
-// export default Patientheader;
+
 export default withTracker( () => {
     const praxisId = Session.get('praxisId');
     
