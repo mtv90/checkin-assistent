@@ -3,7 +3,9 @@ import { withTracker  } from 'meteor/react-meteor-data';
 import {Session} from 'meteor/session';
 import {Behandlungen} from '../api/behandlungen';
 import Modal from 'react-modal';
+import swal2 from 'sweetalert2';
 import PropTypes from 'prop-types';
+import {Termine} from '../api/termine';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -46,7 +48,7 @@ export class Ressourcenkalender extends React.Component {
         const resourceTitle = dragged_resource.title;
         const resourceId = dragged_resource.id;
         const date = dragged_date;
-
+        
         if(termin_id){
             Meteor.call('behandlung.insert',
                 id,
@@ -89,6 +91,89 @@ export class Ressourcenkalender extends React.Component {
             }
         );
     }
+    handleEventOpen(e){
+        if(e.editable || e.editable === undefined){
+            const termin_id = e.event._def.extendedProps.termin_id
+            Meteor.subscribe('termine');
+            Meteor.subscribe('getBehandlungsraum')
+            const mytermin = Termine.findOne({_id: termin_id})
+            let behandlung = Behandlungen.findOne({termin_id: termin_id});
+         
+            swal({
+                title: `Termin abschließen: ${mytermin.title}`,
+                text: `Möchten Sie den Termin abschließen?`,
+                buttons: ["abbrechen", true],
+                content: {
+                  element: "input",
+                  attributes: {
+                    placeholder: "Abschlussbemerkung eingeben",
+                    type: "text",
+                  },
+                }
+              }).then((value) => {
+                  if(value){
+                    let termin = {
+                        ...mytermin,
+                        abschlussbemerkung: value,
+                        status: 'abgeschlossen',
+                        patientRead: false
+                    }
+                    Meteor.call('termin.update', 
+                    termin._id, 
+                    termin,
+                    (error, result) => {
+                      if(error){
+                        swal(`${error.error}`,"","error")
+                      }
+                      if(result){
+                        
+                        Meteor.call('termin.update_mail_finished',
+                          termin.patient.emails[0].address, 
+                          termin.praxis.title, 
+                          termin.subject, 
+                          termin,
+                          (error, result) => {
+                            if(error){
+                              swal('Fehler', `${error.error}`, 'error');
+                            }
+                          });
+                        behandlung = {
+                            ...behandlung,
+                            status: 'abgeschlossen',
+                            backgroundColor: '#16A086',
+                            editable: false
+                        }
+                        Meteor.call('behandlung.abschluss_update',
+                            behandlung._id, behandlung,
+                            (err, res) => {
+                                if(err){
+                                    swal('Fehler', `${err.error}`, 'error');
+                                }
+                            }
+                        )
+                        this.handleModalClose();
+                        swal('Termin abgeschlossen',"","success");
+                      }
+                    }
+                  );
+                  
+                  }
+              });
+        } else {
+            swal2.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Termin beendet',
+                text: 'Der Termin wurde bereits erfolgreich abgeschlossen ',
+                showConfirmButton: false,
+                timer: 5000,
+                toast:true
+              })
+        }
+    }
+    handleEventClose(){
+        this.setState({isOpen:false})
+    }
     onSubmit(){}
     render(){
         var Spinner = require('react-spinkit');
@@ -100,7 +185,7 @@ export class Ressourcenkalender extends React.Component {
             )
         }
         return (
-                    <div className="resource-cal resource-spacing">
+            <div className="kalender-container resource-cal resource-spacing">
                         <FullCalendar id="calendar"
                             schedulerLicenseKey= "GPL-My-Project-Is-Open-Source"
                             plugins={[ resourceTimelinePlugin, resourceTimeGridPlugin, interactionPlugin ]}
@@ -108,18 +193,8 @@ export class Ressourcenkalender extends React.Component {
                             selectable={true}
                             locale= 'de'
                             height='parent'
-                            // dateClick= {function(info) {
-                            //     alert('clicked ' + info.dateStr);
-                            //   }}
-                            // select= {function(info) {
-                            //     if(info.startStr >= moment()){
-                            //         alert('selected ' + info.startStr + ' to ' + info.endStr)
-                            //     } else {
-                            //         ()=>{return this.setState({isOpen:true})}
-                            //         console.log(info)
-                            //     }
-                                
-                            //   }}
+                            
+                            eventClick= {this.handleEventOpen.bind(this)}
                             minTime= '08:00:00'
                             maxTime= '23:00:00'
                             buttonText={
@@ -129,31 +204,40 @@ export class Ressourcenkalender extends React.Component {
                             }
                             editable={true}
                             events={ this.props.behandlungen }
-                            // eventConstraint= {
-                            //     {start: moment().format('YYYY-MM-DDTHH:mm')}
-                            //     // end: '20:00:00' // hard coded goodness unfortunately
-                            // }
+                            
                             eventOverlap={false}
                             droppable={true}
                             // Drag n Drop Funktionalität innerhalb des Ressourcenkalenders
                             eventDrop={info => {
-                                
-                                const behandlung_id = info.event._def.extendedProps._id;
-                                let resource;
-                                if(info.newResource){
-                                    resource= info.newResource;
-                                } else{
-                                    resource = {
-                                        id: info.event._def.resourceIds[0],
-                                        title: info.event._def.extendedProps.resourceTitle
+                                if(info.event._def.extendedProps.status !== 'abgeschlossen'){
+                                    const behandlung_id = info.event._def.extendedProps._id;
+                                    let resource;
+                                    if(info.newResource){
+                                        resource= info.newResource;
+                                    } else{
+                                        resource = {
+                                            id: info.event._def.resourceIds[0],
+                                            title: info.event._def.extendedProps.resourceTitle
+                                        }
                                     }
+                                    
+                                    const event = info.event;
+                                    const termin_id = info.event._def.extendedProps.termin_id
+    
+                                    this.updateBehandlung(behandlung_id, resource, event, termin_id )
+                                } else {
+                                    swal2.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'Termin beendet',
+                                        text: 'Der Termin wurde bereits erfolgreich abgeschlossen ',
+                                        showConfirmButton: false,
+                                        timer: 5000,
+                                        toast:true
+                                      })
+                                      return false
                                 }
                                 
-                                const event = info.event;
-                                const termin_id = info.event._def.extendedProps.termin_id
-
-                                this.updateBehandlung(behandlung_id, resource, event, termin_id )
-                        
                             }}
                             // Drag n Drop Funktionalität vom Wartezimmer in den Ressourcenkalender 
                             drop={(info) => {
@@ -176,52 +260,17 @@ export class Ressourcenkalender extends React.Component {
                                 this.updateBehandlung(behandlung_id, resource, event, termin_id )
                             }}
                             resourceLabelText= "Behandlungsräume"
-                            // resourceGroupField= 'groupId'
-                            // resourceGroupText='Praxis'
                             resources= {this.props.praxis.resources}
                             
                         />
-                <Modal 
-                    isOpen={this.state.isOpen} 
-                    contentLabel="" 
-                    appElement={document.getElementById('app')}
-                    // onAfterOpen={() => this.refs.titel.focus()}
-                    // onRequestClose={this.handleModalClose.bind(this)}
-                    className="boxed-view__box"
-                    overlayClassName="boxed-view boxed-view--modal"
-                >
-                    <h1>Termin hinzufügen</h1>
-                    <form onSubmit={this.onSubmit.bind(this)} className="boxed-view__form">
-                        {/* <select name="patienten" onChange={this.onChangePatient.bind(this)}>
-                            <option>Patienten auswählen...</option>
-                            {this.renderOptions()}
-                        </select>
-                        <input name="subject" type="text" placeholder="Betreff" value={this.state.subject} onChange={this.onChangeSubject.bind(this)} autoComplete="off"/> */}
-                        {/* <label htmlFor="date">Datum:</label>
-                        <input name="date" type="date" placeholder="Datum auswählen" value={this.state.date} onChange={this.onChangeDate.bind(this)}/> */}
-                        {/* <label htmlFor="starttime">von:</label>
-                        <input name="starttime" type="datetime-local" placeholder="Startzeit wählen" value={this.state.start} onChange={this.onChangeStarttime.bind(this)} />
-                        <label htmlFor="endtime">bis:</label>
-                        {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
-                        <input name="endtime" type="datetime-local" placeholder="Ende wählen" value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
-                        <textarea ref="notes" placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
-                        <button type="submit" className="button">Termin anlegen</button>
-                        <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button> */}
-                    </form>
-                </Modal>
         </div>
         )
     }
 }
 export default withTracker( () => {
-    // let handle = 
     Meteor.subscribe('behandlungen');
-    // if(handle.ready()){
-        
         return {
             behandlungen: Behandlungen.find().fetch(),
             Session
         };   
-    // }
-
 })(Ressourcenkalender);

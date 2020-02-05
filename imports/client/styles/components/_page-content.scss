@@ -32,10 +32,34 @@
         width: $page-editor-sidebar-width;
     }
 }
+.page-content-wartezimmer__sidebar{
+    display: flex;
+    transition: left .3s ease;
+    overflow-y: scroll;
+    background-color: white;
+    width: 100vw;
+    -webkit-overflow-scrolling: touch;
+    flex-direction: column;
+    position: fixed;
+    top: $header-height;
+    left: -100vw;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+
+    @include desktop{
+        display: flex;
+        margin-right: $large-space;
+        position: static;
+        width: $page-editor-sidebar-width;
+    }
+}
 .is-nav-open .page-content__sidebar{
     left: 0;
 }
-
+.is-nav-open .page-content-wartezimmer__sidebar{
+    left: 0;
+}
 .page-content__main{
     background-color: white;
     display: flex;

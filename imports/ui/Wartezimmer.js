@@ -13,7 +13,7 @@ import listPlugin from '@fullcalendar/list';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
 import Ressourcenkalender from './Ressourcenkalender';
-
+import {Link} from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 import {Termine} from '../api/termine';
@@ -61,6 +61,22 @@ export class Wartezimmer extends React.Component {
         document.getElementById("mySidenav").style.width = "0";
         
     }
+    renderDashboard = (props) => {
+        const praxisId = this.props.praxisId || (this.props.praxis ? this.props.praxis._id : undefined);
+        if(!(history.location.pathname === '/dashboard' || history.location.pathname === `/dashboard/${praxisId}`)){
+            if(praxisId) {
+                return <button className="button button--link button--dashboard" onClick={() => {
+                    Session.set('isNavOpen', !Session.get('isNavOpen')) 
+                    history.replace(`/dashboard/${praxisId}`)} }><h3>Dashboard</h3></button>
+            } 
+
+            else {
+               return !praxisId ?  <button className="button button--link button--dashboard" onClick={() => {
+                Session.set('isNavOpen', !Session.get('isNavOpen'))    
+                history.replace(`/dashboard`)} }><h3>Dashboard</h3></button> : undefined;
+            }
+        }
+    }
     render() {
         var Spinner = require('react-spinkit');
         if(!this.props.praxis){
@@ -73,13 +89,14 @@ export class Wartezimmer extends React.Component {
         return (
             <div className="">
                 <PrivateHeader title={this.props.praxis.title} praxis={this.props.praxis} button="Dashboard"/>
-                <button type="button" className="button menu" onClick={this.openNav.bind(this)}>&#9776;</button>
-                <div id="mySidenav" className="sidenav">
-                    <a type="button" className="closebtn" onClick={this.closeNav.bind(this)}>&times;</a>
-                    <TerminListe/>
-                </div>
                 <div className="wrapper">
-                    <div id="external-events" className="termin-liste">
+                    <div id="external-events" className="page-content-wartezimmer__sidebar">
+                    <div className="sidebar-button--wrapper">
+                            
+                            {this.renderDashboard(this.props)}
+                        
+                            <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
+                        </div>
                         <Warteliste praxisId={this.props.praxisId_warte}/>
                         <hr/>
                         <TerminListe praxisId={this.props.praxisId_warte}/>

@@ -43,7 +43,7 @@ if(Meteor.isServer){
 
     Meteor.publish(
         'termine', function (){
-            return Termine.find({user_id: this.userId});
+            return Termine.find();
     });
     Meteor.publish(
         'termineWaiting', function (){
@@ -105,7 +105,10 @@ Meteor.methods({
                 optional:true
             }
         }).validate({patient_id, subject, notes});
-
+        
+        if(moment(start) < moment()){
+            throw new Meteor.Error('Es können keine Termine in der Vergangenheit erstellt werden!');
+        }
         const patient = Meteor.users.findOne({_id: patient_id}, {fields:{services: 0, role: 0, createdAt: 0}});
         if(patient){
             let title = `${patient.profile.nachname}, ${patient.profile.vorname}` 
@@ -231,7 +234,9 @@ Meteor.methods({
             let to = termin.patient.emails[0].address;
             let from = `${termin.praxis.title}-Checkin <app151404387@heroku.com>`;
             let subject = termin.subject;
-            
+            if(moment(termin.start) < moment()){
+                throw new Meteor.Error('Es können keine Termine in der Vergangenheit erstellt werden!');
+            }
 
             return Termine.update({
                 _id,
@@ -247,10 +252,61 @@ Meteor.methods({
         }
 
     },
+
+    // Funktion zur Email-Benachrichtigung
     'termin.update_mail'(to, myName, subject, termin){
         if(termin){
             const from = `${myName}-Checkin <app151404387@heroku.com>`;
-            const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\Grund: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
+            const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
+            
+            process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+            // Make sure that all arguments are strings.
+            check([to, from, subject, text], [String]);
+            // Let other method calls from the same client start running, without
+            // waiting for the email sending to complete.
+            this.unblock();
+            if(to && from && subject && text){
+                Email.send({to:to, from:from, subject:subject, text:text});
+            }
+        }
+    },
+    'termin.update_mail_finished'(to, myName, subject, termin){
+        if(termin){
+            const from = `${myName}-Checkin <app151404387@heroku.com>`;
+            const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.abschlussbemerkung}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
+            
+            process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+            // Make sure that all arguments are strings.
+            check([to, from, subject, text], [String]);
+            // Let other method calls from the same client start running, without
+            // waiting for the email sending to complete.
+            this.unblock();
+            if(to && from && subject && text){
+                Email.send({to:to, from:from, subject:subject, text:text});
+            }
+        }
+    },
+
+    'termin.update_mail_checked_in'(to, myName, subject, termin){
+        if(termin){
+            const from = `${myName}-Checkin <app151404387@heroku.com>`;
+            const text = `Liebes Team der ${termin.praxis.title},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Patient/in ${termin.patient.profile.vorname} ${termin.patient.profile.nachname} ist nun eingecheckt und befindet sich im Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: \n\E-mail: ${termin.kv_daten.kontakt.email}\n\Telefon: ${termin.kv_daten.kontakt.telefon}`
+            
+            process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
+            // Make sure that all arguments are strings.
+            check([to, from, subject, text], [String]);
+            // Let other method calls from the same client start running, without
+            // waiting for the email sending to complete.
+            this.unblock();
+            if(to && from && subject && text){
+                Email.send({to:to, from:from, subject:subject, text:text});
+            }
+        }
+    },
+    'termin.update_mail_too_late'(to, myName, subject, termin){
+        if(termin){
+            const from = `${myName}-Checkin <app151404387@heroku.com>`;
+            const text = `Liebes Team der ${termin.praxis.title},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Patient/in ${termin.patient.profile.vorname} ${termin.patient.profile.nachname} wird sich verspäten! Sie haben die Möglichkeit auf ihn zu warten oder den Termin zu stornieren.\n\ \n\Neuer Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\E-mail: ${termin.patient.emails[0].address}`
             
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
             // Make sure that all arguments are strings.

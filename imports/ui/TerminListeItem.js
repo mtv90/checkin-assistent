@@ -2,6 +2,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
+import swal2 from 'sweetalert2';
 import Modal from 'react-modal';
 import Spinner from 'react-spinkit';
 import moment from 'moment';
@@ -60,25 +61,87 @@ export default class TerminListeItem extends React.Component {
         }
     }
     checkDelay(){
-        if(this.state.moment.diff(this.props.start, 'minutes') >= -120 && this.state.moment.diff(this.props.start, 'minutes') < -30){
+        if(this.state.moment.diff(this.props.start, 'minutes') >= -120 && this.state.moment.diff(this.props.start, 'minutes') < -15){
 
             return 'termin-list-item min30';
         }
-        if(this.state.moment.diff(this.props.start, 'minutes') >= -30 && this.state.moment.diff(this.props.start, 'minutes') < 0){
+        if(this.state.moment.diff(this.props.start, 'minutes') >= -15 && this.state.moment.diff(this.props.start, 'minutes') < 0){
             return 'termin-list-item min15'
         }
-        if(this.state.moment.diff(this.props.start, 'minutes') >= 0 ){
-            return 'termin-list-item too-late'
+        if(this.state.moment.diff(this.props.start, 'minutes') >= 0 && this.state.moment.diff(this.props.start, 'minutes') < 15){
+            return 'termin-list-item minPlus15'
         }  
+        if(this.state.moment.diff(this.props.start, 'minutes') >= 15 ){
+            return 'termin-list-item too-late'
+        }
     }
     componentDidMount(){
-        
+        let start = this.props.start
         const self = this;
+        let termin = {...this.props}
         self.interval = setInterval(function() {
-          self.setState({
-            moment: moment(),
-          });
-        }, 300000);    
+            self.setState({
+                moment: moment(),
+            });
+            
+            if(moment().diff(termin.start, 'minutes') >= 15 && moment().diff(termin.start, 'minutes')){
+                console.log('Termin wird in 10 min automatisch storniert!')
+                
+                
+                if(termin.status !== 'storniert' && !termin.checkedIn  ){
+                    swal2.fire({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: `Verspätung: ${termin.title}: ${termin.subject}`,
+                        text: 'Der Termin hat sich nicht entschuldigt und wird automatisch storniert',
+                        showConfirmButton: false,
+                        timer: 9000,
+                        toast:true
+                      }).then((value) => {
+                          if(value){
+                              console.log(termin)
+                            termin['status'] = 'storniert'
+                            termin['patientRead'] = false
+                            termin['checkedIn'] = false
+                            termin['stornoGrund'] = 'Nicht erschienen, unentschuldigte Verspätung'
+                            
+                            Meteor.call('termin.update', 
+                            termin._id, 
+                            termin,
+                            (error, result) => {
+                              if(error){
+                                swal(`${error.error}`,"","error")
+                              }
+                              if(result){
+                                Meteor.call('termin.update_mail',
+                                termin.patient.emails[0].address, 
+                                termin.praxis.title, 
+                                termin.subject, 
+                                termin,
+                                (error, result) => {
+                                  if(error){
+                                    swal('Fehler', `${error.error}`, 'error');
+                                  }
+                                    if(result){
+                                        swal2.fire({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: `Verspätung: ${termin.title}: ${termin.subject}`,
+                                            text: 'Der Termin wurde erfolgreich storniert',
+                                            showConfirmButton: false,
+                                            timer: 5000,
+                                            toast:true
+                                        })
+                                    }
+                                });
+                                
+                              }
+                            })
+                        }
+                      })
+                }
+            }
+        }, 60000);    
     }
     componentWillUnmount(){
         clearInterval(this.interval);

@@ -35,6 +35,12 @@ export const AdminDashboard = (props) => {
         <div className="" >
             <PrivateHeader title={renderTitle(props)}/>
             <ChangePraxis/>
+            <div className="page-content-wartezimmer__sidebar">
+                <div className="sidebar-button--wrapper">
+                    
+                    <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
+                </div>
+            </div>
             <div className="dashboard-content">
                 <div className="boxed-view__dashboard">
                                           

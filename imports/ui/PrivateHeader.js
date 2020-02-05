@@ -33,7 +33,7 @@ export class PrivateHeader extends React.Component {
     return (
         <div className="header">
             <div className="header__content">
-               {history.location.pathname.startsWith("/dashboard") ? undefined : <img className="header__nav-toggle" src={imgSrc} onClick={this.navToggle.bind(this)}/>}
+                <img className="header__nav-toggle" src={imgSrc} onClick={this.navToggle.bind(this)}/>
                 <h1 className="header__title">{this.props.title}</h1>
                 <span className="header-container-right">
                     {this.renderDashboard(this.props)}

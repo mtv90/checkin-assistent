@@ -6,7 +6,7 @@ import { Random } from 'meteor/random';
 import { Tracker } from 'meteor/tracker';
 import {Session} from 'meteor/session';
 import { withTracker  } from 'meteor/react-meteor-data';
-// import history from '../routes/history';
+import history from '../routes/history';
 import {Termine} from '../api/termine';
 import {Praxen} from '../api/praxen';
 import Modal from 'react-modal';
@@ -99,12 +99,6 @@ openModal(e){
     start: moment(e.startStr).format('YYYY-MM-DDTHH:mm'),
     end: moment(e.endStr).format('YYYY-MM-DDTHH:mm')
   })
-  // Session.set({
-  //   isOpen: true,
-  //   start: e.startStr,
-  //   end: e.endStr
-  // });
-
 }
 
 handleModalClose(){
@@ -284,12 +278,9 @@ handleStorno(e){
       }).catch((err) => {
         swal(`${err.error}`, "Die eingegebene Zeichenfolge stimmt nicht überein", "error");
       }); 
-    } else {
-      throw new Meteor.Error("Sie müssen einen Grund angeben")
-    } 
+    }
   }).catch( (err) => {
     console.log(err);
-    swal(`${err.error}`, "", "error");
   })
 }
 renderOptions(){
@@ -315,6 +306,23 @@ onChangePatient(e){
       this.setState({patient_id})
   }
 }
+
+renderDashboard = (props) => {
+  const praxisId = this.props.praxisId || (this.props.praxis ? this.props.praxis._id : undefined);
+  if(!(history.location.pathname === '/dashboard' || history.location.pathname === `/dashboard/${praxisId}`)){
+      if(praxisId) {
+          return <button className="button button--link button--dashboard" onClick={() => {
+            Session.set('isNavOpen', !Session.get('isNavOpen'))
+            history.replace(`/dashboard/${praxisId}`)} }><h3>Dashboard</h3></button>
+      } 
+
+      else {
+         return !praxisId ?  <button className="button button--link button--dashboard" onClick={() => {
+          Session.set('isNavOpen', !Session.get('isNavOpen')) 
+          history.replace(`/dashboard`) }}><h3>Dashboard</h3></button> : undefined;
+      }
+  }
+}
 render(){
   var Spinner = require('react-spinkit');
   if(!this.props.praxis){
@@ -325,9 +333,14 @@ render(){
     )
 }
   return (
-    <div className="">
-      {/* `${this.props.user.profile.nachname}, ${this.props.user.profile.vorname}` */}
+    <div>
       <PrivateHeader title={this.props.praxis.title} praxis={this.props.praxis}/>
+      <div className="page-content-wartezimmer__sidebar">
+        <div className="sidebar-button--wrapper">
+          {this.renderDashboard(this.props)}
+          <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
+        </div>
+      </div>
       <AddTermin praxis={this.props.praxis} />
       <div className="kalender-container" id="wide-calendar">
         <FullCalendar

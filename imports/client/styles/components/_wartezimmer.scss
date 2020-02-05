@@ -98,10 +98,13 @@
 }
 .min15 {
 
-    border-left: $praxis-item-border*2 solid #FFD662;
+    border-left: $praxis-item-border*2 solid $my-yellow;
+}
+.minPlus15{
+    border-left: $praxis-item-border*2 solid $custom-red;
 }
 .too-late{
-    border-left: $praxis-item-border*2 solid #DD4132;
+    border-left: $praxis-item-border*2 solid #ff4fff;
 }
 
 .listitem-title{

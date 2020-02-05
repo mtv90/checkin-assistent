@@ -126,6 +126,18 @@ Meteor.methods({
                 updatedAt: new Date()
             }
         })
+    },
+
+    'behandlung.abschluss_update'(_id, behandlung){
+        if(!this.userId){
+            throw new Meteor.Error('Nicht authorisiert!');
+        }
+        return Behandlungen.update({_id: _id}, {
+            $set: {
+                ...behandlung,
+                updatedAt: new Date()
+            }
+        })
     }
 
 });
