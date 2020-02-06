@@ -87,14 +87,12 @@ export class Wartezimmer extends React.Component {
             )
         }
         return (
-            <div className="">
+            <div>
                 <PrivateHeader title={this.props.praxis.title} praxis={this.props.praxis} button="Dashboard"/>
                 <div className="wrapper">
                     <div id="external-events" className="page-content-wartezimmer__sidebar">
-                    <div className="sidebar-button--wrapper">
-                            
+                        <div className="sidebar-button--wrapper">
                             {this.renderDashboard(this.props)}
-                        
                             <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
                         </div>
                         <Warteliste praxisId={this.props.praxisId_warte}/>

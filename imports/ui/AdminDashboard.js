@@ -38,7 +38,7 @@ export const AdminDashboard = (props) => {
             <div className="page-content-wartezimmer__sidebar">
                 <div className="sidebar-button--wrapper">
                     
-                    <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
+                    <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); }}>logout</button>
                 </div>
             </div>
             <div className="dashboard-content">
@@ -46,7 +46,7 @@ export const AdminDashboard = (props) => {
                                           
                     {checkSelected(props) ? <Link className='boxed-view__dashboardbox' to={{pathname: `/dashboard/${props.praxisId}/termine`}}><h3>Mein Kalender</h3></Link> : undefined}
                     {checkSelected(props) ? <Link className='boxed-view__dashboardbox' to={{pathname: `/dashboard/${props.praxisId}/wartezimmer`}}><h3>Mein Wartezimmer</h3></Link> : undefined}
-                    {checkSelected(props) ? <Link className='boxed-view__dashboardbox' to={{pathname: `/patienten/${props.praxisId}`}}><h3>Meine Patienten</h3></Link> : undefined}
+                    {/* {checkSelected(props) ? <Link className='boxed-view__dashboardbox' to={{pathname: `/patienten/${props.praxisId}`}}><h3>Meine Patienten</h3></Link> : undefined} */}
                     
                     <Link className="boxed-view__dashboardbox" to="/praxisverwaltung"><h3>Praxisverwaltung</h3></Link>
                 </div>

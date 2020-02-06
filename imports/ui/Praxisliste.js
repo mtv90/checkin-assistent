@@ -18,9 +18,9 @@ export const Praxisliste = (props) => {
         <div className="praxisliste">
             <div className="sidebar-button--wrapper">
             
-                <Link className="button button--link button--dashboard" to={{pathname: `/dashboard`}}>Dashboard</Link>
+                <Link className="button button--link button--dashboard" to={{pathname: `/dashboard/${Session.get('praxisId')}`}} onClick={() => Session.set('isNavOpen', !Session.get('isNavOpen'))}>Dashboard</Link>
             
-                <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
+                <button className="button button--link button--dashboard" onClick={() => { Accounts.logout(); history.replace('/');}}>logout</button>
             </div>
             <AddPraxis/>
             <FlipMove maintainContainerHeight={true}>

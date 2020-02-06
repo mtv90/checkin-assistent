@@ -343,6 +343,7 @@ render(){
       </div>
       <AddTermin praxis={this.props.praxis} />
       <div className="kalender-container" id="wide-calendar">
+        
         <FullCalendar
           selectable={true}
           defaultView="timeGridWeek"

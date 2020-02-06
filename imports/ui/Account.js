@@ -17,26 +17,15 @@ import 'react-tabs/style/react-tabs.css';
 export const Account = (props) => {
     var Spinner = require('react-spinkit');
 
-    // if(!props.konto){
-    //     return (
-    //         <div className="pacman-view">
-    //             <Spinner name='pacman' color="#1BBC9B" />
-    //         </div>
-    //     )
-    // }
     return (
         <div>
             <Patientheader title={`${Session.get('user').profile.nachname}, ${Session.get('user').profile.vorname}`}/>
             <div className="page-content editor-container">
                 <div className="page-content__sidebar">
-                   
                     <div className="sidebar-button--wrapper">
-                    
-                    <Link className="button button--link button--cancel-account" to={{pathname: `/dashboard`}}>Dashboard</Link>
-                
-                    <button className="button button--link button--cancel-account" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
-                </div>
-                    
+                        <Link className="button button--link button--cancel-account" to={{pathname: `/dashboard`}} onClick={() => Session.set('isNavOpen', !Session.get('isNavOpen')) }>Dashboard</Link>
+                        <button className="button button--link button--cancel-account" onClick={() => { Accounts.logout(); history.replace('/');}}>logout</button>
+                    </div>
                     
                     <Tabs className="tabs-content">
                         <TabList>

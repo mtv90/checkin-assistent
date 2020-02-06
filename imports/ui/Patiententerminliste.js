@@ -17,7 +17,7 @@ export const Patiententerminliste = (props) => {
         <div className="praxisliste">
             <div className="sidebar-button--wrapper">
             
-                <Link className="button button--link button--cancel-account" to={{pathname: `/dashboard`}}>Dashboard</Link>
+                <Link className="button button--link button--cancel-account" to={{pathname: `/dashboard`}} onClick={() => Session.set('isNavOpen', !Session.get('isNavOpen'))} >Dashboard</Link>
             
                 <button className="button button--link button--cancel-account" onClick={() => { Accounts.logout(); history.replace('/'); }}>logout</button>
             </div>

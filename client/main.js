@@ -19,6 +19,7 @@ import swal from 'sweetalert';
 import swal2 from 'sweetalert2';
 import {Termine} from '../imports/api/termine';
 import { Behandlungen } from '../imports/api/behandlungen';
+import Axios from 'axios';
 
 Tracker.autorun(() => {
 
@@ -241,10 +242,8 @@ Meteor.startup(() => {
     start: moment().format('YYYY-MM-DDTHH:mm'),
     end: moment().add(30, 'm').format('YYYY-MM-DDTHH:mm')
   })
-  
-  
+    
   ReactDOM.render(<Loading/>, document.getElementById('app'));
-  
   
   window.setTimeout(() => {
     ReactDOM.render(

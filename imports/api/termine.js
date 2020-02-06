@@ -234,10 +234,7 @@ Meteor.methods({
             let to = termin.patient.emails[0].address;
             let from = `${termin.praxis.title}-Checkin <app151404387@heroku.com>`;
             let subject = termin.subject;
-            if(moment(termin.start) < moment()){
-                throw new Meteor.Error('Es können keine Termine in der Vergangenheit erstellt werden!');
-            }
-
+            
             return Termine.update({
                 _id,
             },{

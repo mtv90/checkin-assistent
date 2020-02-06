@@ -19,6 +19,12 @@ export const PatientenDashboard = (props) => {
     return (
         <div>
             <Patientheader title={`${props.user.profile.nachname}, ${props.user.profile.vorname}`}/>
+            <div className="page-content-wartezimmer__sidebar">
+                <div className="sidebar-button--wrapper">
+                    
+                    <button className="button button--link button--cancel-account" onClick={() => { Accounts.logout(); }}>logout</button>
+                </div>
+            </div>
             <div className="dashboard-content">
                 <div className="boxed-view__dashboard">
                     <Link className="boxed-view__dashboardbox--patient" to="/meine-termine">Meine Termine</Link>
