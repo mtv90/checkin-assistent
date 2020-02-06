@@ -117,6 +117,7 @@ export class Ressourcenkalender extends React.Component {
                         ...mytermin,
                         abschlussbemerkung: value,
                         status: 'abgeschlossen',
+                        backgroundColor: '#16A086',
                         patientRead: false
                     }
                     Meteor.call('termin.update', 

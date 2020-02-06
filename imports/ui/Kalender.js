@@ -431,25 +431,25 @@ render(){
             </select>)}
           <input  className="admin-input"
                   name="subject" type="text" 
-                  disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
+                  disabled = {this.state.termin.status === 'open' ? '' : 'disabled'}
                   placeholder="Betreff" 
                   value={this.state.subject} 
                   onChange={this.onChangeSubject.bind(this)} autoComplete="off"/>
           <label htmlFor="starttime">von:</label>
           <input  name="starttime" type="datetime-local" 
                   className="admin-input"
-                  disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
+                  disabled = {this.state.termin.status === 'open' ? '' : 'disabled'}
                   placeholder="Startzeit wählen" value={this.state.start } 
                   onChange={this.onChangeStarttime.bind(this)} />
           <label htmlFor="endtime">bis:</label>
           {this.state.timeError ? <small className="error--text">{this.state.timeError}</small> : undefined}
           <input  name="endtime" type="datetime-local" 
                   className="admin-input"
-                  disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
+                  disabled = {this.state.termin.status === 'open' ? '' : 'disabled'}
                   placeholder="Ende wählen" 
                   value={this.state.end} onChange={this.onChangeEndtime.bind(this)} />
           <textarea name="notes" 
-                    disabled = {(this.state.termin.status === 'storniert') || (this.state.termin.status === 'waiting') ? 'disabled' : ''}
+                    disabled = {this.state.termin.status === 'open' ? '' : 'disabled'}
                     placeholder="Bemerkungen eingeben"value={this.state.notes} onChange={this.onChangeNotes.bind(this)}/>
           {this.state.termin.status === 'storniert' ? (
             <div>
@@ -458,7 +458,7 @@ render(){
             </div>
            ) : (
             <div className="boxed-view__form">
-              {this.state.termin.status === 'open' ? <button type="submit" className="button">speichern</button> : this.state.termin.status === 'verspaetet' ? <p className="editor--message">Der Patient wird sich verspäten. Sie können den Termin lediglich <u>stornieren</u>!</p> : <p className="editor--message">Der Patient befindet sich bereits im Wartezimmer. Eine Terminbearbeitung ist daher nicht mehr möglich!</p>}
+              {this.state.termin.status === 'open' ? <button type="submit" className="button">speichern</button> : this.state.termin.status === 'verspaetet' ? <p className="editor--message">Der Patient wird sich verspäten. Sie können den Termin lediglich <u>stornieren</u>!</p> : this.state.termin.status === 'abgeschlossen' ? <p className="editor--message">Die Behandlung wurde abgeschlossen!</p> : <p className="editor--message">Der Patient befindet sich bereits im Wartezimmer. Eine Terminbearbeitung ist daher nicht mehr möglich!</p>}
               <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
               {this.state.termin.status === 'open' || this.state.termin.status === 'verspaetet' ? <button type="button" className="button button--remove-opening" onClick={this.handleStorno.bind(this)}>stornieren</button> : undefined}
             </div>
