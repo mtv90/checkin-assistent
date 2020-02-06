@@ -7,7 +7,6 @@ const AccountItem = (props) => {
     return ( 
         <div className={className} id={props.item._id} onClick={ () => {
             Session.set('selectedKontoDetails', props.item._id)
-            // this.props.termin['patientRead'] = true;
            
         }}>
             <h4>{props.item.title}</h4>

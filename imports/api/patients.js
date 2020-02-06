@@ -9,8 +9,3 @@ if(Meteor.isServer) {
         return Patients.find({user_id: this.userId});
     });
 }
-
-// Meteor.methods({
-
-//     'patients.insert'()
-// });

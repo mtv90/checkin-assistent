@@ -55,33 +55,6 @@ Meteor.methods({
         
         let end = moment(date).add(duration, 'minutes').format('YYYY-MM-DDTHH:mm:ss')
 
-        // moment(date) < moment(termin.start) && 
-        // if(moment(date) < moment()){
-        //     // throw new Meteor.Error('Sie können keine Termine in die Vergangenheit schieben');
-        //     const startdate = moment().format('YYYY-MM-DDTHH:mm:ss');
-           
-        //     Termine.update({
-        //         _id
-        //     },{
-        //         $set: {
-        //             ...termin,
-        //             updatedAt: moment().format('YYYY-MM-DDTHH:mm:ss'),
-        //             status: 'in-behandlung'
-        //         }
-        //     });
-        //     return Behandlungen.insert({
-        //         resourceId,
-        //         start: startdate,
-        //         end: moment(startdate).add(duration, 'minutes').format('YYYY-MM-DDTHH:mm:ss'),
-        //         resourceTitle: resourceTitle,
-        //         title: termin.title,
-        //         termin_id: termin._id,
-        //         user_id: this.userId,
-        //         status: 'in-behandlung',
-        //         createdAt: new Date(),
-        //         updatedAt: new Date()
-        //     })
-        // }
         Termine.update({
             _id
         },{

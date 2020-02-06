@@ -278,29 +278,12 @@ export class AddPraxis extends React.Component {
                                             <button className="button--remove-opening" onClick={(e) => {this.handleRemoveResource(e, index)}}>entfernen</button>
                                         </div>
                                         <input className="admin-input" type="text" name="title" placeholder="Name" onChange={(e) => this.handleChangeResourceTitle(e, index)} value={resource.title} autoComplete="false" />
-                                        {/* <div className="praxis-opening-box">
-                                            <div className="time-box">
-                                                <label className="opening-label" htmlFor="open-time">von:</label>
-                                                <input type="time" name="open-time" placeholder="von" onChange={(e) => this.handleChangeOpeningStart(e, index)} value={open.start} />
-                                            </div>
-                                            <div className="time-box">
-                                                <label className="opening-label" htmlFor="close-time">bis:</label>
-                                                <input type="time" name="close-time" placeholder="bis" onChange={(e) => this.handleChangeOpeningEnd(e, index)} value={open.end} />
-                                            </div>
-                                        </div> */}
+                                       
                                     </div>
                                 )
                             })
                         }
-                        {/* <Select
-                            value={this.state.patientenList}
-                            onChange={this.handleChangePatient}
-                            isMulti
-                            name="Mitarbeiter"
-                            options={this.props.patienten}
-                            className="select-box"
-                            classNamePrefix="Mitarbeiter auswählen..."
-                        /> */}
+                
                         <button type="submit" className="button">speichern</button>
                         <button type="button" className="button button--cancel" onClick={this.handleModalClose.bind(this)}>abbrechen</button>
                     </form>

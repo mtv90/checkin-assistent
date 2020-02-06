@@ -257,10 +257,9 @@ Meteor.methods({
             const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
             
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
-            // Make sure that all arguments are strings.
+            // Prüfe, ob alle Argumente vom Typ String sind
             check([to, from, subject, text], [String]);
-            // Let other method calls from the same client start running, without
-            // waiting for the email sending to complete.
+            // Asynchrone Methode, sodass User nicht auf Terminierung der Email-Senden-Funktion warten muss
             this.unblock();
             if(to && from && subject && text){
                 Email.send({to:to, from:from, subject:subject, text:text});
@@ -273,10 +272,9 @@ Meteor.methods({
             const text = `Hallo ${termin.patient.profile.vorname} ${termin.patient.profile.nachname},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.abschlussbemerkung}\n\ \n\Kontakt: ${termin.praxis.title}, ${termin.praxis.strasse} ${termin.praxis.nummer}, ${termin.praxis.plz} ${termin.praxis.stadt}\n\ \n\Telefon: ${termin.praxis.telefon}, E-mail: ${termin.praxis.email}\n\ \n\ \n\Bei weiterführenden Fragen wenden Sie sich bitte an den oben genannten Kontakt.\n\ \n\Ihr Praxis-Team!`
             
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
-            // Make sure that all arguments are strings.
+            // Prüfe, ob alle Argumente vom Typ String sind
             check([to, from, subject, text], [String]);
-            // Let other method calls from the same client start running, without
-            // waiting for the email sending to complete.
+            // Asynchrone Methode, sodass User nicht auf Terminierung der Email-Senden-Funktion warten muss
             this.unblock();
             if(to && from && subject && text){
                 Email.send({to:to, from:from, subject:subject, text:text});
@@ -290,10 +288,9 @@ Meteor.methods({
             const text = `Liebes Team der ${termin.praxis.title},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Patient/in ${termin.patient.profile.vorname} ${termin.patient.profile.nachname} ist nun eingecheckt und befindet sich im Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\Kontakt: \n\E-mail: ${termin.kv_daten.kontakt.email}\n\Telefon: ${termin.kv_daten.kontakt.telefon}`
             
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
-            // Make sure that all arguments are strings.
+            // Prüfe, ob alle Argumente vom Typ String sind
             check([to, from, subject, text], [String]);
-            // Let other method calls from the same client start running, without
-            // waiting for the email sending to complete.
+            // Asynchrone Methode, sodass User nicht auf Terminierung der Email-Senden-Funktion warten muss
             this.unblock();
             if(to && from && subject && text){
                 Email.send({to:to, from:from, subject:subject, text:text});
@@ -306,10 +303,9 @@ Meteor.methods({
             const text = `Liebes Team der ${termin.praxis.title},\n\ \n\ \n\Es gibt Veränderungen bzgl. Ihres Termins:\n\ \n\Patient/in ${termin.patient.profile.vorname} ${termin.patient.profile.nachname} wird sich verspäten! Sie haben die Möglichkeit auf ihn zu warten oder den Termin zu stornieren.\n\ \n\Neuer Status: ${termin.status}\n\ \n\Betreff: ${termin.subject}\n\ \n\Datum: ${moment(termin.start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(termin.end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Hinweise: ${termin.notes}\n\ \n\Stornierungsgrund: ${termin.stornoGrund}\n\ \n\E-mail: ${termin.patient.emails[0].address}`
             
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
-            // Make sure that all arguments are strings.
+            // Prüfe, ob alle Argumente vom Typ String sind
             check([to, from, subject, text], [String]);
-            // Let other method calls from the same client start running, without
-            // waiting for the email sending to complete.
+           // Asynchrone Methode, sodass User nicht auf Terminierung der Email-Senden-Funktion warten muss
             this.unblock();
             if(to && from && subject && text){
                 Email.send({to:to, from:from, subject:subject, text:text});
@@ -319,10 +315,9 @@ Meteor.methods({
     'termin.send_reminder'(to, from, subject, text){
         if(to){
             process.env.MAIL_URL="smtp://app151404387@heroku.com:xcpw0h707834@smtp.sendgrid.net:587";
-            // Make sure that all arguments are strings.
+            // Prüfe, ob alle Argumente vom Typ String sind
             check([to, from, subject, text], [String]);
-            // Let other method calls from the same client start running, without
-            // waiting for the email sending to complete.
+            // Asynchrone Methode, sodass User nicht auf Terminierung der Email-Senden-Funktion warten muss
             this.unblock();
             Email.send({to, from, subject, text});
         }

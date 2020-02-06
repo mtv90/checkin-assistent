@@ -62,8 +62,7 @@ Account.propTypes = {
 } 
 export default withTracker( () => {
     Meteor.subscribe('meinKonto')
-    // const konto = Konten.findOne({user_id: Meteor.userId()});
-    
+        
     return {
         konto: Konten.findOne({user_id: Meteor.userId()}),
     };

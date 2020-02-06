@@ -35,16 +35,6 @@ export const AccountDatenListe = (props) => {
             ) : undefined }
             {!props.konto ? <AddAccountDetails title="Stammdaten"/> : undefined}
              
-            
-            
-            {/* <FlipMove maintainContainerHeight={true}>
-                {props.patiententermine.map( (termin) => {
-                    return <AccountItem key={account._id} account={account}/> 
-                })}
-            </FlipMove>
-            Stammdaten
-            Fragebogen
-            Nachrichten */}
         </div>
     );
 };

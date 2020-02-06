@@ -118,11 +118,7 @@ Meteor.methods({
         if(!this.userId){
             throw new Meteor.Error('Es ist kein Benutzer vorhanden');
         }
-        // let mail = email;
-        // if(!mail) {
-        //   const user = Meteor.users.findOne({_id: this.userId});
-        //   mail = user.emails[0].address
-        // }
+
         Accounts.emailTemplates.siteName = 'Dein Checkin-Assistent';
         Accounts.emailTemplates.from = 'Checkin-Assistent<app151404387@heroku.com>';
         Accounts.emailTemplates.verifyEmail = {
@@ -161,10 +157,9 @@ Meteor.methods({
       let from = `${praxisTitle}-Checkin <app151404387@heroku.com>`;
       let subject = sub;
       let text = `Hallo ${user.profile.vorname} ${user.profile.nachname},\n\ \n\ \n\hiermit bestätigen wir Ihnen folgenden Termin:\n\ \n\Datum: ${moment(start).format('dd DD.MM.YYYY HH:mm')} Uhr bis ${moment(end).format('DD.MM.YYYY HH:mm')} Uhr\n\ \n\Grund: ${subject}\n\ \n\Hinweise: ${notes}\n\ \n\Kontakt: ${praxisTitle}, ${praxisStrasse} ${praxisNummer}, ${praxisPlz} ${praxisStadt}\n\ \n\Telefon: ${praxisTelefon}, E-mail: ${praxisEmail}\n\ \n\ \n\Falls Sie den Termin nicht wahrnehmen können, melden Sie sich bitte über den oben genannten Kontakt oder über die App.\n\ \n\Vielen Dank und bis bald!`
-      // Make sure that all arguments are strings.
+      // Prüfe, ob alle Argumente vom Typ String sind
       check([to, from, subject, text], [String]);
-      // Let other method calls from the same client start running, without
-     // waiting for the email sending to complete.
+      // Asynchrone Methode, sodass User nicht auf Terminierung der Email-Senden-Funktion warten muss
       this.unblock();
       Email.send({to, from, subject, text});
     }
