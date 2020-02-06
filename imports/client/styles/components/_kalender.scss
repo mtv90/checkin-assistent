@@ -6,8 +6,7 @@
     height: -o-calc(100vh - 135px); /* opera */
     height: -webkit-calc(100vh - 135px); /* google, safari */
     height: -moz-calc(100vh - 135px); /* firefox */
-    height: calc($page-content-height + 6rem);
-    
+    padding: $space;    
 }
 @media(min-width:451px){
     #mobile-calendar {
