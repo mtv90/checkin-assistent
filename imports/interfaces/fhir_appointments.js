@@ -1,6 +1,5 @@
 import mkFhir from 'fhir.js';
 import { Meteor } from 'meteor/meteor';
-import { WebApp } from 'meteor/webapp';
 
 // Funktion zur Abfrage von FHIR-Daten 
 Meteor.methods({

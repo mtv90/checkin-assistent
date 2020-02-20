@@ -128,9 +128,9 @@ export default class AddTermin extends React.Component {
     }
     onChangeSubject(e){
         const subject = e.target.value;
-        // if(subject) {
+
         this.setState({subject});
-        // }
+
     }
     openTerminModal(){
         this.setState({isOpen: true});

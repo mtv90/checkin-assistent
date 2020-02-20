@@ -71,7 +71,7 @@ function inactivityTimer() {
    function resetTimer() {
         clearTimeout(t);
         
-        t = setTimeout(logout, 600000); 
+        t = setTimeout(logout, 60000); 
  
     }
   }
@@ -193,7 +193,7 @@ const onEnterKonto = (props) => {
 export const Routes = (
     <Router history={history}>
         <Switch>
-            <Route exact path="/" privacy="unauth" render={() => { onEnterPublicPage(); return <Login/> }}/>
+            <Route exact path="/" render={() => { onEnterPublicPage(); return <Login/> }}/>
             <Route exact path="/signup" render={() => { onEnterPublicPage(); return <Signup/> }}/>
             
             <Route exact path="/dashboard" render={(props) => onEnterDashboard(props) ? onEnterDashboard(props) : <Redirect to="/" />} />
@@ -202,9 +202,9 @@ export const Routes = (
             <Route exact path="/dashboard/:id/termine" render= { (props) => onEnterKalender(props) ? ( <Kalender user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
             <Route exact path="/dashboard/:id/wartezimmer" render= { (props) => onEnterWartezimmer(props) ? ( <Wartezimmer user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
                 
-            <Route exact path="/praxisverwaltung" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/> 
+            <Route exact path="/praxisverwaltung" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'admin') ) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified"/> )}/> 
             <Route exact path="/praxisverwaltung/:id" render= { (props) => onEnterPraxen(props) ? ( <Praxisverwaltung user={this.user}/> ) : ( <Redirect to="/not-verified" /> ) }/>
-            <Route exact path="/meine-termine" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? (<Patiententermine user={this.user}/>) : (<Redirect to="/not-verified" />) } /> 
+            <Route exact path="/meine-termine" render= { () => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? (<Patiententermine user={this.user}/>) : (<Redirect to="/not-verified" />) }/> 
             <Route exact path="/meine-termine/:id" render= {(props) => onEnterTermine(props) ? <Patiententermine user={this.user}/> : <Redirect to="/not-verified" />}  /> 
             <Route exact path="/patient/:user_id" render= {() => (isLoggedIn() && this.isVerified && (this.role === 'patient') ) ? ( <Account user={this.user}/> ) : ( <Redirect to="/not-verified" /> )}/>
             <Route exact path="/patient/:user_id/:id" render= {(props) => onEnterKonto(props) ? ( <Account user={this.user}/> ) : ( <Redirect to="/not-verified" /> )}/>

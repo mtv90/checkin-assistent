@@ -19,7 +19,7 @@ import swal from 'sweetalert';
 import swal2 from 'sweetalert2';
 import {Termine} from '../imports/api/termine';
 import { Behandlungen } from '../imports/api/behandlungen';
-import Axios from 'axios';
+
 
 Tracker.autorun(() => {
 
@@ -247,9 +247,6 @@ Meteor.startup(() => {
   
   window.setTimeout(() => {
     ReactDOM.render(
-      // <Router history={history}>
-      //   <App/>
-      // </Router>
       Routes
       , document.getElementById('app'));
   }, 1000);
