@@ -23,7 +23,7 @@
     "emotion": "^10.0.27",
     "fhir.js": "0.0.22",
     "history": "^4.10.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jso": "^4.1.1",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
